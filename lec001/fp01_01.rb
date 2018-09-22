@@ -6,10 +6,10 @@ require 'bigdecimal/util'
 例題の三角形の面積計算メソッドをそのまま打ち込み、irb で実行させてみよ。
 数字でないものを与えたりするとどうなるかも試せ。
 =end
-def triarea(w, h)
+def triarea1(w, h)
 	begin
 		return (w * h) / 2.0
-	rescue =>
+	rescue => e
 		return e
 	end
 end
@@ -18,11 +18,11 @@ end
 演習 2 三角形の面積計算で、割る数の指定を「2.0」でなくただの「2」にした場合に何か違いがあ
 るか試せ。
 =end
-begin triarea2(w,h)
+def triarea2(w, h)
 	begin
 		return (w * h) / 2
-	rescue e
-		retuen e
+	rescue => e
+		return e
 	end
 end
 
@@ -36,7 +36,7 @@ a. 2 つの実数を与え、その和を返す (ついでに、差、商、積�
 # 積
 def q_003_a_times(a, b)
 	begin
-		retuen a * b
+		return a * b
 	rescue => e
 		return e
 	end
@@ -45,9 +45,9 @@ end
 # 商
 def q_003_a_div(a, b)
 	begin
-		return a.quo(b).to_f
+		return a / b
 	rescue => e
-		return e.message
+		return e
 	end
 end
 # 差
@@ -55,7 +55,7 @@ def q_003_a_diff(a, b)
 	begin
 		return a - b
 	rescue => e
-		retuen e
+		return e
 	end
 end
 # 和
@@ -75,7 +75,7 @@ def q_003_b(a, b)
 	begin
 		return a % b
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
@@ -85,15 +85,12 @@ x を出力する (分子は「1.0」という書き方にした方がいいか�
 =end
 def q_003_c(x)
 	begin
-		num = ct_tos(x.abs)
-		puts num
-
+		num = ct_tos(x)
 		deg = fact(num)
-		puts num
 		ret = num.negative? ? sprintf("%#.010g", x.to_d * deg.to_d) : sprintf("%#.010g", 1.to_d / x.to_d)
 		return ret
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
@@ -108,12 +105,12 @@ d. 数値 x を与え、その 8 乗を返す。ついでに 6 乗、7 乗もや
 def q_003_d(x, n)
 	begin
 		if n.to_d > 0 then
-			return sprintf("%#.010g", (1..n.to_i.abs-1).to_a.inject(x.to_f){|f, i| f.to_f * x.to_f})
+			return sprintf("%#.010g", (1..n.to_i.abs-1).to_a.inject(x.to_s.to_d){|f, i| f.to_s.to_d * x.to_s.to_d})
 		else
-			return Rational(1, (1..n.to_i.abs-1).to_a.inject(x.to_d){|f, i| f.to_f * x.to_f})
+			return Rational(1, (1..n.to_i.abs-1).to_a.inject(x.to_s.to_d){|f, i| f.to_s.to_d * x.to_s.to_d})
 		end
 	rescue => e
-		e.message
+		return e
 	end
 end
 
@@ -130,7 +127,7 @@ f. 実数 x を与え、x の平方根を出力する。さまざまな値につ
 =end
 
 =begin
-積数を返すメソッド
+逆数の積数を返すメソッド
 @param int　次数
 @return double 積数
 =end
@@ -151,9 +148,22 @@ end
 @param 実数(絶対値)
 @return int 次数
 =end
-def ct_tos(n)
+def ct_tos(x)
 	begin
-		ret = n.to_s.include?(".") ? n.to_s.size.pred * -1 : n.to_s.size.pred
+		n = x.to_s.to_d.abs
+		result = 0;
+		if n >= 1.0 then
+			while n >= 10.0 do
+				n = n / 10.0
+				result += 1
+			end
+		elsif 1.0 > n && n > 0.0 then
+			while  1.0 > n  do
+				n = n * 10.0
+				result += 1
+			end
+		end
+		return result
 	rescue => e
 		return e.message
 	end
