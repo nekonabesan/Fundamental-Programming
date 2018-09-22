@@ -6,16 +6,16 @@ a. 非負整数 n を受け取り、2のn乗 を計算する。
 =end
 def a(n)
 	begin
+		raise ArgumentError if n == nil
 		n = n.to_i.abs
 		result = 1
 		while n > 0 do
 			result = result * 2
 			n -= 1
-			puts n
 		end
 		return result
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
@@ -24,6 +24,7 @@ b. 非負整数 n を受け取り、n! = n × (n − 1) × · · · × 2 × 1 �
 =end
 def b(n)
 	begin
+		raise ArgumentError if n == nil
 		n = n.to_i.abs
 		result = 1
 		while n > 0 do
@@ -32,7 +33,7 @@ def b(n)
 		end
 		return result
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
@@ -41,16 +42,15 @@ c. 非負整数 n と r(≤ n) を受け取り、nCr を計算する。
 =end
 def c(n,r)
 	begin
+		raise ArgumentError if n == nil || r == nil
 		n = n.to_s.to_i.abs
 		r = r.to_s.to_i.abs
 		if r > n then raise "Error" end
 		n_i = b(n)
-		puts n_i
 		r_i = b(r) * b(n - r)
-		puts r_i
 		return n_i / r_i
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
@@ -59,6 +59,7 @@ d. x と計算する項の数 n を与えて、次のテイラー展開を計算
 =end
 def d(x, n)
 	begin
+		raise ArgumentError if x == nil || n == nil
 		x = x.to_i.abs
 		n = n.to_i.abs
 		sin_x = 0.0
@@ -76,7 +77,6 @@ def d(x, n)
 				sin_x -= (x_n(x,i).to_s.to_d / b(i).to_s.to_d) if sw.negative?
 				sw = sw * -1
 			end
-			puts(cos_x)
 		end
 		result.push(sin_x)
 		result.push(cos_x)
@@ -89,6 +89,7 @@ end
 =end
 def x_n(x,n)
 	begin
+		raise ArgumentError if x == nil || n == nil
 		n = n.to_s.to_i.abs
 		r = r.to_s.to_i.abs
 		result = 1
@@ -97,17 +98,21 @@ def x_n(x,n)
 		end
 		return result
 	rescue => e
-		return e.message
+		return e
 	end
 end
 
 =begin
 =end
 def factorial(a)
-	result = a.to_i.abs
-	while a.to_i > 1 do
-		result = result * a -= 1
-		puts a
+	begin
+		raise ArgumentError if a == nil
+		result = a.to_i.abs
+		while a.to_i > 1 do
+			result = result * a -= 1
+		end
+		return result
+	rescue => e
+		return e
 	end
-	return result
 end
