@@ -3,6 +3,7 @@ require 'bigdecimal/util'
 
 def main(a,b)
   begin
+    raise ArgumentError if a == nil || b == nil
     a.to_i.abs
     b.to_i.abs
     result = 0;
@@ -22,6 +23,6 @@ def main(a,b)
     end
     return result
   rescue => e
-    e.message
+    e
   end
 end

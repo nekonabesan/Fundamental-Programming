@@ -7,13 +7,14 @@ class Fp02_06
   #/-----------------------------------------------------------/
   def p(n)
     begin
+      raise ArgumentError if n == nil || n == 0
       n = n.to_i.abs
       for i in 2..(n - 1) do
         return false if (n % i) == 0
       end
       return true
     rescue => e
-      return e.message
+      return e
     end
   end
 end
