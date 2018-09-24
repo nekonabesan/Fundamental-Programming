@@ -6,11 +6,12 @@ a. 数の配列を受け取り、その最大値を返す。
 =end
 def a(array)
   begin
+    raise ArgumentError if array == nil
     result = array.shift.to_i
-    array.each { |i| result = i.to_i if i.to_i > result.to_i  }
+    array.each { |i| result = i.to_s.to_i if i.to_s.to_i > result.to_i  }
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -20,6 +21,7 @@ b. 数の配列を受け取り、最大値が何番目かを返す。なお先�
 =end
 def b(array)
   begin
+    raise ArgumentError if array == nil
     result = 0
     max = array.first.to_i
     array.each_with_index do |e,i|
@@ -30,7 +32,7 @@ def b(array)
     end
     return result.to_i
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -40,6 +42,7 @@ c. 数の配列を受け取り、最大値が何番目かを出力する。な�
 =end
 def c(array)
   begin
+    raise ArgumentError if array == nil
     result = []
     max = array[b(array).to_i]
     array.each_with_index do |e,i|
@@ -49,7 +52,7 @@ def c(array)
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -58,6 +61,7 @@ d. 数の配列を受け取り、その平均より小さい要素を出力す�
 =end
 def d(array)
   begin
+    raise ArgumentError if array == nil
     result = []
     avg = avg(array)
     array.each_with_index do |e,i|
@@ -65,7 +69,7 @@ def d(array)
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -75,6 +79,7 @@ e. 数の配列を受け取り、その内容を「小さい順」に並べて�
 =end
 def e(array)
   begin
+    raise ArgumentError if array == nil
     result = []
     until array.empty?  do
       min = array.first
@@ -90,19 +95,20 @@ def e(array)
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
 
 
 def avg(array)
   begin
+    raise ArgumentError if array == nil
     result = 0.0;
     array.each_with_index do |e,i|
         result += e.to_s.to_d
     end
     return result / array.length.to_s.to_d
   rescue => e
-    e.message
+    return e
   end
 end

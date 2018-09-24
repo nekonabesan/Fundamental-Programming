@@ -4,6 +4,7 @@ require 'bigdecimal/util'
 
 def main(n)
   begin
+    raise ArgumentError if n == nil
     obj = Fp02_06.new
     n = n.to_i.abs
     result = []
@@ -12,6 +13,6 @@ def main(n)
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
