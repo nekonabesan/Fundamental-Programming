@@ -1,3 +1,4 @@
+require 'benchmark'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
@@ -42,8 +43,13 @@ end
 def selectionsort(a)
   begin
     raise ArgumentError if a.nil?
-    s = a.size.to_i - 1
-    a.each_with_index{ |var,i| a = swap(a,i,arraminrange(a,i,s)) }
+    #/==============計測開始==============/
+    time = Benchmark.realtime do
+      s = a.size.to_i - 1
+      a.each_with_index{ |var,i| a = swap(a,i,arraminrange(a,i,s)) }
+    end
+    puts("処理時間 #{time}s")
+    #/=============計測終了===============/
     return a
   rescue => e
     return e

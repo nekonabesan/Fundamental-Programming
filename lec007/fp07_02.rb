@@ -1,3 +1,4 @@
+require 'benchmark'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
@@ -47,11 +48,16 @@ b. 上記を呼び出しながら単純挿入法で配列を整列するメソ�
 =end
 def insertionsort(a)
   begin
-    raise ArgumentError if a.nil?
-    a.each_with_index do |x,i|
-      index = shiftlarger(a,i,x)
-      rewritea(a,index,i,x)
+    #/==============計測開始==============/
+    time = Benchmark.realtime do
+      raise ArgumentError if a.nil?
+      a.each_with_index do |x,i|
+        index = shiftlarger(a,i,x)
+        rewritea(a,index,i,x)
+      end
     end
+    puts("処理時間 #{time}s")
+    #/=============計測終了===============/
     return a
   rescue => e
     return e
