@@ -83,6 +83,7 @@ def makeprm(n)
       flg = true
       for j in 2..(i - 1) do
         flg = false if i % j == 0
+        break if j > (i /2)
       end
       results.push(i) if flg == true
     end
