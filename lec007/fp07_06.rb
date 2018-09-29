@@ -6,28 +6,66 @@ require 'bigdecimal/util'
 def radixsort(a)
   begin
     raise ArgumentError if a.nil?
-
-    mask = 1
+    mask = 0b01
     flg = true
+    right = Array.new
+    #/==============計測開始==============/
+    #time = Benchmark.realtime do
     while flg == true do
       flg = false
-      left = Array.new
-      right = Araay.new
+      right = []
       a.each_with_index do |val,i|
-        if val & mask == 0 then
-          left.push(val)
+        a.delete_at(i)
+        if  val & mask == 0 then
+          a.unshift(val)
         else
-          left.push(val)
+          right.push(val)
           flg = true
         end
-        mask = mask << 1
       end
-      a = Array.new
-      a.push(left)
-      a.push(right)
+      a.concat(right)
+      mask = mask << 1
     end
-
+    #puts("処理時間 #{time}s")
+    #/=============計測終了===============/
+    return a
   rescue => e
     return e
   end
 end
+
+
+=begin
+def radixsort(a)
+  begin
+    raise ArgumentError if a.nil?
+    mask = 0b01
+    flg = true
+    #/==============計測開始==============/
+    #time = Benchmark.realtime do
+      while flg == true do
+        flg = false
+        left = Array.new
+        right = Array.new
+        a.each_with_index do |val,i|
+          if  val & mask == 0 then
+            left.push(val)
+          else
+            right.push(val)
+            flg = true
+          end
+        end
+        a = Array.new
+        left.concat(right)
+        a = left.dup
+        mask = mask << 1
+      end
+    #end
+    #puts("処理時間 #{time}s")
+    #/=============計測終了===============/
+    return a
+  rescue => e
+    return e
+  end
+end
+=end

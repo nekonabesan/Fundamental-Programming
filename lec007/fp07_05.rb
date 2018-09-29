@@ -15,7 +15,7 @@ x を順に取り出し、それぞれについて b[x] の値を 1 増やす。
 def makebin(a)
   begin
     raise ArgumentError if a.nil?
-    b = Array.new(10000,0)
+    b = Array.new(a.max + 1, 0)
     a.each_with_index{ |val,i| b[val] += 1 }
     return b
   rescue => e
@@ -33,18 +33,17 @@ def binsort(a)
     raise ArgumentError if a.nil?
     results = Array.new
     #/==============計測開始==============/
-    time = Benchmark.realtime do
+    #time = Benchmark.realtime do
       b = makebin(a)
       b.each_with_index do |val,i|
         if val != 0 then
-          puts(val)
           for j in 1..val do
             results.push(i)
           end
         end
       end
-    end
-    puts("処理時間 #{time}s")
+    #end
+    #puts("処理時間 #{time}s")
     #/=============計測終了===============/
     return results
   rescue => e
