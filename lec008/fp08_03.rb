@@ -11,12 +11,16 @@ require '../modules/fp_module.rb'
 def a(n)
   begin
     raise ArgumentError if n.nil?
+    m =  Array.new
     results = Array.new
-    a = primality_test(n)
-    a.each_with_index { |(key,val),i| results.push(key) if val == true }
-    File.open("fp08_03.txt", mode = "w"){|f|
-      f.write(results)
-    }
+    # ミラー–ラビン素数判定法を実行
+    a = rabin_miller(n)
+    a.each_with_index { |(key,val),i| m.push(key.to_i) if val == true }
+    # ミラー–ラビン素数判定法の戻り値を検証
+    results = primality_test(m)
+    #File.open("fp08_03_results.txt", mode = "w"){|f|
+    #  f.write(results)
+    #}
     return results
   rescue => e
     return e
@@ -24,7 +28,23 @@ def a(n)
 end
 
 
-def primality_test(n)
+def primality_test(a)
+  begin
+    raise ArgumentError if a.nil?
+    results = Array.new
+    a.each_with_index do |val,i|
+      for j in 2..(val - 1) do
+        results.push(val) if val % j == 0
+      end
+    end
+    return results
+  rescue => e
+    return e
+  end
+end
+
+
+def rabin_miller(n)
   begin
     raise ArgumentError if n.nil?
     results = {}
