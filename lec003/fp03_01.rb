@@ -46,7 +46,7 @@ def b
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -68,6 +68,6 @@ def c
     end
     return result
   rescue => e
-    return e.message
+    return e
   end
 end

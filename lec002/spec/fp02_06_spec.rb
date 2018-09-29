@@ -52,5 +52,9 @@ describe "演習6" do
     results = obj.p(nil)
     expect(results).to be_a(ArgumentError)
   end
-
+  it "p(0)" do
+    obj = Fp02_06.new
+    results = obj.p(0)
+    expect(results).to be_a(ArgumentError)
+  end
 end
