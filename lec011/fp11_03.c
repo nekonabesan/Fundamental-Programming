@@ -7,6 +7,6 @@
 int main(void) {
   // 演習 3
   printf("%s\n", "演習 3");
-  printf("calc1 =>  %20g\n", calc1(2.0));
+  printf("sqrt =>  %20g\n", calc1(2.0));
   return FALSE;
 }
