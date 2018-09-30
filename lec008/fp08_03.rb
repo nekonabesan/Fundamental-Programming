@@ -98,6 +98,22 @@ def pow(base,power,mod)
 end
 
 
+def pirandom(n)
+  begin
+    raise ArgumentError if n.nil?
+    count = 0
+    n.times do
+      x = rand()
+      y = rand()
+      count = count + 1 if x**2 + y**2 < 1.0
+    end
+    return 4.0 * count / n
+  rescue => e
+    return e
+  end
+end
+
+
 def makeprm(n)
   begin
     raise ArgumentError if n.nil?
