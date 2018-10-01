@@ -122,6 +122,22 @@ e. 円錐の底面の半径と高さを与え、体積を返す。
 f. 実数 x を与え、x の平方根を出力する。さまざまな値について計算し、精度がどれくらい
 あるか検討せよ。
 =end
+def q_003_f(x,c = 1000)
+	begin
+		raise ArgumentError if 0 >= x || x.nil? || 0 >= c || c.nil?
+		flg = true
+		i = 0
+		result = 0
+		while flg == true do
+			result = i.to_s.to_d / c.to_s.to_d
+			flg = false if result**2 >= x
+			i += 1
+		end
+		return result
+	rescue => e
+		return e
+	end
+end
 
 =begin
 =end
