@@ -4,12 +4,15 @@ require 'bigdecimal/util'
 $vals = []
 $stac = []
 $list = []
+$lstac = []
 
 def e(x)
   begin
+    raise "x is Null" if x == nil
+    raise "x is Empty" if x == ''
     $vals.push(x); $list.push(x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -17,7 +20,7 @@ def add
   begin
     x = $vals.pop; $vals.push($vals.pop + x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -25,15 +28,15 @@ def mul
   begin
     x = $vals.pop; $vals.push($vals.pop * x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
 def clear
   begin
-    $stac = $vals; $vals = []; return $vals
+    $stac = $vals; $lstac = $list ; $vals = []; $list = []; return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -44,7 +47,7 @@ def dec
   begin
     x = $vals.pop; $vals.push($vals.pop - x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -55,9 +58,9 @@ b. うっかり間違って reset した時にそれを取り消せる機能 und
 def undo
   begin
     result = []
-    $vals = $stac; return $vals
+    $vals = $stac; $list = $lstac; return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -90,7 +93,7 @@ def div
   begin
     x = $vals.pop; $vals.push($vals.pop / x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -98,7 +101,7 @@ def mod
   begin
     x = $vals.pop; $vals.push($vals.pop % x); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
@@ -107,16 +110,22 @@ b. 現在の演算結果の符号を反転する操作 inv。たとえば「1 2 
 =end
 def inv
   begin
-    x = $vals.pop; $vals.push($vals.pop * -1); return $vals
+    x = $vals.push($vals.pop * -1); return $vals
   rescue => e
-    return e.message
+    return e
   end
 end
 
 =begin
 c. 最後の結果と 1 つ前の結果を交換する操作 exch。たとえば「1 3 exch sub → 2」となる。
 =end
-
+def exch
+  begin
+    x = $vals.pop; y = $vals.pop; $vals.push(x,y)
+  rescue => e
+    return e
+  end
+end
 
 =begin
 d. ご破産の機能 clear と、開始またはご破産から現在までの操作をすべて横に並べて (つま
