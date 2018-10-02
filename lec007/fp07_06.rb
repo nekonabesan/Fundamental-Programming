@@ -2,7 +2,7 @@ require 'benchmark'
 require 'bigdecimal'
 require 'bigdecimal/util'
 
-
+=begin
 def radixsort(a)
   begin
     raise ArgumentError if a.nil?
@@ -11,21 +11,22 @@ def radixsort(a)
     right = Array.new
     #/==============計測開始==============/
     #time = Benchmark.realtime do
-    while flg == true do
-      flg = false
-      right = []
-      a.each_with_index do |val,i|
-        a.delete_at(i)
-        if  val & mask == 0 then
-          a.unshift(val)
-        else
-          right.push(val)
-          flg = true
+      while flg == true do
+        flg = false
+        right = []
+        a.each_with_index do |val,i|
+          a.delete_at(i)
+          if  val & mask == 0 then
+            a.unshift(val)
+          else
+            right.push(val)
+            flg = true
+          end
         end
+        a.concat(right)
+        mask = mask << 1
       end
-      a.concat(right)
-      mask = mask << 1
-    end
+    #end
     #puts("処理時間 #{time}s")
     #/=============計測終了===============/
     return a
@@ -33,9 +34,8 @@ def radixsort(a)
     return e
   end
 end
+=end
 
-
-=begin
 def radixsort(a)
   begin
     raise ArgumentError if a.nil?
@@ -68,4 +68,3 @@ def radixsort(a)
     return e
   end
 end
-=end

@@ -58,4 +58,13 @@ end
 d. 正の整数 n の 2 進表現
 =end
 def binary(n)
+  begin
+    raise ArgumentError if n.nil?
+    return 0.to_s if n.to_i == 0
+    return 1.to_s if n.to_i == 1
+    return binary(n.to_i / 2).to_s + "0" if  n % 2 == 0 && n >= 2
+    return binary(n.to_i / 2).to_s + "1" if  n % 2 == 1 && n >= 2
+  rescue => e
+    return e
+  end
 end

@@ -114,4 +114,34 @@ describe "演習4" do
       expect(results).to be_a(ArgumentError)
     end
   end
+  context "binary" do
+    it "binary(0)" do
+      results = binary(0)
+      expect(results).to match("0")
+    end
+    it "binary(1)" do
+      results = binary(1)
+      expect(results).to match("1")
+    end
+    it "binary(2)" do
+      results = binary(2)
+      expect(results).to match("10")
+    end
+    it "binary(3)" do
+      results = binary(3)
+      expect(results).to match("11")
+    end
+    it "binary(4)" do
+      results = binary(4)
+      expect(results).to match("100")
+    end
+    it "binary(255)" do
+      results = binary(255)
+      expect(results).to match("11111111")
+    end
+    it "binary(nil)" do
+      results = binary(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
 end
