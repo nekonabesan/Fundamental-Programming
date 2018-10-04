@@ -31,9 +31,15 @@ b. 60%の確率で表がでるイカサマコインで「10 回投げて表が�
     begin
       raise ArgumentError if n.nil?
       results = Array.new
+      amt = 0
       n.times do
-
+        10.times do
+          amt += 1 if 60 >= rand(100)
+        end
+        results.push(amt)
+        amt = 0
       end
+      return results
     rescue => e
       return e
     end
@@ -62,7 +68,6 @@ c. サイコロを 3 個振ってうち 2 個が同じ目 (もう 1 個は違う
       return e
     end
   end
-
 
 =begin
 d. 次のようなすごろくをあがるのにサイコロを何回振るか分布を調べる。

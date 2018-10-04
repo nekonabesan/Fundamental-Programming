@@ -70,10 +70,10 @@ def prime(n)
     return false if n == 1 || n & 1 == 0
     d = n-1
     d >>= 1 while d & 1 == 0
-    20.times do                               # 20 は上の説明の k に相当
+    20.times do
       a = rand(n-2) + 1
       t = d
-      y = pow(a,t,n)                  # 実装コードは下にある
+      y = pow(a,t,n)
       while t != n-1 && y != 1 && y != n-1
         y = (y * y) % n
         t <<= 1

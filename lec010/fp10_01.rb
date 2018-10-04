@@ -2,6 +2,10 @@ require 'benchmark'
 require 'bigdecimal'
 require 'bigdecimal/util'
 require '../modules/fp_module.rb'
+
+# a. 用の構造体定義
+Cell = Struct.new(:data, :next)
+
 =begin
 演習 1 ここまでの例 (構築、長さ、プリント) を打ち込んで動かせ。動いたら、次のメソッドを作っ
 てみよ (ループでも再帰でも好きな方でよい)。
@@ -32,14 +36,50 @@ def atolr(a, pos = 0)
   end
 end
 
-
-
-
 =begin
 a. data に数値が入っている単連結リストに対して、その数値の合計を求める listsum。
 =end
-def a
+def a(n = 10)
   begin
+    raise ArgumetError if n.nil?
+    address = Array.new
+    result = 0
+    flg = true
+    for i in 0..n do
+      p = Cell.new(i,nil)
+      address.push(p)
+    end
+    p = create(address)
+    while true do
+      result += p.data
+      puts(p.next)
+      p = p.next
+      break if p.next == nil
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+=begin
+配列化された構造体への参照から単連結リストを生成するメソッド
+@param Array
+@return Constructor(先頭要素へのポインタ)
+=end
+def create(array)
+  begin
+    raise ArgumetError if array.nil?
+    cnt = array.length - 1
+    nxt = nil
+    result = nil
+    while cnt >= 0 do
+      array[cnt].next = nxt
+      nxt = array[cnt]
+      result = array[cnt]
+      cnt -= 1
+    end
+    return result
   rescue => e
     return e
   end
