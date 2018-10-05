@@ -13,7 +13,7 @@ Cell2 = Struct.new(:data, :next, :prev)
 =end
 def atol(a)
   begin
-    raise ArgumetError if a.nil?
+    raise ArgumentError if a.nil?
     p = nil
     (a.length - 1).step(0, -1) do |i|
       p = Cell.new(a[i], p)
@@ -26,7 +26,7 @@ end
 
 def atolr(a, pos = 0)
   begin
-    raise ArgumetError if a.nil?
+    raise ArgumentError if a.nil?
     if a.length <= pos
       return nil
     else
@@ -42,7 +42,7 @@ a. data に数値が入っている単連結リストに対して、その数値
 =end
 def a(n = 10)
   begin
-    raise ArgumetError if n.nil?
+    raise ArgumentError if n.nil?
     address = Array.new
     result = 0
     for i in 0..n do
@@ -68,7 +68,7 @@ end
 =end
 def create(array)
   begin
-    raise ArgumetError if array.nil?
+    raise ArgumentError if array.nil?
     cnt = array.length - 1
     nxt = nil
     result = nil
@@ -90,7 +90,7 @@ b. 各セルのdata(文字列)を連結した1つの文字列を返すlistcat。
 =end
 def b(str)
   begin
-    raise ArgumetError if str.nil?
+    raise ArgumentError if str.nil?
     s = str.split("")
     t = Array.new
     result = ""
@@ -117,7 +117,7 @@ end
 =end
 def create2(array)
   begin
-    raise ArgumetError if array.nil?
+    raise ArgumentError if array.nil?
     cnt = 0
     prev = nil
     result = nil
@@ -139,7 +139,7 @@ c. 上と同様だがただし逆順に連結する listcatrev。
 =end
 def c(str)
   begin
-    raise ArgumetError if str.nil?
+    raise ArgumentError if str.nil?
     s = str.split("")
     t = Array.new
     result = ""
@@ -165,7 +165,7 @@ d. printlist と同様だが、1 行目は 1 回、2 行目は 2 回、3 行目�
 =end
 def d(str)
   begin
-    raise ArgumetError if str.nil?
+    raise ArgumentError if str.nil?
     s = str.split("")
     t = Array.new
     result = ""
