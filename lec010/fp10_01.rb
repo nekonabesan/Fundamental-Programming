@@ -5,6 +5,7 @@ require '../modules/fp_module.rb'
 
 # a. 用の構造体定義
 Cell = Struct.new(:data, :next)
+Cell2 = Struct.new(:data, :next, :prev)
 
 =begin
 演習 1 ここまでの例 (構築、長さ、プリント) を打ち込んで動かせ。動いたら、次のメソッドを作っ
@@ -110,6 +111,30 @@ def b(str)
 end
 
 =begin
+配列化された構造体への参照から双方向リストを生成するメソッド
+@param Array
+@return Constructor(先頭要素へのポインタ)
+=end
+def create2(array)
+  begin
+    raise ArgumetError if array.nil?
+    cnt = 0
+    prev = nil
+    result = nil
+    while array.length > cnt do
+      array[cnt].next = array[cnt + 1]
+      array[cnt].prev = prev
+      prev = array[cnt]
+      result = array[cnt]
+      cnt += 1
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+=begin
 c. 上と同様だがただし逆順に連結する listcatrev。
 =end
 def c(str)
@@ -117,19 +142,18 @@ def c(str)
     raise ArgumetError if str.nil?
     s = str.split("")
     t = Array.new
-    l = nil
     result = ""
     s.each_with_index do |val,i|
-       p = Cell.new(val,nil)
+       p = Cell2.new(val,nil)
        t.push(p)
     end
-    p = create(t)
+    p = create2(t)
     while true do
-      break if l.nil?
-      result += l.data.to_s
-      l = l.next
+      result += p.data.to_s
+      break if p.prev == nil
+      p = p.prev
     end
-    return l
+    return result
   rescue => e
     return e
   end
@@ -139,8 +163,17 @@ end
 d. printlist と同様だが、1 行目は 1 回、2 行目は 2 回、3 行目は 4 回、…と倍倍で打ち出す
 回数が増える printmany。打ち出す順番は任意の順番で (ごちゃまぜで) よい。
 =end
-def d
+def d(str)
   begin
+    raise ArgumetError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = create(t)
   rescue => e
     return e
   end
