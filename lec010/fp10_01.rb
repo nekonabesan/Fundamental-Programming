@@ -44,7 +44,6 @@ def a(n = 10)
     raise ArgumetError if n.nil?
     address = Array.new
     result = 0
-    flg = true
     for i in 0..n do
       p = Cell.new(i,nil)
       address.push(p)
@@ -52,9 +51,8 @@ def a(n = 10)
     p = create(address)
     while true do
       result += p.data
-      puts(p.next)
-      p = p.next
       break if p.next == nil
+      p = p.next
     end
     return result
   rescue => e
@@ -89,8 +87,23 @@ end
 b. 各セルのdata(文字列)を連結した1つの文字列を返すlistcat。文字列連結は「p.data.to s
 + …」のように to s で文字列にしてから「+」を使えばよい。
 =end
-def b
+def b(str)
   begin
+    raise ArgumetError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = create(t)
+    while true do
+      result += p.data.to_s
+      break if p.next == nil
+      p = p.next
+    end
+    return result
   rescue => e
     return e
   end
@@ -99,8 +112,24 @@ end
 =begin
 c. 上と同様だがただし逆順に連結する listcatrev。
 =end
-def c
+def c(str)
   begin
+    raise ArgumetError if str.nil?
+    s = str.split("")
+    t = Array.new
+    l = nil
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = create(t)
+    while true do
+      break if l.nil?
+      result += l.data.to_s
+      l = l.next
+    end
+    return l
   rescue => e
     return e
   end
