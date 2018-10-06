@@ -49,7 +49,7 @@ def a(n = 10)
       p = Cell.new(i,nil)
       address.push(p)
     end
-    p = create(address)
+    p = listcat(address)
     while true do
       result += p.data
       break if p.next == nil
@@ -66,7 +66,7 @@ end
 @param Array
 @return Constructor(先頭要素へのポインタ)
 =end
-def create(array)
+def listcat(array)
   begin
     raise ArgumentError if array.nil?
     cnt = array.length - 1
@@ -98,7 +98,7 @@ def b(str)
        p = Cell.new(val,nil)
        t.push(p)
     end
-    p = create(t)
+    p = listcat(t)
     while true do
       result += p.data.to_s
       break if p.next == nil
@@ -115,6 +115,7 @@ end
 @param Array
 @return Constructor(先頭要素へのポインタ)
 =end
+=begin
 def create2(array)
   begin
     raise ArgumentError if array.nil?
@@ -133,6 +134,7 @@ def create2(array)
     return e
   end
 end
+=end
 
 =begin
 c. 上と同様だがただし逆順に連結する listcatrev。
@@ -144,14 +146,15 @@ def c(str)
     t = Array.new
     result = ""
     s.each_with_index do |val,i|
-       p = Cell2.new(val,nil)
+       p = Cell.new(val,nil)
        t.push(p)
     end
-    p = create2(t)
+    p = listcat(t)
+    r = listrev(p)
     while true do
-      result += p.data.to_s
-      break if p.prev == nil
-      p = p.prev
+      result += r.data
+      break if r.next == nil
+      r = r.next
     end
     return result
   rescue => e
@@ -173,7 +176,7 @@ def d(str)
        p = Cell.new(val,nil)
        t.push(p)
     end
-    p = create(t)
+    p = listcat(t)
   rescue => e
     return e
   end
@@ -198,8 +201,22 @@ end
 f. 単リストの並び順を逆向きにした単リストを返す listrev。これには元のリストを変更し
 てしまう版と変更しない版とが考えられるが、どちらでもよいことにする。
 =end
-def f
+def listrev(p)
   begin
+    raise ArgumentError if p.nil?
+    a = Array.new
+    r = Array.new
+    while true do
+      a.push(p)
+      break if p.next.nil?
+      p = p.next
+    end
+    len = a.length - 1
+    while len >= 0 do
+      r.push(a[len])
+      len -= 1
+    end
+    return listcat(r)
   rescue => e
     return e
   end
