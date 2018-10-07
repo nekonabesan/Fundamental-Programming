@@ -11,6 +11,7 @@ Cell2 = Struct.new(:data, :next, :prev)
 演習 1 ここまでの例 (構築、長さ、プリント) を打ち込んで動かせ。動いたら、次のメソッドを作っ
 てみよ (ループでも再帰でも好きな方でよい)。
 =end
+=begin
 def atol(a)
   begin
     raise ArgumentError if a.nil?
@@ -36,6 +37,7 @@ def atolr(a, pos = 0)
     return e
   end
 end
+=end
 
 =begin
 a. data に数値が入っている単連結リストに対して、その数値の合計を求める listsum。
@@ -54,29 +56,6 @@ def a(n = 10)
       result += p.data
       break if p.next == nil
       p = p.next
-    end
-    return result
-  rescue => e
-    return e
-  end
-end
-
-=begin
-配列化された構造体への参照から単連結リストを生成するメソッド
-@param Array
-@return Constructor(先頭要素へのポインタ)
-=end
-def listcat(array)
-  begin
-    raise ArgumentError if array.nil?
-    cnt = array.length - 1
-    nxt = nil
-    result = nil
-    while cnt >= 0 do
-      array[cnt].next = nxt
-      nxt = array[cnt]
-      result = array[cnt]
-      cnt -= 1
     end
     return result
   rescue => e
@@ -109,32 +88,6 @@ def b(str)
     return e
   end
 end
-
-=begin
-配列化された構造体への参照から双方向リストを生成するメソッド
-@param Array
-@return Constructor(先頭要素へのポインタ)
-=end
-=begin
-def create2(array)
-  begin
-    raise ArgumentError if array.nil?
-    cnt = 0
-    prev = nil
-    result = nil
-    while array.length > cnt do
-      array[cnt].next = array[cnt + 1]
-      array[cnt].prev = prev
-      prev = array[cnt]
-      result = array[cnt]
-      cnt += 1
-    end
-    return result
-  rescue => e
-    return e
-  end
-end
-=end
 
 =begin
 c. 上と同様だがただし逆順に連結する listcatrev。
@@ -177,6 +130,11 @@ def d(str)
        t.push(p)
     end
     p = listcat(t)
+    t.length.times do |i|
+      (i + 1).times{ result += p.data.to_s }
+      p = p.next
+    end
+    return result
   rescue => e
     return e
   end
@@ -192,6 +150,29 @@ e. listsum と同様だが、ただし奇数番目のセルの値だけ合計す
 =end
 def e
   begin
+  rescue => e
+    return e
+  end
+end
+
+=begin
+配列化された構造体への参照から単連結リストを生成するメソッド
+@param Array
+@return Constructor(先頭要素へのポインタ)
+=end
+def listcat(array)
+  begin
+    raise ArgumentError if array.nil?
+    cnt = array.length - 1
+    nxt = nil
+    result = nil
+    while cnt >= 0 do
+      array[cnt].next = nxt
+      nxt = array[cnt]
+      result = array[cnt]
+      cnt -= 1
+    end
+    return result
   rescue => e
     return e
   end

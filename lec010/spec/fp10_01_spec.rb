@@ -57,24 +57,34 @@ describe "演習 1" do
       expect(results).to be_a(ArgumentError)
     end
   end
-=begin
   context "d" do
-    it "" do
-      results = a()
-      expect(results).to match("")
+    it "d('string')" do
+      results = d("string")
+      expect(results).to match("sttrrriiiinnnnngggggg")
+    end
+    it "d('Hallo World!!')" do
+      results = d("Hallo World!!")
+      expect(results).to match("Haalllllllooooo      WWWWWWWoooooooorrrrrrrrrllllllllllddddddddddd!!!!!!!!!!!!!!!!!!!!!!!!!")
+    end
+    it "d('0123456789')" do
+      results = d("0123456789")
+      expect(results).to match("0112223333444445555556666666777777778888888889999999999")
     end
     it "" do
-      results = a()
-      expect(results).to match("")
-    end
-    it "" do
-      results = a()
-      expect(results).to match("")
-    end
-    it "" do
-      results = a()
-      expect(results).to match("")
+      results = d(nil)
+      expect(results).to be_a(ArgumentError)
     end
   end
-=end
+  context "listcat" do
+    it "listcat(nil)" do
+      results = listrev(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "f" do
+    it "listrev(nil)" do
+      results = listrev(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
 end
