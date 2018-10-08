@@ -2,7 +2,10 @@ require __dir__ + "/spec_helper"
 require __dir__ + '/../fp02_02.rb'
 
 describe "演習2" do
-  describe "a"do
+=begin
+ a. 2 つの異なる実数 a、b を受け取り、より大きいほうを返す。
+=end
+  context "a"do
     it "a(10.100000001,0)" do
       results = a(10.100000001,0)
       expect(results).to eq 10.100000001
@@ -15,8 +18,16 @@ describe "演習2" do
       results = a(0,-1)
       expect(results).to eq 0
     end
+    it "a(-9999,88888888)" do
+      results = a(-9999,88888888)
+      expect(results).to eq 88888888
+    end
   end
-  describe "b" do
+  context "b" do
+=begin
+  b. 3 つの異なる実数 a、b、c を受け取り、最大のものを返す。(やる気があったら 4 つでやっ
+  てみてもよいでしょう。)
+=end
     it "b(1,-5,8.0)" do
       results = b(1,-5,8.0)
       expect(results).to eq 8.0
@@ -29,8 +40,16 @@ describe "演習2" do
       results = b(0.01,0.000000125,-2.0)
       expect(results).to eq 0.01
     end
+    it "b(-99999,0,10000000000)" do
+      results = b(-99999,0,10000000000)
+      expect(results).to eq 10000000000
+    end
   end
-  describe "c" do
+  context "c" do
+=begin
+  c. 実数を 1 つ受け取り、それが正なら「’positive’」、負なら「’negative’」、零なら
+  「’zero’」という文字列を返す。(注意! 文字列は’…’ または"…"で囲んで指定します。)
+=end
     it "c(-0.00000000125)" do
       results = c(-0.00000000125)
       expect(results).to eq "negative"
