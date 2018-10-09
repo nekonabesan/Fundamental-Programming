@@ -9,7 +9,9 @@ class Fp02_06
     begin
       raise ArgumentError if n == nil || n == 0
       n = n.to_i.abs
-      for i in 2..(n - 1) do
+      lim = n - 1
+      lim = (n / 2) + 1 if n / 2 > 2 
+      for i in 2..lim do
         return false if (n % i) == 0
       end
       return true

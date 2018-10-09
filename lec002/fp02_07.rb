@@ -8,16 +8,19 @@ def main(n)
     raise ArgumentError if n == nil
     obj = Fp02_06.new
     n = n.to_i.abs
-    result = []
+    results = Array.new
+    results.push(2)
+    i = 3
     #/==============計測開始==============/
     time = Benchmark.realtime do
-      for i in 2..n do
-        result.push(i) if obj.p(i)
+      while n >= i do
+        results.push(i) if obj.p(i)
+        i += 2
       end
     end
     puts("処理時間 #{time}s")
     #/=============計測終了===============/
-    return result
+    #return results
   rescue => e
     return e
   end
