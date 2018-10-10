@@ -9,16 +9,16 @@ require 'bigdecimal/util'
 def a_0(n)
   begin
     raise ArgumentError if n.nil? || 2 > n
-    obj = FpPno.new
+    obj = FpPno.new(n)
     n = n.to_i.abs
     result = []
     #/==============計測開始==============/
-    #time = Benchmark.realtime do
+    time = Benchmark.realtime do
       for i in 2..n do
         result.push(i) if obj.judgePno(i)
       end
-    #end
-    #puts("(全検索)処理時間 #{time}s")
+    end
+    puts("(全検索)処理時間 #{time}s")
     #/=============計測終了===============/
     return result
   rescue => e
@@ -35,12 +35,13 @@ def a_1(n)
   begin
     raise ArgumentError if n.nil? || 2 > n
     results = []
-    obj = FpPno.new
+    obj = FpPno.new(n)
     #/==============計測開始==============/
     time = Benchmark.realtime do
       for i in 2..n do
         sw = false
         #results.each{ |k| sw = true if i % k == 0 }
+        # 既知の素数と剰余を取る処理
         results.each do |k|
           if i % k == 0 then
             sw = true
@@ -53,7 +54,7 @@ def a_1(n)
     end
     puts("処理時間 #{time}s")
     #/=============計測終了===============/
-    #return results
+    return results
   rescue => e
     return e
   end
@@ -66,7 +67,7 @@ a. 改良版
 def a_2(n)
   begin
     raise ArgumentError if n.nil? || 2 > n
-    obj = FpPno.new
+    obj = FpPno.new(n)
     results = Array.new
     results.push(2)
     i = 3
@@ -75,6 +76,7 @@ def a_2(n)
       while n >= i do
         sw = false
         #results.each{ |k| sw = true if i % k == 0 }
+        # 既知の素数と剰余を取る処理
         results.each do |k|
           if i % k == 0 then
             sw = true
@@ -91,7 +93,7 @@ def a_2(n)
     end
     puts("処理時間 #{time}s")
     #/=============計測終了===============/
-    #return results
+    return results
   rescue => e
     return e
   end
@@ -108,20 +110,60 @@ b. 別の考え方として、N 未満の素数を打ち出すのに次の方針
 def b_1(n)
   begin
     raise ArgumentError if n.nil? || 2 > n
-    obj = FpPno.new
-    chk = Array.new(n,true)
+    obj = FpPno.new(n)
     results = Array.new
     #/==============計測開始==============/
-    #time = Benchmark.realtime do
+    time = Benchmark.realtime do
       for i in 2..n do
-        next if chk[i] == false
+        next if obj.chkNotPno(i) == false
         if obj.judgePno(i) == true then
-          chk.each_with_index{ |val,j| chk[j] = false if j % i == 0 }
+          obj.notPnoInAry(i)
           results.push(i)
         end
       end
-    #end
-    #puts("(全検索)処理時間 #{time}s")
+    end
+    puts("(全検索)処理時間 #{time}s")
+    #/=============計測終了===============/
+    return results
+  rescue => e
+    return e
+  end
+end
+
+=begin
+b. 改良版
+   偶数を検査対象から除外
+=end
+def b_2(n)
+  begin
+    raise ArgumentError if n.nil? || 2 > n
+    obj = FpPno.new(n)
+    chk = Array.new(n,true)
+    results = Array.new
+    # 2の倍数をfalseとして初期化
+    chk[2] = false
+    chk.each_with_index{ |val,i| chk[i] = false if i % 2 == 0 }
+    results.push(2)
+    j = 3
+    #/==============計測開始==============/
+    time = Benchmark.realtime do
+      while n >= j do
+        if chk[j] == false then
+          j += 2
+          next
+        end
+        if obj.judgePno2(j) == true then
+          k = j + 1
+          while n >= k do
+            chk[k] = false if k % j == 0
+            k += 1
+          end
+          results.push(j)
+        end
+        j += 2
+      end
+    end
+    puts("(全検索)処理時間 #{time}s")
     #/=============計測終了===============/
     return results
   rescue => e
