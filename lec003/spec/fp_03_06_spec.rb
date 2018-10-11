@@ -139,34 +139,34 @@ end
 describe "演習6" do
   context "a_0" do
     it "a_0(100)" do
-      results = a_1(3571)
+      results = a_0(3571)
       expect(results).to eq pnos
     end
     it "a_0(1)" do
-      results = a_1(1)
+      results = a_0(1)
       expect(results).to be_a(ArgumentError)
     end
     it "a_0(nil)" do
-      results = a_1(nil)
+      results = a_0(nil)
       expect(results).to be_a(ArgumentError)
     end
   end
   context "a_1" do
     it "a_1(100)" do
-      results = a_2(3571)
+      results = a_1(3571)
       expect(results).to eq pnos
     end
     it "a_1(1)" do
-      results = a_2(1)
+      results = a_1(1)
       expect(results).to be_a(ArgumentError)
     end
     it "a_1(nil)" do
-      results = a_2(nil)
+      results = a_1(nil)
       expect(results).to be_a(ArgumentError)
     end
   end
   context "a_2" do
-    it "a_2(100)" do
+    it "a_2(3571)" do
       results = a_2(3571)
       expect(results).to eq pnos
     end
@@ -180,7 +180,7 @@ describe "演習6" do
     end
   end
   context "b_1" do
-    it "b_1(100)" do
+    it "b_1(3571)" do
       results = b_1(3571)
       expect(results).to eq pnos
     end
@@ -194,7 +194,7 @@ describe "演習6" do
     end
   end
   context "b_2" do
-    it "b_2(100)" do
+    it "b_2(3571)" do
       results = b_2(3571)
       expect(results).to eq pnos
     end

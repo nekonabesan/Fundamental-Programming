@@ -159,7 +159,7 @@ def b_2(n)
     end
     puts("(b_2)処理時間 #{time}s")
     #/=============計測終了===============/
-    #return results
+    return results
   rescue => e
     return e
   end
