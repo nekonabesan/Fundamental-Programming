@@ -52,7 +52,7 @@ def a_1(n)
         results.push(i) if obj.judgePno(i) == true
       end
     end
-    puts("処理時間 #{time}s")
+    puts("(a_1)処理時間 #{time}s")
     #/=============計測終了===============/
     return results
   rescue => e
@@ -91,7 +91,7 @@ def a_2(n)
         i += 2
       end
     end
-    puts("処理時間 #{time}s")
+    puts("(a_2)処理時間 #{time}s")
     #/=============計測終了===============/
     return results
   rescue => e
@@ -115,14 +115,13 @@ def b_1(n)
     #/==============計測開始==============/
     time = Benchmark.realtime do
       for i in 2..n do
-        next if obj.chkNotPno(i) == false
+        next if obj.chkNotPno(i) == true
         if obj.judgePno(i) == true then
-          obj.notPnoInAry(i)
           results.push(i)
         end
       end
     end
-    puts("(全検索)処理時間 #{time}s")
+    puts("(b_1)処理時間 #{time}s")
     #/=============計測終了===============/
     return results
   rescue => e
@@ -144,28 +143,23 @@ def b_2(n)
     chk[2] = false
     chk.each_with_index{ |val,i| chk[i] = false if i % 2 == 0 }
     results.push(2)
-    j = 3
+    i = 3
     #/==============計測開始==============/
     time = Benchmark.realtime do
-      while n >= j do
-        if chk[j] == false then
-          j += 2
+      while n >= i do
+        if obj.chkNotPno(i) == true then
+          i += 2
           next
         end
-        if obj.judgePno2(j) == true then
-          k = j + 1
-          while n >= k do
-            chk[k] = false if k % j == 0
-            k += 1
-          end
-          results.push(j)
+        if obj.judgePno2(i) == true then
+          results.push(i)
         end
-        j += 2
+        i += 2
       end
     end
-    puts("(全検索)処理時間 #{time}s")
+    puts("(b_2)処理時間 #{time}s")
     #/=============計測終了===============/
-    return results
+    #return results
   rescue => e
     return e
   end
