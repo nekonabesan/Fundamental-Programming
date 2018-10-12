@@ -20,7 +20,7 @@ def a_0(n)
     end
     puts("(全検索)処理時間 #{time}s")
     #/=============計測終了===============/
-    return result
+    #return result
   rescue => e
     return e
   end
@@ -54,7 +54,7 @@ def a_1(n)
     end
     puts("(a_1)処理時間 #{time}s")
     #/=============計測終了===============/
-    return results
+    #return results
   rescue => e
     return e
   end
@@ -75,7 +75,6 @@ def a_2(n)
     time = Benchmark.realtime do
       while n >= i do
         sw = false
-        #results.each{ |k| sw = true if i % k == 0 }
         # 既知の素数と剰余を取る処理
         results.each do |k|
           if i % k == 0 then
@@ -93,7 +92,7 @@ def a_2(n)
     end
     puts("(a_2)処理時間 #{time}s")
     #/=============計測終了===============/
-    return results
+    #return results
   rescue => e
     return e
   end
@@ -123,7 +122,7 @@ def b_1(n)
     end
     puts("(b_1)処理時間 #{time}s")
     #/=============計測終了===============/
-    return results
+    #return results
   rescue => e
     return e
   end
@@ -159,7 +158,7 @@ def b_2(n)
     end
     puts("(b_2)処理時間 #{time}s")
     #/=============計測終了===============/
-    return results
+    #return results
   rescue => e
     return e
   end
