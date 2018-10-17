@@ -3,18 +3,29 @@ require __dir__ + '/../../../modules/fp_image.rb'
 class DrowImage
   def initialize
     @obj = FpImage.new
-    @c_reef = {0 => [47,79,54], 1 => [51,96,69]}
+    @c_reef = {
+      0 => [47,79,54],
+      1 => [51,96,69],
+      2 => [224,234,58],
+      3 => [209,232,41],
+      4 => [127,246,85],
+      5 => [0,255,65],
+      6 => [11,218,81],
+      7 => [107,191,63],
+      8 => [88,191,63],
+      9 => [34,195,80]
+    }
   end
 
-  def draw(sw,x0,y0,c = 0)
+  def draw(sw, x0, y0, c = 0)
     begin
       raise ArgumentError if sw.nil? || x0.nil? || y0.nil?
       if sw == 'tree1' then
         puts('tree1')
-        self.drowTree01(x0,y0,c)
+        self.drowTree01(x0, y0, c)
       elsif sw == 'tree2' then
         puts('tree2')
-        self.drowTree02(x0,y0,c)
+        self.drowTree02(x0, y0, c)
       else
         return false
       end
@@ -63,31 +74,31 @@ class DrowImage
     end
   end
 
-  def drowTree01(x0,y0,c = 0)
+  def drowTree01(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?
       # rectangle(x, y, w, h, r, g, b)
       @obj.rectangle(x0, y0 + 80, 4, 40, 93, 93, 33)
       # triangle(x0, y0, x1, y1, x2, y2, r, g, b)
-      @obj.triangle(x0, y0, x0 - 10, y0 + 40, x0 + 10, y0 + 40, @c_reef[0][0],@c_reef[0][1],@c_reef[0][2])
+      @obj.triangle(x0, y0, x0 - 10, y0 + 40, x0 + 10, y0 + 40, @c_reef[c][0],@c_reef[c][1],@c_reef[c][2])
       # triangle(x0, y0, x1, y1, x2, y2, r, g, b)
-      @obj.triangle(x0, y0 + 20, x0 - 15,y0 + 60, x0 + 15,y0 + 60, @c_reef[0][0],@c_reef[0][1],@c_reef[0][2])
+      @obj.triangle(x0, y0 + 20, x0 - 15,y0 + 60, x0 + 15,y0 + 60, @c_reef[c][0],@c_reef[c][1],@c_reef[c][2])
       # triangle(x0, y0, x1, y1, x2, y2, r, g, b)
-      @obj.triangle(x0, y0 + 50 ,x0 - 20 , y0 + 80, x0 + 20, y0 + 80, @c_reef[0][0],@c_reef[0][1],@c_reef[0][2])
+      @obj.triangle(x0, y0 + 50 ,x0 - 20 , y0 + 80, x0 + 20, y0 + 80, @c_reef[c][0],@c_reef[c][1],@c_reef[c][2])
       return true
     rescue => e
       return e
     end
   end
 
-  def drowTree02(x0,y0,c)
+  def drowTree02(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?
       # Tree Obj01
       # rectangle(x, y, w, h, r, g, b)
       @obj.rectangle(x0, y0 + 60, 4, 40, 93, 93, 33)
       # ellipse(x0, y0, prm_a, prm_b, r, g, b)
-      @obj.ellipse(x0, y0, 20, 50, @c_reef[1][0], @c_reef[1][1], @c_reef[1][2])
+      @obj.ellipse(x0, y0, 20, 50, @c_reef[c][0], @c_reef[c][1], @c_reef[c][2])
     rescue => e
       return e
     end
