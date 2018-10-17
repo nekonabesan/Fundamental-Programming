@@ -1,0 +1,303 @@
+基礎プログラミングおよび演習レポート ＃04
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/10/23
+
+[課題の再掲]
+演習 3 2 要素の配列を 2 つ並べた配列を 2 × 2 の行列として扱うことを考える。
+たとえば「[[1.0,0.0], [0.0, 1.0]]」は単位行列であり、
+一般に「[[a, b], [c, d]]」は次の行列を表す。
+a. 2 × 2 行列の RPN 電卓を作れ。加減算、乗算は作ること。
+b. さらに、転置行列、逆行列の演算も作ってみよ。
+c. 2 × 2 より大きな 3 × 3、できれば一般の N × N 行列の RPN 電卓を作ってみよ。
+
+[実施したこととその結果]
+◆実際に行列演算を組み立てる処理
+/==========================lec004/fp04_03.rb============================/
+require 'bigdecimal'
+require 'bigdecimal/util'
+require __dir__ + '/app/model/fp04_matrix.rb'
+
+=begin
+a. 2 × 2 行列の RPN 電卓を作れ。加減算、乗算は作ること。
+=end
+def a_add(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.add(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def a_sub(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.sub(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def a_mul(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.mul(left,right)
+  rescue => e
+    return e
+  end
+end
+
+=begin
+b. さらに、転置行列、逆行列の演算も作ってみよ。
+=end
+def b(array)
+  begin
+    raise ArgumentError if array.nil?
+    obj = Matrix.new
+    return obj.transpose(array)
+  rescue => e
+    return e
+  end
+end
+
+
+=begin
+c. 2 × 2 より大きな 3 × 3、できれば一般の N × N 行列の RPN 電卓を作ってみよ。
+=end
+def c_add(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.add(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def c_sub(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.sub(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def c_mul(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.mul(left,right)
+  rescue => e
+    return e
+  end
+end
+/=======================================================================/
+◆行列演算に必要な処理を集約したクラス
+/===================lec004/app/model/fp04_matrix.rb=====================/
+require 'bigdecimal'
+require 'bigdecimal/util'
+require __dir__ + '/app/model/fp04_matrix.rb'
+
+=begin
+a. 2 × 2 行列の RPN 電卓を作れ。加減算、乗算は作ること。
+=end
+def a_add(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.add(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def a_sub(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.sub(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def a_mul(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.mul(left,right)
+  rescue => e
+    return e
+  end
+end
+
+=begin
+b. さらに、転置行列、逆行列の演算も作ってみよ。
+=end
+def b(array)
+  begin
+    raise ArgumentError if array.nil?
+    obj = Matrix.new
+    return obj.transpose(array)
+  rescue => e
+    return e
+  end
+end
+
+
+=begin
+c. 2 × 2 より大きな 3 × 3、できれば一般の N × N 行列の RPN 電卓を作ってみよ。
+=end
+def c_add(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.add(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def c_sub(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.sub(left,right)
+  rescue => e
+    return e
+  end
+end
+
+def c_mul(left,right)
+  begin
+    raise ArgumentError if left.nil? || right.nil?
+    obj = Matrix.new
+    return obj.mul(left,right)
+  rescue => e
+    return e
+  end
+end
+/=======================================================================/
+◆テスト
+/======================lec004/spec/fp04_03_spec.rb======================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp04_03.rb'
+
+describe "演習3" do
+  context "a" do
+    it "a_mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])" do
+      results = a_mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])
+      expect(results).to eq [[4,5,6,7],[12,17,22,27],[20,29,38,47]]
+    end
+    it "a_mul(nil,[1,2])" do
+      results = a_mul(nil,[1,2])
+      expect(results).to be_a(ArgumentError)
+    end
+    it "a_mul([1,2],nil)" do
+      results = a_mul([1,2],nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "b" do
+    it "b([[1,1,1],[1,1,1]])" do
+      results = b([[1,1,1],[1,1,1]])
+      expect(results).to eq [[1, 1], [1, 1], [1, 1]]
+    end
+    it "transpose([[2,3,-1],[5,7,0]])" do
+      results = b([[2,3,-1],[5,7,0]])
+      expect(results).to eq [[2, 5], [3, 7], [-1, 0]]
+    end
+    it "transpose(nil)" do
+      results = b(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "c" do
+    it "c_mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])" do
+      results = c_mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])
+      expect(results).to eq [[4,5,6,7],[12,17,22,27],[20,29,38,47]]
+    end
+    it "c_mul(nil,[1,2])" do
+      results = c_mul(nil,[1,2])
+      expect(results).to be_a(ArgumentError)
+    end
+    it "c_mul([1,2],nil)" do
+      results = c_mul([1,2],nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+end
+/=======================================================================/
+/====================lec004/spec/fp04_matrix_spec.rb====================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../app/model/fp04_matrix.rb'
+
+describe "Class Matrix" do
+  obj = Matrix.new
+  context "mul" do
+    it "mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])" do
+      results = obj.mul([[0,1],[2,3],[4,5]],[[0,1,2,3],[4,5,6,7]])
+      expect(results).to match_array([[4,5,6,7],[12,17,22,27],[20,29,38,47]])
+    end
+    it "mul([[1,2],[3,4]],[[5,6],[7,8]])" do
+      results = obj.mul([[1,2],[3,4]],[[5,6],[7,8]])
+      expect(results).to match_array([[19,22],[43,50]])
+    end
+    it "mul(nil,[1,2])" do
+      results = obj.mul(nil,[1,2])
+      expect(results).to be_a(ArgumentError)
+    end
+    it "mul([1,2],nil)" do
+      results = obj.mul([1,2],nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "transpose" do
+    it "transpose([[1,1,1],[1,1,1]])" do
+      results = obj.transpose([[1,1,1],[1,1,1]])
+      expect(results).to match_array([[1, 1], [1, 1], [1, 1]])
+    end
+    it "transpose([[2,3,-1],[5,7,0]])" do
+      results = obj.transpose([[2,3,-1],[5,7,0]])
+      expect(results).to match_array([[2, 5], [3, 7], [-1, 0]])
+    end
+    it "transpose(nil)" do
+      results = obj.transpose(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+end
+/=======================================================================/
+[考察]
+◆行列演算の考え方
+・整数の演算処理に限って言えば通常の加減乗除
+・行列の演算処理には行数と列数に制約条件がある
+cf)積の場合左側の列数と右側の行数が等しくなければならない等
+行列演算の実装に際して先ず考慮すべき点は、引数として渡される行列(左、右)の正当性チェックの実装。
+次に設問について、2×2正方行列の演算処理とN×N正方行列又はN×M行列の演算処理には上記の観点から見て特段の差異は無い。
+◆実装について
+上記の通り、整数値の行列演算の場合考慮すべき点は引数として渡される行列が演算処理の前提となる行列演算の規約を満たすか否かに集約される。
+作業の進め方として、当初、単一のソース内に実装した条件判定のメソッドをクラスメソッドとして切り出した。
+次に各メソッドに直接実装していた計算処理をクラスメソッドとして切り出す事となった。
+結果的に作業開始時点から2～3回のリファクタリングを実施した。
+◆得られた知見
+本演習に関して言えば、実装内容自体は考慮に値しない単純な内容であったが、
+前述のように複数回のリファクタリングを繰り返す必要性があったため、
+成果物であるソースコードの流動性に比してテストコードの一貫性の恩恵を実感できた。
+◆結論
+一般に「テスト駆動開発」と言われる開発手法の有効性が確認できた。
+
+[アンケート]
+Q1. 配列が使いこなせるようになりましたか。
+
+Q2. 疑似コードを書くのと、Rubyに直すのと、打ち込んで動かすのとで掛かった手間の比率を教えてください。
+
+Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+特になし。
