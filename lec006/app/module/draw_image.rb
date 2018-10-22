@@ -1,8 +1,11 @@
 require __dir__ + '/../../../modules/fp_image.rb'
-
+=begin
+図形クラスを呼び出し風景オブジェクトを生成するクラス
+=end
 class DrowImage
   def initialize
     @obj = FpImage.new
+    # 葉の色相を配列として初期化
     @c_reef = {
       0 => [47,79,54],
       1 => [51,96,69],
@@ -35,9 +38,14 @@ class DrowImage
     end
   end
 
+=begin
+ディレクトリへ画像ファイルを出力するメソッド
+param String file name
+return bool
+=end
   def write(fname = 'test')
     begin
-      @obj.writeimage("img/test.ppm")
+      @obj.writeimage("img/" + fname + ".ppm")
       @onj = nil
       return true
     rescue => e
@@ -45,6 +53,9 @@ class DrowImage
     end
   end
 
+=begin
+背景画像生成メソッド
+=end
   def drawBackGroundImage
     begin
       #/=============================================/
@@ -74,6 +85,13 @@ class DrowImage
     end
   end
 
+=begin
+ 三角形と長方形を組み合わせて「木」を生成するメソッド
+ param int x座標
+ param int y座標
+ param int 葉の色
+ return bool
+=end
   def drowTree01(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?
@@ -91,6 +109,13 @@ class DrowImage
     end
   end
 
+=begin
+ 楕円と長方形を組み合わせて「木」を生成するメソッド
+ param int x座標
+ param int y座標
+ param int 葉の色
+ return bool
+=end
   def drowTree02(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?

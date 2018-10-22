@@ -1,5 +1,8 @@
 require __dir__ + '/app/module/draw_image.rb'
-
+=begin
+オブジェクトの生成をクラスへ切り分けた実装例
+※処理は簡素だが定型的なオブジェクトしか生成できない。
+=end
 def a
   obj = DrowImage.new
   obj.drawBackGroundImage
