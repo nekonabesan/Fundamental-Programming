@@ -5,12 +5,14 @@ class FpImage
     @img = Array.new(200) do
       Array.new(300) do @Pixel.new(255,255,255) end
     end
+    return true
   end
 
   def pset(x,y,r,g,b)
     if 0 <= x && x < 300 && 0 <= y && y < 200
       @img[y][x].r = r; @img[y][x].g = g; @img[y][x].b = b
     end
+    return true
   end
 
   def writeimage(name)
@@ -20,6 +22,7 @@ class FpImage
         a.each do |p| f.write(p.to_a.pack("ccc")) end
       end
     end
+    return true
   end
 
   def fillcircle(x0, y0, rad, r, g, b)
@@ -64,12 +67,18 @@ class FpImage
   end
 
   def rectangle(x, y, w, h, r, g, b)
-    j0 = (y - 0.5 * h).to_i
-    j1 = (y + 0.5 * h).to_i
-    i0 = (x - 0.5 * w).to_i
-    i1 = (x + 0.5 * w).to_i
-    j0.step(j1) do |j|
-      i0.step(i1) do |i| pset(i, j, r, g, b) end
+    begin
+      j0 = (y - 0.5 * h).to_i
+      j1 = (y + 0.5 * h).to_i
+      i0 = (x - 0.5 * w).to_i
+      i1 = (x + 0.5 * w).to_i
+      j0.step(j1) do |j|
+        i0.step(i1) do |i| pset(i, j, r, g, b) end
+      end
+      return true
+    rescue => e
+      return e
     end
   end
+
 end
