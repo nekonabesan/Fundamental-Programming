@@ -1,10 +1,10 @@
 ﻿@startuml
 
-FpImage - fp06_01 : Shape >
+FpImage --|> fp06_01 : Shape >
 
 class FpImage {
 	- {field} Struct Pixel
-	- {field} Array img
+	- {field} ArrayList img
 	+ {method} initialize() :void
 	+ {method} pset(number x,number y,number r,number g,number b)
 	+ {method} fillcircle(number x0, nuy0, rad, r, g, b)
