@@ -1,1 +1,5 @@
 */coverage/
+*.o
+*.gcda
+*.gcno
+*.exe
