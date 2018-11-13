@@ -8,96 +8,6 @@ require '../modules/fp_module.rb'
 せよ。円周率の例題を活用してもよいが、できれば別の関数を積分するプログラムを作って検
 討することが望ましい。
 =end
-def a(n)
-  begin
-    raise ArgumentError if n.nil?
-    m =  Array.new
-    results = Array.new
-    # ミラー–ラビン素数判定法を実行
-    a = rabin_miller(n)
-    a.each_with_index { |(key,val),i| m.push(key.to_i) if val == true }
-    # ミラー–ラビン素数判定法の戻り値を検証
-    results = primality_test(m)
-    #File.open("fp08_03_results.txt", mode = "w"){|f|
-    #  f.write(results)
-    #}
-    return results
-  rescue => e
-    return e
-  end
-end
-
-
-def primality_test(a)
-  begin
-    raise ArgumentError if a.nil?
-    results = Array.new
-    a.each_with_index do |val,i|
-      for j in 2..(val - 1) do
-        results.push(val) if val % j == 0
-      end
-    end
-    return results
-  rescue => e
-    return e
-  end
-end
-
-
-def rabin_miller(n)
-  begin
-    raise ArgumentError if n.nil?
-    results = {}
-    a = Array.new(n) {|i| i }
-    a.each_with_index do |val,i|
-      if prime(val) == true then
-        results[val.to_s] = true
-      else
-        results[val.to_s] = false
-      end
-    end
-    return results
-  rescue => e
-    return e
-  end
-end
-
-
-def prime(n)
-  begin
-    raise ArgumentError if n.nil?
-    return true if n == 2
-    return false if n == 1 || n & 1 == 0
-    d = n-1
-    d >>= 1 while d & 1 == 0
-    20.times do
-      a = rand(n-2) + 1
-      t = d
-      y = pow(a,t,n)
-      while t != n-1 && y != 1 && y != n-1
-        y = (y * y) % n
-        t <<= 1
-      end
-      return false if y != n-1 && t & 1 == 0
-    end
-    return true
-  rescue => e
-    return e
-  end
-end
-
-
-def pow(base,power,mod)
-  result = 1
-  while power > 0
-    result = (result * base) % mod if power & 1 == 1
-    base = (base * base) % mod
-    power >>= 1;
-  end
-  return result
-end
-
-
 def pirandom(n)
   begin
     raise ArgumentError if n.nil?
@@ -113,20 +23,34 @@ def pirandom(n)
   end
 end
 
-
-def makeprm(n)
+def integrandom(n)
   begin
     raise ArgumentError if n.nil?
-    results = Array.new(0)
-    for i in 2..n do
-      flg = true
-      for j in 2..(i - 1) do
-        flg = false if i % j == 0
-        break if j > (i /2)
+    count = 0
+    n.times do
+      x = rand()
+      y = rand()
+      if y < x then
+        count = count + 1
       end
-      results.push(i) if flg == true
     end
-    return results
+    return count / n.to_f
+  rescue => e
+    return e
+  end
+end
+
+def funcrand1(n)
+  begin
+    raise ArgumentError if n.nil?
+    count = 0
+    n.times do
+      x = rand()
+      y = rand()
+      puts(x**2)
+      count = count + 1 if  y <= -((x**2) - 9)
+    end
+    return count
   rescue => e
     return e
   end
