@@ -1,3 +1,12 @@
+//-----------------------------------------------------------------------------//
+// Google Test用includeヘッダ
+// 本番ビルド時はコメントアウト
+//-----------------------------------------------------------------------------//
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
 const int TRUE = 1;
 const int FALSE = 0;
 //const int DENOMINATOR = 10000000;

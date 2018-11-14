@@ -3,3 +3,6 @@
 *.gcda
 *.gcno
 *.exe
+*.out
+googletest-release-*/
+gtest/
