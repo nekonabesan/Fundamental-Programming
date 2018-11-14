@@ -43,14 +43,23 @@ end
 def funcrand1(n)
   begin
     raise ArgumentError if n.nil?
-    count = 0
+    cnt = 0
+    results = Array.new
     n.times do
-      x = rand()
-      y = rand()
-      puts(x**2)
-      count = count + 1 if  y <= -((x**2) - 9)
+      x = rand(-3.0...3.0)
+      y = rand(0.0...9.0)
+      if y <= (-1 * (x**2 - 9)) then
+        cnt += 1
+      end
     end
-    return count
+    result = ((1.0/n.to_f) * cnt.to_f * 54.0)
+    results.push(result)
+    if 36 < result then
+      results.push(result - 36)
+    else
+      results.push(36 - result)
+    end
+    return results
   rescue => e
     return e
   end
