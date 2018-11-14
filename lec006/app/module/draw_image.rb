@@ -1,7 +1,7 @@
 require __dir__ + '/../../../modules/fp_image.rb'
-=begin
-図形クラスを呼び出し風景オブジェクトを生成するクラス
-=end
+#/===================================================/#
+# 図形クラスを呼び出し風景オブジェクトを生成するクラス
+#/===================================================/#
 class DrowImage
   def initialize
     @obj = FpImage.new
@@ -38,11 +38,11 @@ class DrowImage
     end
   end
 
-=begin
-ディレクトリへ画像ファイルを出力するメソッド
-param String file name
-return bool
-=end
+  #/===================================================/#
+  # ディレクトリへ画像ファイルを出力するメソッド
+  # param String file name
+  # return bool
+  #/===================================================/#
   def write(fname = 'test')
     begin
       @obj.writeimage("img/" + fname + ".ppm")
@@ -53,9 +53,11 @@ return bool
     end
   end
 
-=begin
-背景画像生成メソッド
-=end
+  #/===================================================/#
+  # 背景画像生成メソッド
+  # param void
+  # return bool
+  #/===================================================/#
   def drawBackGroundImage
     begin
       #/=============================================/
@@ -80,18 +82,19 @@ return bool
       #/=============================================/
       @obj.ellipse(100,160,60,20,0,0,255)
       @obj.ellipse(0,180,120,40,0,0,255)
+      return true
     rescue => e
       return e
     end
   end
 
-=begin
- 三角形と長方形を組み合わせて「木」を生成するメソッド
- param int x座標
- param int y座標
- param int 葉の色
- return bool
-=end
+  #/===================================================/#
+  # 三角形と長方形を組み合わせて「木」を生成するメソッド
+  # param int x座標
+  # param int y座標
+  # param int 葉の色
+  # return bool
+  #/===================================================/#
   def drowTree01(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?
@@ -109,13 +112,13 @@ return bool
     end
   end
 
-=begin
- 楕円と長方形を組み合わせて「木」を生成するメソッド
- param int x座標
- param int y座標
- param int 葉の色
- return bool
-=end
+  #/===================================================/#
+  # 楕円と長方形を組み合わせて「木」を生成するメソッド
+  # param int x座標
+  # param int y座標
+  # param int 葉の色
+  # return bool
+  #/===================================================/#
   def drowTree02(x0, y0, c = 0)
     begin
       raise ArgumentError if x0.nil? || y0.nil?
