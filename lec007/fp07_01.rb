@@ -44,11 +44,13 @@ def selectionsort(a)
   begin
     raise ArgumentError if a.nil?
     #/==============計測開始==============/
-    time = Benchmark.realtime do
+    #time = Benchmark.realtime do
       s = a.size.to_i - 1
-      a.each_with_index{ |var,i| a = swap(a,i,arraminrange(a,i,s)) }
-    end
-    puts("処理時間 #{time}s")
+      for i in 0..s do
+        a = swap(a,i,arraminrange(a,i,s))
+      end
+    #end
+    #puts("処理時間 #{time}s")
     #/=============計測終了===============/
     return a
   rescue => e

@@ -184,4 +184,30 @@ describe "演習3" do
       expect(results).to match(/^[0]{1}\.[0]+$/)
     end
   end
+  describe "f" do
+    it "q_003_f(1,1000)" do
+      results = q_003_f(1,1000)
+      expect(results.to_i).to eq 1
+    end
+    it "q_003_f(4,100000)" do
+      results = q_003_f(4,100000)
+      expect(results.to_i).to eq 2
+    end
+    it "q_003_f(0,100000)" do
+      results = q_003_f(0,100000)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "q_003_f(nil,100000)" do
+      results = q_003_f(nil,100000)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "q_003_f(10,0)" do
+      results = q_003_f(10,0)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "q_003_f(10,nil)" do
+      results = q_003_f(10,nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
 end

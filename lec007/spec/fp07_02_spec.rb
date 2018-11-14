@@ -38,17 +38,17 @@ describe "演習2" do
   describe "rewritea" do
     it "" do
       results = rewritea([4,6,1,7,3,9,8],0,1,6)
-      expect(results).to match_array([6,4,1,7,3,9,8])
+      expect(results).to eq [6,4,1,7,3,9,8]
     end
   end
   describe "insertionsort(a)" do
     it "insertionsort([6,4,1,7,3,9,8])" do
       results = insertionsort([6,4,1,7,3,9,8])
-      expect(results).to match_array([1,3,4,6,7,8,9])
+      expect(results).to eq [1,3,4,6,7,8,9]
     end
     it "insertionsort([18,13,12,15,20,14])" do
       results = insertionsort([18,13,12,15,20,14])
-      expect(results).to match_array([12,13,14,15,18,20])
+      expect(results).to eq [12,13,14,15,18,20]
     end
   end
 end

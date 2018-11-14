@@ -45,13 +45,14 @@ def c
   end
 end
 
-
-
 =begin
 d. その他、自分の好きな形を塗るメソッド。
 =end
 def d
   begin
+    obj = FpImage.new
+    obj.rectangle(100,110,100,20,0,0,255)
+    obj.writeimage("img/3d.ppm")
     return true
   rescue => e
     return e

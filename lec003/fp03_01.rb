@@ -58,7 +58,7 @@ def c
   begin
     result = []
     for i in 0..99 do
-      if i % 3 == 0 then
+      if i % 3 == 0 || i.to_s.match(/3/) then
         result.push('aho')
       elsif i.to_s.match("3$") then
         result.push('aho')

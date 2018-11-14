@@ -1,5 +1,8 @@
 require __dir__ + '/../modules/fp_image.rb'
-
+=begin
+処理の中でオブジェクトを生成する実装例
+※実装は煩雑だが処理固有のオブジェクトを定義できる
+=end
 def a
   begin
     obj = FpImage.new
@@ -105,6 +108,28 @@ def a
     obj.rectangle(280,160,4,40,124,96,53)
     # ellipse(x0, y0, prm_a, prm_b, r, g, b)
     obj.ellipse(280,100,20,40,11,218,81)
+=begin
+ 家の描画
+=end
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(220,120,20,80,127,37,9)
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(200,150,82,52,0,0,0)
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(200,150,80,50,255,249,177)
+    # triangle(x0, y0, x1, y1, x2, y2, r, g, b)
+    obj.triangle(200,90,150,130,250,130,255,0,0)
+    # triangle(x0, y0, x1, y1, x2, y2, r, g, b)
+    obj.triangle(200,100,160,130,240,130,255,249,177)
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(185,145,40,30,132,90,18)
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(176,145,16,26,211,237,251)
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(194,145,16,26,211,237,251)
+
+    # rectangle(x, y, w, h, r, g, b)
+    obj.rectangle(225,150,20,40,132,90,18)
 
 
     obj.writeimage("img/6a.ppm")
