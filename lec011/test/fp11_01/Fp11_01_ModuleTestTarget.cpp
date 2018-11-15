@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include "fp11_01_module.c"
+#include "../../modules/fp11_01_module.c"
 
 // テストグループを定義
 TEST_GROUP(TestFuncGroup)
