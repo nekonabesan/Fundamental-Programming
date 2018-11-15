@@ -27,14 +27,12 @@ TEST_GROUP(TestFuncGroup)
 TEST(TestFuncGroup, a)
 {
     std::cout << "a" << std::endl;
-    double ret = a(10, 10);
-    CHECK_EQUAL(10, ret);
+    DOUBLES_EQUAL(20.90, 20.99, a(2.0, 5.0));
 }
 
 // テストを実行するメソッド
 TEST(TestFuncGroup, b)
 {
     std::cout << "b" << std::endl;
-    double ret = b(10);
-    CHECK_EQUAL(20, ret);
+    DOUBLES_EQUAL(2.0, 2.0, b(4.0));
 }
