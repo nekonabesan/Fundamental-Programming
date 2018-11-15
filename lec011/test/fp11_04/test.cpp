@@ -20,14 +20,25 @@ protected:
 };
 
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
-TEST_F(fixtureName, testOk)
+TEST_F(fixtureName, sqrt01)
 {
-    EXPECT_EQ(0.0, calc04(2.0, 10));
-    EXPECT_EQ(1.0, calc04(2.0, 100));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 100));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 1000));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10000));
+}
+TEST_F(fixtureName, sqrt02)
+{
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 100));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 1000));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10000));
 }
 // あえて失敗するテストケースも書いておく。
-TEST_F(fixtureName, testNg)
+TEST_F(fixtureName, sqrt03)
 {
-    EXPECT_EQ(1.0, calc04(3.0, 10));
-    EXPECT_EQ(0.0, calc04(3.0, 100));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 100));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 1000));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10000));
 }
