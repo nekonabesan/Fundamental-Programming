@@ -6,3 +6,4 @@
 *.out
 googletest-release-*/
 gtest/
+*.ut
