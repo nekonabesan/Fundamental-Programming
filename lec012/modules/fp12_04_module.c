@@ -1,3 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+#define RMAX 1000
+#define TRUE 1
+#define FALSE 0
+
 //============================================================================//
 // 演習 4 上の例題を打ち込んでそのまま動かしなさい
 // (最初はトレースバック無しの簡単な方を動かし、
@@ -8,7 +17,11 @@ int room1(int i, int *roomprice) {
   return (i < 0) ? 0 : roomprice[i];
 }
 
-void initialize(int *roomprice, int *roomsel, int rmax) {
+int initialize(int *roomprice, int *roomsel, int rmax) {
+  if(roomprice == NULL || roomsel == NULL || rmax == 0){
+    return FALSE;
+  }
+
   int i;
   for(i = 1; i < rmax; ++i) {
     int min = room1(i - 1, roomprice) + 5000, sel = 1;
@@ -21,4 +34,5 @@ void initialize(int *roomprice, int *roomsel, int rmax) {
     roomprice[i] = min;
     roomsel[i] = sel;
   }
+  return TRUE;
 }
