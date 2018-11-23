@@ -8,12 +8,12 @@
 # -lpthreadをつけることにも注意。
 # makeかmake allしたらビルドして実行まで行います。
 all:
-			gcc -c ../../modules/fp12_04_module.c
-			g++ test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp12_04_module.o
+			gcc -c ../../modules/fp12_05_module.c
+			g++ fp12_05_test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp12_05_module.o
 			./a.out
 gtest-gen:
 			python googletest-release-1.8.1/googletest/scripts/fuse_gtest_files.py ./
 clean:
 
 			rm -f ./a.out
-			rm -f ./fp12_04_module.o
+			rm -f ./fp12_05_module.o
