@@ -52,7 +52,9 @@ void makebrighter(struct color *p){
 // b. 先の演習のreversecolorと同じ変化を施す関数void makereverse(struct color *p)。
 //============================================================================//
 void makereverse(struct color *p){
-
+  p->r = 255 - p->r;
+  p->g = 255 - p->g;
+  p->b = 255 - p->b;
 }
 
 //============================================================================//
@@ -60,11 +62,21 @@ void makereverse(struct color *p){
 // void makerot1(structcolor *p)、void makerot2(struct color *p)。
 //============================================================================//
 void makerot1(struct color *p){
-
+  short r = p->b;
+  short g = p->r;
+  short b = p->g;
+  p->r = r;
+  p->g = g;
+  p->b = b;
 }
 
 void makerot2(struct color *p){
-
+  short r = p->g;
+  short g = p->b;
+  short b = p->r;
+  p->r = r;
+  p->g = g;
+  p->b = b;
 }
 
 //============================================================================//
@@ -72,7 +84,31 @@ void makerot2(struct color *p){
 // void addtocolor(struct color *p, int dr, int dg, int db)。
 //============================================================================//
 void addtocolor(struct color *p, int dr, int dg, int db){
+  int r = (int)p->r;
+  int g = (int)p->g;
+  int b = (int)p->b;
+  r += dr;
+  g += dg;
+  b += db;
 
+  if(r < 0){
+    r = 0;
+  } else if(255 < r){
+    r = 255;
+  }
+  if(g < 0){
+    g = 0;
+  } else if(255 < g){
+    g = 255;
+  }
+  if(b < 0){
+    b = 0;
+  } else if(255 < b){
+    b = 255;
+  }
+  p->r = (short)r;
+  p->g = (short)g;
+  p->b = (short)b;
 }
 
 //============================================================================//

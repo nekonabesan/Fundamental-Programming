@@ -75,14 +75,78 @@ TEST_F(fixtureName, makebrighter)
 //============================================================================//
 TEST_F(fixtureName, makereverse)
 {
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  // test01
+  p->r = 0;
+  p->g = 128;
+  p->b = 255;
+  makereverse(p);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 127);
+  EXPECT_EQ((short)p->b, 0);
+  // test02
+  p->r = 255;
+  p->g = 0;
+  p->b = 128;
+  makereverse(p);
+  EXPECT_EQ((short)p->r, 0);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 127);
+  // test03
+  p->r = 128;
+  p->g = 255;
+  p->b = 0;
+  makereverse(p);
+  EXPECT_EQ((short)p->r, 127);
+  EXPECT_EQ((short)p->g, 0);
+  EXPECT_EQ((short)p->b, 255);
+  // 領域開放
+  free(p);
 }
 
 //============================================================================//
 // c. 先の演習のrot1color、rot2color と同様の変化をおこなう関数
 // void makerot1(structcolor *p)、void makerot2(struct color *p)。
+// 
 //============================================================================//
+TEST_F(fixtureName, makerot1)
+{
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  // test01
+  p->r = 0;
+  p->g = 128;
+  p->b = 255;
+  makerot1(p);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 0);
+  EXPECT_EQ((short)p->b, 128);
+  // test02
+  makerot1(p);
+  EXPECT_EQ((short)p->r, 128);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 0);
+  // 領域開放
+  free(p);
+}
+
 TEST_F(fixtureName, makerot2)
 {
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  // test01
+  p->r = 0;
+  p->g = 128;
+  p->b = 255;
+  makerot2(p);
+  EXPECT_EQ((short)p->r, 128);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 0);
+  // test02
+  makerot2(p);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 0);
+  EXPECT_EQ((short)p->b, 128);
+  // 領域開放
+  free(p);
 }
 
 //============================================================================//
@@ -91,6 +155,40 @@ TEST_F(fixtureName, makerot2)
 //============================================================================//
 TEST_F(fixtureName, addtocolor)
 {
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  // test01
+  p->r = 0;
+  p->g = 0;
+  p->b = 0;
+  addtocolor(p, 10, 10, 10);
+  EXPECT_EQ((short)p->r, 10);
+  EXPECT_EQ((short)p->g, 10);
+  EXPECT_EQ((short)p->b, 10);
+  // test02
+  addtocolor(p, -10, -10, -10);
+  EXPECT_EQ((short)p->r, 0);
+  EXPECT_EQ((short)p->g, 0);
+  EXPECT_EQ((short)p->b, 0);
+  // test03
+  addtocolor(p, -10, -10, -10);
+  EXPECT_EQ((short)p->r, 0);
+  EXPECT_EQ((short)p->g, 0);
+  EXPECT_EQ((short)p->b, 0);
+  // test04
+  p->r = 245;
+  p->g = 245;
+  p->b = 245;
+  addtocolor(p, 10, 10, 10);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 255);
+  // test05
+  addtocolor(p, 1, 1, 1);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 255);
+  // 領域開放
+  free(p);
 }
 
 //============================================================================//

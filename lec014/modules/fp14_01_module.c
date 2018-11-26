@@ -76,7 +76,7 @@ struct color reversecolor(struct color c){
 //============================================================================//
 // d. R の値を G に、G の値を B に、B の値を R にコピーすることで、
 // もとと明るさが同じくらいだけど色調が違う色ができるはずである。
-// これをおこなう関数 struct colorrot1color(struct color c)。
+// これをおこなう関数 struct color rot1color(struct color c)。
 //============================================================================//
 struct color rot1color(struct color c){
   struct color result;
