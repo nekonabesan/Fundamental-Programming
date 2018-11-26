@@ -1,0 +1,52 @@
+title Fp06_01bの動作イメージ
+hide footbox
+
+participant "an CreateShape" as FpImage
+participant "an CreateObject" as FpImage
+participant "an CreateObject" as DrowImage
+participant  "BackgroundImage" as BackgroundImage
+participant "StructPixel" as Pixel
+participant "an Fp06_01b" as Fp06_01b
+
+activate DrowImage
+
+activate FpImage
+
+
+'背景画像'
+Fp06_01b -> DrowImage : RequestBackGroundObject
+DrowImage -> FpImage : RequestTriangle
+FpImage -> DrowImage : Triangle
+DrowImage -> BackgroundImage : MountainsObject
+ref over DrowImage, BackgroundImage
+山脈
+end ref
+FpImage -> DrowImage : Requestfillcircle
+FpImage -> DrowImage : fillcircle
+FpImage -> BackgroundImage : LakeObject
+ref over DrowImage, BackgroundImage
+湖
+end ref
+DrowImage -> Pixel : BackgroundObject
+ref over DrowImage, Pixel
+背景画像
+end ref
+
+'木Object'
+Fp06_01b -> DrowImage : RequestTreeObject
+DrowImage -> FpImage : RequestTriangle
+FpImage -> DrowImage : Triangle
+DrowImage -> FpImage : RequestRectangle
+FpImage -> DrowImage : Rectangle
+DrowImage -> Pixel : TreeObject
+ref over DrowImage, Pixel
+木(オブジェクト)
+end ref
+
+Fp06_01b -> DrowImage : Drow
+
+Pixel -> DrowImage : Construct
+DrowImage -> PpmImageFile : DrowImage
+ref over DrowImage, PpmImageFile
+PPM形式の画像ファイル
+end ref

@@ -98,8 +98,7 @@ int h(int a,int b,int c){
   int array[3] = {a, b, c};
   int result = 0;
   int x = min(array,3);
-  int i = min(array,3);
-  for(int i = 0; i < 3; i++){
+  for(int i = min(array,3); i < 3; i++){
     if(array[i] != x && array[i] != x){
       result = array[i];
     }
