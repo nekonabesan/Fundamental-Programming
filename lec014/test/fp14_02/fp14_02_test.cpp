@@ -25,6 +25,82 @@ protected:
 
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
 // char mystrlen(char s[]);
-TEST_F(fixtureName, mystrlen)
+TEST_F(fixtureName, makedarker)
+{
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  p->r = 255;
+  p->g = 255;
+  p->b = 255;
+  makedarker(p);
+  EXPECT_EQ((short)p->r, 127);
+  EXPECT_EQ((short)p->g, 127);
+  EXPECT_EQ((short)p->b, 127);
+  //
+  free(p);
+}
+
+//============================================================================//
+// a. 色を明るく変化させる関数 void makebrighter(struct color *p)。
+//============================================================================//
+TEST_F(fixtureName, makebrighter)
+{
+  struct color *p = (struct color *)malloc(1 * sizeof(struct color));
+  // test01
+  p->r = 0;
+  p->g = 0;
+  p->b = 0;
+  makebrighter(p);
+  EXPECT_EQ((short)p->r, 10);
+  EXPECT_EQ((short)p->g, 10);
+  EXPECT_EQ((short)p->b, 10);
+  // test02
+  makebrighter(p);
+  EXPECT_EQ((short)p->r, 20);
+  EXPECT_EQ((short)p->g, 20);
+  EXPECT_EQ((short)p->b, 20);
+  // test03
+  p->r = 255;
+  p->g = 255;
+  p->b = 255;
+  makebrighter(p);
+  EXPECT_EQ((short)p->r, 255);
+  EXPECT_EQ((short)p->g, 255);
+  EXPECT_EQ((short)p->b, 255);
+  // 領域開放
+  free(p);
+}
+
+//============================================================================//
+// b. 先の演習のreversecolorと同じ変化を施す関数void makereverse(struct color *p)。
+//============================================================================//
+TEST_F(fixtureName, makereverse)
 {
 }
+
+//============================================================================//
+// c. 先の演習のrot1color、rot2color と同様の変化をおこなう関数
+// void makerot1(structcolor *p)、void makerot2(struct color *p)。
+//============================================================================//
+TEST_F(fixtureName, makerot2)
+{
+}
+
+//============================================================================//
+// d. RGB 値の増分 (マイナスでもよい) を受け取り、その分だけそれぞれの成分を増やす関数
+// void addtocolor(struct color *p, int dr, int dg, int db)。
+//============================================================================//
+TEST_F(fixtureName, addtocolor)
+{
+}
+
+//============================================================================//
+// e. RGB 値それぞれに-10～10 の範囲のランダムな値を足すことで元とちょっとだけ違う色に
+// する関数 void varcolor(struct color *p)。
+//============================================================================//
+TEST_F(fixtureName, varcolor)
+{
+}
+
+//============================================================================//
+// f. その他色の構造体のアドレスを受け取り、好きな変化を施す関数。
+//============================================================================//
