@@ -5,17 +5,191 @@
 提出日付:2018/12/09
 
 [課題の再掲]
+「演習 2」～「演習 5」の (小) 課題から選択して 1 つ以上プログラムを作り、レポートを提出しな
+さい。プログラムと、課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が含
+まれること。アンケートの回答もおこなうこと。
+
+演習 2 次のような機能と使い方を持つクラスを作成せよ。使用例の通りに使えることを確認すること。
+a. 「覚える」機能を持つクラス Memory。put(x) で与えた容を記憶し、get で取り出す。
+b. 「文字列を連結していく」クラス Concat。add(s) で文字列 sを今まで覚えているものに連結する (最初は空文字列)。
+  get で現在覚えている文字列を返す。reset で覚えている文字列を空文字列にリセット。
+  (文字列どうしを連結するのは「+」でできます。)
+c. 「最大 2 つ覚える」機能を持つクラス Memory2。put(x) で新しい内容を記憶させ、get で
+  取り出す。2 回取り出すと 2 回目はより古い内容が出てくる。取り出した値は忘れる。覚え
+  ている以上に取り出すと nil が返る (興味があれば「最大 N 個覚える」をやってもよい)。
+
 
 
 [実施したこととその結果]
 ■ソースコード
+/===================lec009/app/modeles/memory.rb================/
+class Memory
+  def initialize
+    @feeld
+  end
+
+  def put(var)
+    @feeld = var
+  end
+
+  def get
+    return @feeld
+  end
+end
+/===============================================================/
+/==================lec009/app/modeles/memory2.rb================/
+=begin
+c. 「最大 2 つ覚える」機能を持つクラス Memory2。put(x) で新しい内容を記憶させ、get で
+取り出す。2 回取り出すと 2 回目はより古い内容が出てくる。取り出した値は忘れる。覚え
+ている以上に取り出すと nil が返る (興味があれば「最大 N 個覚える」をやってもよい)。
+=end
+class Memory2
+  def initialize
+    @feeld1 = nil
+    @feeld2 = nil
+  end
+
+  def put(n)
+    @feeld2 = @feeld1
+    @feeld1 = n
+  end
+
+  def get
+    result = @feeld1
+    @feeld1 = @feeld2
+    @feeld2 = nil
+    return result
+  end
+
+end
+/===============================================================/
+/==================lec009/app/modeles/memory2.rb================/
+=begin
+b. 「文字列を連結していく」クラス Concat。add(s) で文字列 s を今まで覚えているものに
+連結する (最初は空文字列)。get で現在覚えている文字列を返す。reset で覚えている文
+字列を空文字列にリセット。(文字列どうしを連結するのは「+」でできます。)
+=end
+class Concat
+  def initialize
+    @feeld = ""
+  end
+
+  def add(str)
+    @feeld = @feeld + str.to_s
+  end
+
+  def get
+    return @feeld
+  end
+
+  def reset
+    @feeld = ""
+  end
+
+end
 /===============================================================/
 /===============================================================/
-/===============================================================/
+■テストコード
+/===================lec009/spec/fp09_03_spec.rb=================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp09_02.rb'
+require __dir__ + '/../app/models/memory.rb'
+require __dir__ + '/../app/models/concat.rb'
+require __dir__ + '/../app/models/memory2.rb'
+=begin
+演習 2 次のような機能と使い方を持つクラスを作成せよ。使用例の通りに使えることを確認すること。
+=end
+=begin
+a. 「覚える」機能を持つクラス Memory。put(x) で与えた容を記憶し、get で取り出す。
+=end
+describe "演習 2" do
+  context "Memory" do
+    obj = Memory.new
+    obj.put(5)
+    it "get 5" do
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get 5" do
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get 10" do
+      obj.put(10)
+      results = obj.get
+      expect(results).to eq 10
+    end
+  end
+  context "Concat" do
+    obj = Concat.new
+    obj.add("This")
+    it "add(This)" do
+      results = obj.get
+      expect(results).to eq "This"
+    end
+    it "add(is)" do
+      obj.add("is")
+      results = obj.get
+      expect(results).to eq "Thisis"
+    end
+    it "add(a)" do
+      obj.add("a")
+      results = obj.get
+      expect(results).to eq "Thisisa"
+    end
+    it "reset" do
+      obj.reset
+      obj.add("pen")
+      results = obj.get
+      expect(results).to eq "pen"
+    end
+  end
+  context "Memory2" do
+    obj = Memory2.new
+    it ".put(1)" do
+      obj.put(1)
+      results = obj.get
+      expect(results).to eq 1
+    end
+    it "put(3)" do
+      obj.put(3)
+      obj.put(5)
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq 3
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq nil
+    end
+    it "put(7)->put(9)->get" do
+      obj.put(7)
+      obj.put(9)
+      results = obj.get
+      expect(results).to eq 9
+    end
+    it "put(11)->get" do
+      obj.put(11)
+      results = obj.get
+      expect(results).to eq 11
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq 7
+    end
+  end
+end
 /===============================================================/
 [考察]
 
+
 [アンケート]
-Q1. クラスの概念やその機能について納得しましたか。
-Q2. オブジェクト指向というものにどのような感想を持ちましたか。
-Q3. 本日の全体的な感想と今後の要望をお書きください。
+Q1. クラス定義が書けるようになりましたか。
+ある程度。
+Q2. オブジェクト指向について納得しましたか。
+ある程度。
+Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。
