@@ -17,11 +17,12 @@ b. 「文字列を連結していく」クラス Concat。add(s) で文字列 s�
 c. 「最大 2 つ覚える」機能を持つクラス Memory2。put(x) で新しい内容を記憶させ、get で
   取り出す。2 回取り出すと 2 回目はより古い内容が出てくる。取り出した値は忘れる。覚え
   ている以上に取り出すと nil が返る (興味があれば「最大 N 個覚える」をやってもよい)。
-
+演習 3 有理数クラスをそのまま打ち込んで動かせ。動いたら、四則の他の演算も追加し、動作を確認せよ。
+  できれば、これを用いて浮動小数点では正確に行えない「実用的な」計算が正確にできることを確認してみよ。
 
 
 [実施したこととその結果]
-■ソースコード
+■ソースコード(演習2)
 /===================lec009/app/modeles/memory.rb================/
 class Memory
   def initialize
@@ -90,7 +91,7 @@ end
 /===============================================================/
 /===============================================================/
 ■テストコード
-/===================lec009/spec/fp09_03_spec.rb=================/
+/===================lec009/spec/fp09_02_spec.rb=================/
 require __dir__ + "/spec_helper"
 require __dir__ + '/../fp09_02.rb'
 require __dir__ + '/../app/models/memory.rb'
@@ -183,7 +184,213 @@ describe "演習 2" do
   end
 end
 /===============================================================/
+■ソースコード(演習3)
+/===================lec009/app/modeles/ratio.rb=================/
+=begin
+演習 3 有理数クラスをそのまま打ち込んで動かせ。
+動いたら、四則の他の演算も追加し、動作を確認せよ。
+できれば、これを用いて浮動小数点では正確に行えない「実用的な」計算が正確にで
+きることを確認してみよ。
+=end
+class Ratio
+  begin
+    def initialize(a, b = 1)
+      if b == 0 then
+        @a = 1
+      end
+      if a == 0 then
+        @b = 1;
+      end
+      @a = a.to_i
+      @b = b.to_i
+      if b < 0 then
+        @a = -a
+        @b = -b
+      end
+      g = gcd(a.abs, b.abs)
+      @a = @a/g
+      @b = @b/g
+    rescue => e
+      return e
+    end
+  end
+
+  def getDivisor
+    return @b
+  end
+
+  def getDividend
+    return @a
+  end
+
+  def to_s
+    return "#{@a}/#{@b}"
+  end
+
+  def add(r)
+    begin
+      raise ArgumentError if r == nil
+      c = r.getDividend
+      d = r.getDivisor
+      # a/b+c/d = (ad+bc)/bd
+      return Ratio.new(@a*d + @b*c, @b*d)
+    rescue => e
+      return e
+    end
+  end
+
+  def subtraction(r)
+    begin
+      raise ArgumentError if r == nil
+      c = r.getDividend
+      d = r.getDivisor
+      # a/b-c/d = (ad-bc)/bd
+      return Ratio.new(@a*d - @b*c, @b*d)
+    rescue => e
+      return e
+    end
+  end
+
+  def times(r)
+    begin
+      raise ArgumentError if r == nil
+      return Ratio.new(@a*r.getDividend, @b*r.getDivisor)
+    rescue => e
+      return e
+    end
+  end
+
+  def div(r)
+    begin
+      raise ArgumentError if r == nil
+      return Ratio.new(@a*r.getDivisor, @b*r.getDividend)
+    rescue => e
+      return e
+    end
+  end
+
+  def gcd(x, y)
+    begin
+      raise ArgumentError if x == nil || y == nil
+      while true do
+        if x > y then
+          x = x % y
+          if x == 0 then
+            return y
+          end
+        else y = y % x
+          if y == 0 then
+            return x
+          end
+        end
+      end
+      return TRUE
+    rescue => e
+      return e
+    end
+  end
+end
+/===============================================================/
+/===============================================================/
+■テストコード
+/===================lec009/spec/fp09_03_spec.rb=================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp09_03.rb'
+require __dir__ + '/../app/models/ratio.rb'
+
+
+describe "演習 3 Ratio" do
+  context "Ratio initialize" do
+    it "Ratio.new(3,0)" do
+      obj = Ratio.new(3,0)
+      results = obj
+      expect(results.to_s).to match("3/0")
+    end
+    it "Ratio.new(0,3)" do
+      obj = Ratio.new(0,3)
+      results = obj
+      expect(results.to_s).to match("0/3")
+    end
+    it "Ratio.new(3,5)" do
+      obj = Ratio.new(3,5)
+      results = obj
+      expect(results.to_s).to match("3/5")
+    end
+    it " Ratio.new(8,7)" do
+      obj = Ratio.new(8,7)
+      results = obj
+      expect(results.to_s).to match("8/7")
+    end
+  end
+  context "Ratio add" do
+    it "add" do
+      a = Ratio.new(3,5)
+      b = Ratio.new(8,7)
+      results = a.add(b)
+      expect(results.to_s).to match("61/35")
+    end
+    it "add" do
+      a = Ratio.new(1,2)
+      b = Ratio.new(1,3)
+      results = a.add(b);
+      expect(results.to_s).to match("5/6")
+    end
+  end
+  context "Ratio subtraction" do
+    it "subtraction 01 throw exception" do
+      a = Ratio.new(1,4)
+      results = a.subtraction(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "subtraction" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(1,5)
+      results = a.subtraction(b)
+      expect(results.to_s).to match("1/20")
+    end
+  end
+  context "Ratio times" do
+    it "times 01 throw exception" do
+      a = Ratio.new(1,4)
+      results = a.times(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "times 02" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(1,5)
+      results = a.times(b)
+      expect(results.to_s).to match("1/20")
+    end
+    it "times 03" do
+      a = Ratio.new(2,3)
+      b = Ratio.new(1,5)
+      results = a.times(b)
+      expect(results.to_s).to match("2/15")
+    end
+  end
+  context "Ratio div" do
+    it "div 01 throw exception" do
+      a = Ratio.new(1,3)
+      results = a.div(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "div 02" do
+      a = Ratio.new(1,3)
+      b = Ratio.new(1,5)
+      results = a.div(b)
+      expect(results.to_s).to match("5/3")
+    end
+    it "div 03" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(4)
+      results = a.div(b)
+      expect(results.to_s).to match("1/1")
+    end
+  end
+end
+/===============================================================/
 [考察]
+◆演習2
 小問a~bの処理を
 ・Memory
 ・Memory2
@@ -195,6 +402,11 @@ end
 ・一段論法的因果関係の組み合わせで複雑な処理を実現できる。
 ・個々の機能のテストスコープが明確化され品質が向上する。
 等オブジェクト指向的実装のメリットが確認できた。
+◆演習3
+設問の方針で実装しテスト実施。
+浮動小数点演算と異なり、
+設問の様に計算結果(期待値)が明確に特定できる場合、
+特にユニットテストの恩恵を得ることが出来る事が確認できた。
 
 [アンケート]
 Q1. クラス定義が書けるようになりましたか。

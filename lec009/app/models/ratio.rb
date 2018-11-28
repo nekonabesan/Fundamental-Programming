@@ -51,11 +51,11 @@ class Ratio
     end
   end
 
-  def sub(r)
+  def subtraction(r)
     begin
       raise ArgumentError if r == nil
       c = r.getDividend
-      d = r.get Divisor
+      d = r.getDivisor
       # a/b-c/d = (ad-bc)/bd
       return Ratio.new(@a*d - @b*c, @b*d)
     rescue => e
@@ -73,8 +73,8 @@ class Ratio
   end
 
   def div(r)
-    raise ArgumentError if r == nil
     begin
+      raise ArgumentError if r == nil
       return Ratio.new(@a*r.getDivisor, @b*r.getDividend)
     rescue => e
       return e
