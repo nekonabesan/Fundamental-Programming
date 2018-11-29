@@ -362,7 +362,7 @@ end
 /=====================================================================/
 
 [考察]
-Ruby処理系を含むスクリプト言語の処理系はメモリアロケーションを意識せずに構造体を扱うことが可能であり、
+Ruby処理系はメモリアロケーションを意識せずに「構造体」を扱うことが可能であり、
 本課題においても容易に構造体を定義し参照先の移動、順序変更が実施できた。
 またRubyにおいてはJavaにおけるイテレーションに相当する機能が遥かに容易に実装できる点も確認できた。
 データ構造を維持したまま配列と同様にループ処理が行える機能は特にRDBとの連携において有意であり、
@@ -373,18 +373,80 @@ $vars = array("aaa","bbb","ccc");
 $line = 0;
 $buffer = array();
 // データをBufferへ格納
+// メソッド、変数、配列等が全て「オブジェクト」として初期化されるRubyと異なり
 // 基本的に配列またはハッシュとしてデータを扱う事になり
 // 実装のレベルでは「データ構造」として扱うことが出来る訳ではない
 for($i = 0; Si <= count($vars); $i++){
   if($i == count($vars)){
-    $buffer[$i] = "EOF";
+    $tmp = "EOF";
   } else {
-    $buffer[$i] = $vars[$i];
+    $tmp = $vars[$i];
+  }
+  $buffer[$i] = array('key' => $i, 'val' => $tmp);
+}
+
+// 参照
+for($i = 0; $i < count($buffer); $i++){
+  echo "key-> ".$buffer[$i]['key']." val-> ".$buffer[$i]['val']."\n";
+}
+/-------------------------------------------------------------------/
+・phpの場合(Entity)
+◆Entityクラス
+class Ent {
+  private $key;
+  private $val;
+
+  public function setKey($key){
+    $this->key = $key;
+  }
+  public function getKey(){
+    return $this->key;
+  }
+
+  public function setVal($val){
+    $this->val = $val;
+  }
+  public function getVal(){
+    return $this->val;
   }
 }
+◆呼び出し元
+require_once './Ent.php';
+$vars = array("aaa","bbb","ccc");
+$buffer = array();
+
+// Entityを配列化する処理
+for($i = 0; $i <= count($vars); $i++){
+  // Entityを初期化
+  $obj = new Ent();
+  $obj->setKey($i);
+  if($i == count($vars)){
+    $obj->setVal("EOF");
+  } else {
+    $obj->setVal($vars[$i]);
+  }
+  array_push($buffer,$obj);
+}
+
+// Entityを参照する処理
+foreach($buffer as $key => $val){
+  // 「オブジェクト型」のデータ構造を扱う訳ではなく
+  // 内部的にはオブジェクトに「見える」ハッシュを扱っている
+  printf("value -> %5s\n",$val->getVal());
+}
+
+◆実行結果
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/Music$ php ./main.php
+value ->   aaa
+value ->   bbb
+value ->   ccc
+value ->   EOF
 
 
 [アンケート]
 Q1. 何らかの動的データ構造が扱えるようになりましたか。
+ある程度。
 Q2. 複雑な構造をクラスの中にパッケージ化する利点について納得しましたか。
+ある程度。
 Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。
