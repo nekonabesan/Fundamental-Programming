@@ -10,10 +10,185 @@
 課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が含まれること。
 アンケートの回答もおこなうこと。
 
+演習 4 区間 2 分法によって平方根を求める C プログラムを作成しなさい。必要と思われる精度にし
+たとき、繰り返し回数がいくつになるか検討しなさい。
 
 [実施したこととその結果]
+/====================lec011/modules/fp11_04_module.c===========================/
+//-----------------------------------------------------------------------------//
+// Google Test用includeヘッダ
+// 本番ビルド時はコメントアウト
+//-----------------------------------------------------------------------------//
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+const int TRUE = 1;
+const int FALSE = 0;
+//const int DENOMINATOR = 10000000;
+//-----------------------------------------------------------------------------//
+// 演習 4 区間 2 分法によって平方根を求める C プログラムを作成しなさい。
+// 必要と思われる精度にしたとき、繰り返し回数がいくつになるか検討しなさい。
+//-----------------------------------------------------------------------------//
+double calc04(double x, int d){
+  double a = 0;
+  double b = x;
+  double c = 0;
+  double f = 0;
+  int i = 0;
+  while(1){
+    c = (a + b)/2;
+    f = pow(c, 2.0);
+    if(f == x || i == d){
+      break;
+    }else if(f < x){
+      a = c;
+    }else{
+      b = c;
+    }
+    i++;
+  }
+  return c;
+}
+/==============================================================================/
+/============================lec011/fp11_04.c==================================/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "modules/fp11_04_module.c"
+
+int main(void) {
+  // 演習 3
+  printf("%s\n", "演習 4");
+  printf("%.20f\n", 1.4142135623730951);
+  printf("calc04(2.0, 10) sqrt =>  %.20f\n", calc04(2.0, 10));
+  printf("calc04(2.0, 100) sqrt =>  %.20f\n", calc04(2.0, 100));
+  printf("calc04(2.0, 1000) sqrt =>  %.20f\n", calc04(2.0, 1000));
+  printf("calc04(2.0, 10000) sqrt =>  %.20f\n", calc04(2.0, 10000));
+  printf("calc04(2.0, 100000) sqrt =>  %.20f\n", calc04(2.0, 100000));
+  printf("calc04(2.0, 1000000) sqrt =>  %.20f\n", calc04(2.0, 1000000));
+  printf("calc04(2.0, 10000000) sqrt =>  %.20f\n", calc04(2.0, 10000000));
+  return FALSE;
+}
+/==============================================================================/
+/======================lec011/test/fp11_04/Makefile============================/
+# Makefile
+# all:より下の3行のインデント、
+# gtest-gen:より下の1行のインデント
+# は半角空白になっていますがタブ1個にしてください
+# target.cはCなのでgccで、それ以外はC++なのでg++でビルドします
+# gtest_main.ccはGoogleTestが用意してくれているmain関数、
+# gtest-all.ccがGoogleTest全部入りファイルです
+# -lpthreadをつけることにも注意。
+# makeかmake allしたらビルドして実行まで行います。
+all:
+			gcc -c ../../modules/fp11_04_module.c
+			g++ test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp11_04_module.o
+			./a.out
+
+gtest-gen:
+			python googletest-release-1.8.1/googletest/scripts/fuse_gtest_files.py ./
+/==============================================================================/
+/=======================lec011/test/fp11_04/target.h===========================/
+// テスト対象関数のプロトタイプ宣言
+#ifndef _TARGET_H_
+#define _TARGET_H_
+
+double calc04(double x, int d);
+
+#endif /* _TARGET_H_ */
+/==============================================================================/
+/=======================lec011/test/fp11_04/test.cpp===========================/
+// テストケース記述ファイル
+#include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
+// テスト対象関数を呼び出せるようにするのだが
+// extern "C"がないとCと解釈されない、意外とハマりがち。
+extern "C" {
+  #include "target.h"
+}
+
+// fixtureNameはテストケース群をまとめるグループ名と考えればよい、任意の文字列
+// それ以外のclass～testing::Testまではおまじないと考える
+class fixtureName : public ::testing::Test {
+protected:
+    // fixtureNameでグループ化されたテストケースはそれぞれのテストケース実行前に
+    // この関数を呼ぶ。共通の初期化処理を入れておくとテストコードがすっきりする
+    virtual void SetUp(){
+    }
+    // SetUpと同様にテストケース実行後に呼ばれる関数。共通後始末を記述する。
+    virtual void TearDown(){
+    }
+};
+
+// 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
+TEST_F(fixtureName, sqrt01)
+{
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 100));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 1000));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10000));
+}
+TEST_F(fixtureName, sqrt02)
+{
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 100));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 1000));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10000));
+}
+// あえて失敗するテストケースも書いておく。
+TEST_F(fixtureName, sqrt03)
+{
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 100));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 1000));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10000));
+}
+/==============================================================================/
 
 [考察]
+◆実行結果
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011$ ./a.out
+演習 4
+1.41421356237309514547
+calc04(2.0, 10) sqrt =>  1.41503906250000000000
+calc04(2.0, 100) sqrt =>  1.41421356237309492343
+calc04(2.0, 1000) sqrt =>  1.41421356237309492343
+calc04(2.0, 10000) sqrt =>  1.41421356237309492343
+calc04(2.0, 100000) sqrt =>  1.41421356237309492343
+calc04(2.0, 1000000) sqrt =>  1.41421356237309492343
+calc04(2.0, 10000000) sqrt =>  1.41421356237309492343
+/------------------------------------------------------------------------------/
+１００回程度である程度実用的な制度が得られた。
+◆GoogleTest実施結果
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011/test/fp11_04$ ./a.out
+Running main() from googletest-release-1.8.1/googletest/src/gtest_main.cc
+[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from fixtureName
+[ RUN      ] fixtureName.sqrt01
+[       OK ] fixtureName.sqrt01 (0 ms)
+[ RUN      ] fixtureName.sqrt02
+[       OK ] fixtureName.sqrt02 (0 ms)
+[ RUN      ] fixtureName.sqrt03
+[       OK ] fixtureName.sqrt03 (0 ms)
+[----------] 3 tests from fixtureName (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 3 tests.
+/------------------------------------------------------------------------------/
+◆GoogleTestの導入について
+以下を参考として
+https://qiita.com/igayu/items/9ff003309b237e9ae116
+http://opencv.jp/googletestdocs/primer.html#primer-assertions
+GoogleTestを導入した。
+GoogleTestはCppUTestとことなりインストール不要なためSOLサーバ内の任意のディレクトリ内でも実行可能。
+本課題の性質上、実行環境ごとにプロセッサ・アーキテクチャの差異等により戻り地の差異がありうる為、
+マッチャは近似を判定する「EXPECT_NEAR」を使用した。
 
 [アンケート]
 Q1. C 言語でプログラムが書けるようになりましたか。
