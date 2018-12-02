@@ -8,3 +8,4 @@ googletest-release-*/
 gtest/
 *.ut
 *.ppm
+*.gif
