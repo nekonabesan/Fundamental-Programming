@@ -54,4 +54,12 @@ bool tbl_put(char *k, int v);
 void set_tableszize2(int val);
 bool add_struct(char key[], char val[]);
 bool del_struct(char key[]);
+// 演習5
+static unsigned int hash(char *s);
+static struct ent *lookup(struct ent *p, char *k);
+int get1(struct ent *p, char *k);
+static bool put1(struct ent **p, char *k, int v);
+int tbl_get(char *k);
+bool tbl_put(char *k, int v);
+
 #endif /* _TARGET_H_ */

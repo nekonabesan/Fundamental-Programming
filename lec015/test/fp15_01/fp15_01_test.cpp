@@ -2,13 +2,21 @@
 #define TRUE 1
 #define FALSE 0
 #define MAXTBL 9973
+#define WIDTH 300
+#define HEIGHT 200
+
+struct color {
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
+};
 
 // テストケース記述ファイル
 #include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
 // テスト対象関数を呼び出せるようにするのだが
 // extern "C"がないとCと解釈されない、意外とハマりがち。
 extern "C" {
-  #include "../fp14_target.h"
+  #include "../fp15_target.h"
 }
 
 // fixtureNameはテストケース群をまとめるグループ名と考えればよい、任意の文字列
@@ -25,32 +33,22 @@ protected:
 };
 
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
-// static unsigned int hash(char *s);
-TEST_F(fixtureName, hash)
+// bool img_clear(void);
+TEST_F(fixtureName, img_clear)
 {
 }
 
-// static struct ent *lookup(struct ent *p, char *k);
-TEST_F(fixtureName, lookup)
+// bool img_write(void);
+TEST_F(fixtureName, img_write)
 {
 }
 
-// int get1(struct ent *p, char *k);
-TEST_F(fixtureName, get1)
+// bool img_putpixel(struct color c, int x, int y);
+TEST_F(fixtureName, img_putpixel)
 {
 }
 
-// static bool put1(struct ent **p, char *k, int v);
-TEST_F(fixtureName, put1)
-{
-}
-
-// int tbl_get(char *k);
-TEST_F(fixtureName, tbl_get)
-{
-}
-
-// bool tbl_put(char *k, int v);
-TEST_F(fixtureName, tbl_put)
+// bool img_fillcircle(struct color c, double x, double y, double r);
+TEST_F(fixtureName, img_fillcircle)
 {
 }

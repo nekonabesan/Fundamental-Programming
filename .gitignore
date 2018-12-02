@@ -7,3 +7,4 @@ coverage/
 googletest-release-*/
 gtest/
 *.ut
+*.ppm
