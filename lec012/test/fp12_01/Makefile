@@ -9,11 +9,10 @@
 # makeかmake allしたらビルドして実行まで行います。
 all:
 			gcc -c ../../modules/fp12_01_module.c
-			g++ test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp12_01_module.o
+			g++ fp12_01_test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp12_01_module.o
 			./a.out
 gtest-gen:
 			python googletest-release-1.8.1/googletest/scripts/fuse_gtest_files.py ./
 clean:
-
 			rm -f ./a.out
 			rm -f ./fp12_01_module.o
