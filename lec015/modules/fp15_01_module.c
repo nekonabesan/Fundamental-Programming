@@ -48,6 +48,10 @@ bool img_putpixel(struct color c, int x, int y) {
 }
 
 bool img_fillcircle(struct color c, double x, double y, double r) {
+  // 座標の境界値chk
+  if(x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || r < 1) {
+    return false;
+  }
   int imin = (int)(x - r - 1);
   int imax = (int)(x + r + 1);
   int jmin = (int)(y - r - 1);
@@ -55,6 +59,22 @@ bool img_fillcircle(struct color c, double x, double y, double r) {
   for(int j = jmin; j <= jmax; ++j) {
     for(int i = imin; i <= imax; ++i) {
       if((x-i)*(x-i) + (y-j)*(y-j) <= r*r) {
+        img_putpixel(c, i, j);
+      }
+    }
+  }
+  return true;
+}
+
+bool img_triangle(struct color c, double x1, double y1, double x2, double y2, double x3, double y3){
+  if(x1 >= WIDTH || x2 >= WIDTH || x3 >= WIDTH || y1 >= HEIGHT || y2 >= HEIGHT || y3 >= HEIGHT){
+    return false;
+  }
+  for(int j = 0; j < HEIGHT; j++){
+    for(int i = 0; i < WIDTH; i++){
+      if (((x2 - x1) * (j - y1) - (y2 - y1) * (i - x1)) <= 0
+      && ((x3 - x1) * (j - y1) - (y3 - y1) * (i - x1)) >= 0
+      && ((x3 - x2) * (j - y2) - (y3 - y2) * (i - x2)) <= 0) {
         img_putpixel(c, i, j);
       }
     }

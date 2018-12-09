@@ -2,6 +2,12 @@
 #include "modules/fp15_01_module.c"
 
 int main(void) {
+  int x1 = 0;
+  int x2 = 0;
+  int x3 = 0;
+  int y1 = 0;
+  int y2 = 0;
+  int y3 = 0;
   struct color c1;
   struct color c2;
   c1.r = 30;
@@ -11,7 +17,8 @@ int main(void) {
   c2.g = 0;
   c2.b = 0;
 
-  for(int i = 0; i < 20; ++i) {
+  // 円
+  /*for(int i = 0; i < 20; ++i) {
     img_clear();
     img_fillcircle(c1, 20+i*8, 100, 20);
     img_write();
@@ -19,6 +26,42 @@ int main(void) {
   for(int i = 0; i < 20; ++i) {
     img_clear();
     img_fillcircle(c2, 180, 100+i*5, 20-i);
+    img_write();
+  }*/
+
+  // 三角形
+  x1 = 0;
+  x2 = 0;
+  x3 = 0;
+  y1 = 0;
+  y2 = 0;
+  y3 = 0;
+  for(int i = 0; i < 20; ++i) {
+    img_clear();
+    x1 += 0;
+    x2 += 0;
+    x3 += 0;
+    y1 += 0;
+    y2 += 0;
+    y3 += 0;
+    img_triangle(c1, x1, y1, x2, y2, x3, y3);
+    img_write();
+  }
+  x1 = 0;
+  x2 = 0;
+  x3 = 0;
+  y1 = 0;
+  y2 = 0;
+  y3 = 0;
+  for(int i = 0; i < 20; ++i) {
+    img_clear();
+    x1 += 0;
+    x2 += 0;
+    x3 += 0;
+    y1 += 0;
+    y2 += 0;
+    y3 += 0;
+    img_triangle(c1, x1, y1, x2, y2, x3, y3);
     img_write();
   }
 }

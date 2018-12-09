@@ -36,20 +36,64 @@ protected:
 // bool img_clear(void);
 TEST_F(fixtureName, img_clear)
 {
+  // test01
   EXPECT_TRUE(img_clear());
 }
 
 // bool img_write(void);
 TEST_F(fixtureName, img_write)
 {
+  // test01
+  EXPECT_TRUE(img_write());
 }
 
 // bool img_putpixel(struct color c, int x, int y);
 TEST_F(fixtureName, img_putpixel)
 {
+  // tets01 x境界値
+  struct color c;
+  c.r = 0;
+  c.g = 127;
+  c.b = 255;
+  EXPECT_FALSE(img_putpixel(c,-1,1));
+  EXPECT_TRUE(img_putpixel(c,0,1));
+  EXPECT_TRUE(img_putpixel(c,1,1));
+  EXPECT_TRUE(img_putpixel(c,299,1));
+  EXPECT_FALSE(img_putpixel(c,300,1));
+  // tets02 y境界値
+  EXPECT_FALSE(img_putpixel(c,1,-1));
+  EXPECT_TRUE(img_putpixel(c,1,0));
+  EXPECT_TRUE(img_putpixel(c,1,1));
+  EXPECT_TRUE(img_putpixel(c,1,199));
+  EXPECT_FALSE(img_putpixel(c,1,200));
 }
 
 // bool img_fillcircle(struct color c, double x, double y, double r);
 TEST_F(fixtureName, img_fillcircle)
 {
+  struct color c;
+  c.r = 0;
+  c.g = 127;
+  c.b = 255;
+  // test01
+  EXPECT_TRUE(img_fillcircle(c,299,1,1));
+  EXPECT_FALSE(img_fillcircle(c,300,1,1));
+  // test02
+  EXPECT_TRUE(img_fillcircle(c,1,199,1));
+  EXPECT_FALSE(img_fillcircle(c,1,200,1));
+  // test02
+  EXPECT_FALSE(img_fillcircle(c,1,1,0));
+  EXPECT_TRUE(img_fillcircle(c,1,1,1));
+}
+
+// bool img_triangle(struct color c, double x1, double y1, double x2, double y2, double x3, double y3)
+TEST_F(fixtureName, img_triangle)
+{
+  struct color c;
+  c.r = 0;
+  c.g = 127;
+  c.b = 255;
+  // test01
+  EXPECT_TRUE(img_triangle(c,299,1,1,1,1,1));
+  EXPECT_FALSE(img_triangle(c,300,1,1,1,1,1));
 }
