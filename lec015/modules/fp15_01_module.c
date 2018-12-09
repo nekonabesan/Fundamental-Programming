@@ -48,8 +48,10 @@ bool img_putpixel(struct color c, int x, int y) {
 }
 
 bool img_fillcircle(struct color c, double x, double y, double r) {
-  int imin = (int)(x - r - 1), imax = (int)(x + r + 1);
-  int jmin = (int)(y - r - 1), jmax = (int)(y + r + 1);
+  int imin = (int)(x - r - 1);
+  int imax = (int)(x + r + 1);
+  int jmin = (int)(y - r - 1);
+  int jmax = (int)(y + r + 1);
   for(int j = jmin; j <= jmax; ++j) {
     for(int i = imin; i <= imax; ++i) {
       if((x-i)*(x-i) + (y-j)*(y-j) <= r*r) {

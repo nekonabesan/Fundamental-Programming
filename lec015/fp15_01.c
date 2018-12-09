@@ -13,10 +13,12 @@ int main(void) {
 
   for(int i = 0; i < 20; ++i) {
     img_clear();
-    img_fillcircle(c1, 20+i*8, 100, 20); img_write();
+    img_fillcircle(c1, 20+i*8, 100, 20);
+    img_write();
   }
   for(int i = 0; i < 20; ++i) {
     img_clear();
-    img_fillcircle(c2, 180, 100+i*5, 20-i); img_write();
+    img_fillcircle(c2, 180, 100+i*5, 20-i);
+    img_write();
   }
 }
