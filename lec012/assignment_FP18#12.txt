@@ -469,5 +469,8 @@ http://opencv.jp/googletestdocs/primer.html#primer-assertions
 
 [アンケート]
 Q1. C 言語で配列を取り扱えるようになりましたか。
+ある程度。
 Q2. 動的計画法を理解しましたか。またどのように思いましたか。
+ある程度。
 Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。
