@@ -36,6 +36,7 @@ protected:
 // bool img_clear(void);
 TEST_F(fixtureName, img_clear)
 {
+  EXPECT_TRUE(img_clear());
 }
 
 // bool img_write(void);
