@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -13,16 +14,17 @@
 //============================================================================//
 // tblchash --- table impl. with chained hash.
 struct ent {
-  char *key; int val;
+  char *key;
+  int val;
   struct ent *next;
 };
 struct ent *tbl[MAXTBL];
 
 static unsigned int hash(char *s) {
   unsigned int v = 1;
-  while(*s)
-   v *= 11 * (*s++) + 1;
- }
+  while(*s){
+    v *= 11 * (*s++) + 1;
+  }
   return v % MAXTBL;
 }
 
@@ -43,19 +45,25 @@ int get1(struct ent *p, char *k) {
 static bool put1(struct ent **p, char *k, int v) {
   struct ent *q = lookup(*p, k);
   if(q != NULL) {
-    q->val = v; return true;
+    q->val = v;
+    return true;
   }
+
   q = (struct ent*)malloc(sizeof(struct ent));
   if(q == NULL) {
     return false;
   }
+
   int len = strlen(k);
+
   q->key = (char*)malloc(len+1);
   if(q->key == NULL) {
     return false;
   }
+
   strcpy(q->key, k);
-  q->val = v; q->next = *p;
+  q->val = v;
+  q->next = *p;
   *p = q;
   return true;
 }
