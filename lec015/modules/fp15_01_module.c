@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define WIDTH 300
 #define HEIGHT 200
@@ -9,6 +10,10 @@ struct color {
   unsigned char r;
   unsigned char g;
   unsigned char b;
+};
+struct gp{
+  double x;
+  double y;
 };
 
 static unsigned char buf[HEIGHT][WIDTH][3];
@@ -28,7 +33,8 @@ bool img_write(void) {
   sprintf(fname, "img%04d.ppm", filecnt++);
   FILE *f = fopen(fname, "wb");
   if(f == NULL) {
-    fprintf(stderr, "can’t open %s\n", fname); exit(1);
+    fprintf(stderr, "can’t open %s\n", fname);
+    exit(1);
     return false;
   }
   fprintf(f, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
@@ -47,37 +53,52 @@ bool img_putpixel(struct color c, int x, int y) {
   return true;
 }
 
-bool img_fillcircle(struct color c, double x, double y, double r) {
-  // 座標の境界値chk
-  if(x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || r < 1) {
-    return false;
-  }
-  int imin = (int)(x - r - 1);
-  int imax = (int)(x + r + 1);
-  int jmin = (int)(y - r - 1);
-  int jmax = (int)(y + r + 1);
-  for(int j = jmin; j <= jmax; ++j) {
-    for(int i = imin; i <= imax; ++i) {
-      if((x-i)*(x-i) + (y-j)*(y-j) <= r*r) {
-        img_putpixel(c, i, j);
-      }
-    }
-  }
-  return true;
+// (参)http://www.ohshiro.tuis.ac.jp/~ohshiro/prog/game07_call_by_reference_pointer.html
+// 座標(x, y) を，(xc, yc)を中心に θラジアン回転した座標は，次の式で計算できることが知られている。
+// 回転した後のX座標 =  (x - xc) * cosθ - (y - yc) * sinθ + xc
+// 回転した後のY座標 =  (x - xc) * sinθ + (y - yc) * cosθ + yc
+//--------------------------------------------------------------//
+// rd rad回転させたｘ座標を導出するメソッド
+// @param double x
+// @param double y
+// @param double xc
+// @param double yc
+// @param double rd
+// @return double
+//--------------------------------------------------------------//
+double rt_x(double x, double y, double xc, double yc, double rd){
+  return (x - xc) * cos(rd) - (y - yc) * sin(rd) + xc;
 }
 
-bool img_triangle(struct color c, double x1, double y1, double x2, double y2, double x3, double y3){
-  if(x1 >= WIDTH || x2 >= WIDTH || x3 >= WIDTH || y1 >= HEIGHT || y2 >= HEIGHT || y3 >= HEIGHT){
-    return false;
-  }
-  for(int j = 0; j < HEIGHT; j++){
-    for(int i = 0; i < WIDTH; i++){
-      if (((x2 - x1) * (j - y1) - (y2 - y1) * (i - x1)) <= 0
-      && ((x3 - x1) * (j - y1) - (y3 - y1) * (i - x1)) >= 0
-      && ((x3 - x2) * (j - y2) - (y3 - y2) * (i - x2)) <= 0) {
-        img_putpixel(c, i, j);
-      }
-    }
-  }
-  return true;
+//--------------------------------------------------------------//
+//　rd rad回転させたｙ座標を導出するメソッド
+// @param double x
+// @param double y
+// @param double xc
+// @param double yc
+// @param double rd
+// @return double
+//--------------------------------------------------------------//
+double rt_y(double x, double y, double xc, double yc, double rd){
+  // 数学座標と同じ様にするためにy座標値を反転
+  y = -y;
+  yc = -yc;
+  return -1.0 * ((x - xc) * sin(rd) + (y - yc) * cos(rd) + yc);
+}
+
+//----------------------------------------------------------------------------//
+// 三角形の重心を導出するメソッド
+// @param x0
+// @param y0
+// @param x1
+// @param y1
+// @param x2
+// @param y2
+// @return struct gp
+//----------------------------------------------------------------------------//
+struct gp calc_gp(double x0, double y0, double x1, double y1, double x2, double y2){
+  struct gp g;
+  g.x = (x0 + x1 + x2) / 3;
+  g.y = (y0 + y1 + y2) / 3;
+  return g;
 }

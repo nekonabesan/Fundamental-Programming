@@ -10,6 +10,10 @@ struct color {
   unsigned char g;
   unsigned char b;
 };
+struct gp{
+  double x;
+  double y;
+};
 
 // テストケース記述ファイル
 #include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
@@ -33,55 +37,23 @@ protected:
 };
 
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
-//double rt_x(double x, double y, double xc, double yc, double rd)
-TEST_F(fixtureName, rt_x)
+// img_triangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
+TEST_F(fixtureName, img_triangle)
 {
-}
-
-//double rt_y(double x, double y, double xc, double yc, double rd)
-TEST_F(fixtureName, rt_y)
-{
-}
-
-// bool img_clear(void);
-TEST_F(fixtureName, img_clear)
-{
-  // test01
-  EXPECT_TRUE(img_clear());
-}
-
-// bool img_write(void);
-TEST_F(fixtureName, img_write)
-{
-  // test01
-  EXPECT_TRUE(img_write());
-}
-
-// bool img_putpixel(struct color c, int x, int y);
-TEST_F(fixtureName, img_putpixel)
-{
-  // tets01 x境界値
   struct color c;
   c.r = 0;
   c.g = 127;
   c.b = 255;
-  EXPECT_FALSE(img_putpixel(c,-1,1));
-  EXPECT_TRUE(img_putpixel(c,0,1));
-  EXPECT_TRUE(img_putpixel(c,1,1));
-  EXPECT_TRUE(img_putpixel(c,299,1));
-  EXPECT_FALSE(img_putpixel(c,300,1));
-  // tets02 y境界値
-  EXPECT_FALSE(img_putpixel(c,1,-1));
-  EXPECT_TRUE(img_putpixel(c,1,0));
-  EXPECT_TRUE(img_putpixel(c,1,1));
-  EXPECT_TRUE(img_putpixel(c,1,199));
-  EXPECT_FALSE(img_putpixel(c,1,200));
+  EXPECT_TRUE(img_triangle(c,1,1,1,1,1,1));
 }
 
-// struct gp calc_gp(double x0, double y0, double x1, double y1, double x2, double y2)
-TEST_F(fixtureName, calc_gp)
+// bool rt_triangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
+TEST_F(fixtureName, img_rtriangle)
 {
-  struct gp g = calc_gp(10,10,20,20,30,30);
-  EXPECT_EQ(g.x,20);
-  EXPECT_EQ(g.y,20);
+  struct color c;
+  c.r = 0;
+  c.g = 127;
+  c.b = 255;
+  // test01
+  EXPECT_TRUE(rt_triangle(c,1,1,1,1,1,1));
 }
