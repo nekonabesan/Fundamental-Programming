@@ -50,15 +50,16 @@ bool rt_circle(struct color c, double x0, double y0, double r){
   double x;
   double y;
   double rd;
+  bool flg = true;
   //struct gp g = calc_gp(x0, y0, x1, y1, x2, y2);
   for(int angle = 0; angle < 360; angle+=1){
     rd = angle * PI / 180.0;
     sx0 = rt_x(x0, y0, 150, 100, rd);
     sy0 = rt_y(x0, y0, 150, 100, rd);
     img_clear();
-    img_fillcircle(c, sx0, sy0, r);
+    flg = img_fillcircle(c, sx0, sy0, r);
     img_write();
   }
 
-   return true;
+   return flg;
 }

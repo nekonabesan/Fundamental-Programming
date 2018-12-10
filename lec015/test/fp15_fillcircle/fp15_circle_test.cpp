@@ -58,4 +58,11 @@ TEST_F(fixtureName, img_fillcircle)
 // bool rt_circle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2)
 TEST_F(fixtureName, rt_circle)
 {
+  struct color c;
+  c.r = 0;
+  c.g = 127;
+  c.b = 255;
+  // test01
+  EXPECT_TRUE(rt_circle(c,150,120,10));
+  EXPECT_FALSE(rt_circle(c,150,-200,10));
 }
