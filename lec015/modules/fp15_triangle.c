@@ -93,15 +93,6 @@ bool rt_triangle(struct color c, double x0, double y0, double x1, double y1, dou
     sy2 = rt_y(x2, y2, g.x, g.y, rd);
     img_clear();
     img_triangle(c, sx0, sy0, sx1, sy1, sx2, sy2);
-    /*if(0 <= angle && angle < 90){
-      img_triangle(c, sx0, sy0, sx1, sy1, sx2, sy2);
-    } else if(90 <= angle && angle < 180) {
-      img_triangle(c, sx1, sy1, sx2, sy2, sx0, sy0);
-    } else if(180 <= angle && angle < 270) {
-      img_rtriangle(c, sx0, sy0, sx2, sy2, sx1, sy1);
-    } else if(270 <= angle && angle < 360) {
-      img_triangle(c, sx2, sy2, sx0, sy0, sx1, sy1);
-    }*/
     img_write();
   }
 
