@@ -10,7 +10,10 @@ struct color {
   unsigned char g;
   unsigned char b;
 };
-
+struct gp{
+  double x;
+  double y;
+};
 // テストケース記述ファイル
 #include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
 // テスト対象関数を呼び出せるようにするのだが
@@ -36,6 +39,8 @@ protected:
 //double rt_x(double x, double y, double xc, double yc, double rd)
 TEST_F(fixtureName, rt_x)
 {
+  // test01
+  
 }
 
 //double rt_y(double x, double y, double xc, double yc, double rd)
@@ -81,7 +86,20 @@ TEST_F(fixtureName, img_putpixel)
 // struct gp calc_gp(double x0, double y0, double x1, double y1, double x2, double y2)
 TEST_F(fixtureName, calc_gp)
 {
+  // test01
   struct gp g = calc_gp(10,10,20,20,30,30);
   EXPECT_EQ(g.x,20);
   EXPECT_EQ(g.y,20);
+  // test02
+  g = calc_gp(0,30,-10,-15,10,-15);
+  EXPECT_EQ(g.x,0);
+  EXPECT_EQ(g.y,0);
+  // test03
+  g = calc_gp(1,4,-1,-2,3,-2);
+  EXPECT_EQ(g.x,1);
+  EXPECT_EQ(g.y,0);
+  // test04
+  g = calc_gp(1,2,3,4,5,6);
+  EXPECT_EQ(g.x,3);
+  EXPECT_EQ(g.y,4);
 }
