@@ -1,0 +1,361 @@
+活動内容報告 ＃11
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/17
+
+「演習 1」または「演習 2」で動かしたプログラム (どれか 1 つでよい) を含むレポートを提出しなさい。
+プログラムと、簡単な説明が含まれること。アンケートの回答もおこなうこと。
+演習 1 例題のうち好きな方をそのまま打ち込み実行しなさい。
+実行できたら、プログラムの一部をわざと色々に壊してコンパイルし、エラーの出かたを体験しなさい。
+OK なら次の課題をやりなさい。
+その場合、「cp triarea.c max2.c」のように
+課題ごとに先に作ったプログラムのファイルをコピーしてから修正すると (main はほぼ同じなので) 楽だと思います。
+a. 円錐の底面の半径と高さを与え、体積を出力する。
+b. 実数 x を与え、その平方値を出力する。
+c. 実数 x を与え、その 8 乗 (または 7 乗または 6 乗) を出力する。
+d. 整数を 2 つ与え、その大きい方を出力する。
+e. 整数を 2 つ与え、その小さい方を出力する。
+f. 整数を 3 つ与え、その最大値を出力する (または 4 つの最大でもよい)。
+g. 整数を 3 つ与え、その最小値を出力する (または 4 つの最小でもよい)。
+h. 整数を 3 つ与え (すべて異なる値とする)、中央の値を出力する。
+i. 正の整数 n を与え、n の階乗を出力する。
+j. 正の整数 n を与え、2
+n を出力する。
+k. 正の整数 n, r(n ≥ r) を与え、nCr を出力する。
+l. 正の整数 a, b を与え、それらの最大公約数を出力する。
+m. その他、自分が面白いと思う計算を行う関数を作って行なえ。
+
+[作成したプログラム]
+/=======================lec011/modules/fp11_01_module.c========================/
+const int TRUE = 1;
+const int FALSE = 0;
+//-----------------------------------------------------------------------//
+// m. その他、自分が面白いと思う計算を行う関数を作って行なえ。
+//-----------------------------------------------------------------------//
+int max(int data[], int n){
+  int result = data[0];
+  for(int i = 1; i < n; i++){
+    if(data[i] > result){
+      result = data[i];
+    }
+  }
+  return result;
+}
+
+int min(int data[], int n){
+  int result = data[0];
+  for(int i = 1; i < n; i++){
+    if(data[i] < result){
+      result = data[i];
+    }
+  }
+  return result;
+}
+
+int calc1(int n, int t){
+  int result = n;
+  for(int i = 1; i < t; i++){
+    result = result * (n - i);
+  }
+  return result;
+}
+
+//-----------------------------------------------------------------------//
+// a. 円錐の底面の半径と高さを与え、体積を出力する。
+//-----------------------------------------------------------------------//
+double a(double r, double h) {
+  double v = ((1.0/3.0) * 3.14 * pow(r, 2.0) * h);
+  return v;
+}
+
+
+//-----------------------------------------------------------------------//
+// b. 実数 x を与え、その平方値を出力する。
+//-----------------------------------------------------------------------//
+double b(double x){
+  return sqrt(x);
+}
+
+
+//-----------------------------------------------------------------------//
+// c. 実数 x を与え、その 8 乗 (または 7 乗または 6 乗) を出力する。
+//-----------------------------------------------------------------------//
+double c(double x, double n){
+  return pow(x,n);
+}
+
+
+//-----------------------------------------------------------------------//
+// d. 整数を 2 つ与え、その大きい方を出力する。
+//-----------------------------------------------------------------------//
+int d(int a, int b){
+  int array[2] = {a, b};
+  return max(array, 2);
+}
+
+//-----------------------------------------------------------------------//
+// e. 整数を 2 つ与え、その小さい方を出力する。
+//-----------------------------------------------------------------------//
+int e(int a, int b){
+  int array[2] = {a, b};
+  return min(array, 2);
+}
+
+
+//-----------------------------------------------------------------------//
+// f. 整数を 3 つ与え、その最大値を出力する (または 4 つの最大でもよい)。
+//-----------------------------------------------------------------------//
+int f(int a, int b, int c){
+  int array[3] = {a, b, c};
+  return max(array, 3);
+}
+
+
+//-----------------------------------------------------------------------//
+// g. 整数を 3 つ与え、その最小値を出力する (または 4 つの最小でもよい)。
+//-----------------------------------------------------------------------//
+int g(int a,int b,int c){
+  int array[3] = {a, b, c};
+  return min(array, 3);
+}
+
+//-----------------------------------------------------------------------//
+// h. 整数を 3 つ与え (すべて異なる値とする)、中央の値を出力する。
+//-----------------------------------------------------------------------//
+int h(int a,int b,int c){
+  int array[3] = {a, b, c};
+  int result = 0;
+  int x = min(array,3);
+  for(int i = min(array,3); i < 3; i++){
+    if(array[i] != x && array[i] != x){
+      result = array[i];
+    }
+  }
+  return result;
+}
+
+//-----------------------------------------------------------------------//
+// i. 正の整数 n を与え、n の階乗を出力する。
+//-----------------------------------------------------------------------//
+int i(int n){
+  int result = n;
+  for(int i = (n - 1); i > 0; i--){
+    result = result * i;
+  }
+  return result;
+}
+
+//-----------------------------------------------------------------------//
+// j. 正の整数 n を与え、2の乗 を出力する。
+//-----------------------------------------------------------------------//
+int j(int n){
+  int result = 2;
+  if (n == 0) {
+    return 1;
+  }
+  for(int i = n; i > 1; i--){
+    result = result * 2;
+  }
+  return result;
+}
+
+//-----------------------------------------------------------------------//
+// k. 正の整数 n, r(n ≥ r) を与え、nCr を出力する。
+//-----------------------------------------------------------------------//
+int k(int n, int r){
+  if(r > n){
+    return FALSE;
+  }
+  return calc1(n, r)/calc1(r, r);
+}
+
+//-----------------------------------------------------------------------//
+// l. 正の整数 a, b を与え、それらの最大公約数を出力する。
+//-----------------------------------------------------------------------//
+int l(int a, int b){
+  int array[2] = {a, b};
+  int m = min(array, 2);
+  int result = 1;
+  for(int i = 1; i <= m; i++){
+    if(a % i == 0 && b % i == 0){
+      result = i;
+    }
+  }
+  return result;
+}
+/==============================================================================/
+/=============================lec011/fp11_01.c=================================/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "modules/fp11_01_module.c"
+// 演習 1 例題のうち好きな方をそのまま打ち込み実行しなさい。実行できたら、プログラムの一部をわ
+// ざと色々に壊してコンパイルし、エラーの出かたを体験しなさい。OK なら次の課題をやりな
+// さい。その場合、「cp triarea.c max2.c」のように課題ごとに先に作ったプログラムのファ
+// イルをコピーしてから修正すると (main はほぼ同じなので) 楽だと思います。
+
+
+
+int main(void){
+  // a. 円錐の底面の半径と高さを与え、体積を出力する。
+  printf("a(2.0, 5.0)\n");
+  printf("%f\n", a(2.0, 5.0));
+  // b. 実数 x を与え、その平方値を出力する。
+  printf("b(4)\n");
+  printf("%f\n", b(4));
+  // c. 実数 x を与え、その 8 乗 (または 7 乗または 6 乗) を出力する。
+  printf("c(2,4)\n");
+  printf("%f\n", c(2,4));
+  // d. 整数を 2 つ与え、その大きい方を出力する。
+  printf("d(5,2)\n");
+  printf("%d\n", d(5,2));
+  // e. 整数を 2 つ与え、その小さい方を出力する。
+  printf("e(11,2)\n");
+  printf("%d\n", e(11,2));
+  // f. 整数を 3 つ与え、その最大値を出力する (または 4 つの最大でもよい)。
+  printf("f(99,-1,0)\n");
+  printf("%d\n", f(99,-1,0));
+  // g. 整数を 3 つ与え、その最小値を出力する (または 4 つの最小でもよい)。
+  printf("g(99,-1,0)\n");
+  printf("%d\n", g(99,-1,0));
+  // h. 整数を 3 つ与え (すべて異なる値とする)、中央の値を出力する。
+  printf("h(3,27,9)\n");
+  printf("%d\n", h(3,27,9));
+  // i. 正の整数 n を与え、n の階乗を出力する。
+  printf("i(3)\n");
+  printf("%d\n", i(3));
+  // j. 正の整数 n を与え、2\n を出力する。
+  printf("j(2)\n");
+  printf("%d\n", j(3));
+  // k. 正の整数 n, r(n ≥ r) を与え、nCr を出力する。
+  printf("k(7,3)\n");
+  printf("%d\n", k(7,3));
+  // l. 正の整数 a, b を与え、それらの最大公約数を出力する。
+  printf("l(99,81)\n");
+  printf("%d\n",l(99,81));
+
+  return 0;
+}
+/==============================================================================/
+/=================lec011/test/fp11_01/Fp11_01_TestTarget.h=====================/
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+    extern double a(double val);
+    extern double b(double val);
+
+#ifdef __cplusplus
+}
+#endif  // __cplusplus
+/==============================================================================/
+/==============lec011/test/fp11_01/Fp11_01_ModuleTestTarget.cpp================/
+CXX = g++
+CXXFLAGS = -std=c++11 -static-libstdc++ -g -Wall -fprofile-arcs -ftest-coverage -I./ -I$(CPPUTEST_HOME)/include
+LDFLAGS = -L./ -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+CPPUTEST_HOME =  /usr/include/CppUTest/
+TARGET = sample_cpputest.ut
+SRCS = fp11_01_module_main.cpp Fp11_01_ModuleTestTarget.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	    $(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
+
+$(OBJS): $(SRCS)
+	    $(CXX) -c $(CXXFLAGS) $^
+
+%.o: %.cpp
+	    $(CXX) -c $(CXXFLAGS) $<
+
+.PHONY: clean
+clean:
+	    rm -f $(TARGET) $(OBJS) *.gcno *.gcov *
+	    find . -name "*.gcda" | xargs rm
+/==============================================================================/
+/==============lec011/test/fp11_01/fp11_01_module_main.cpp=====================/
+CXX = g++
+CXXFLAGS = -std=c++11 -static-libstdc++ -g -Wall -fprofile-arcs -ftest-coverage -I./ -I$(CPPUTEST_HOME)/include
+LDFLAGS = -L./ -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+CPPUTEST_HOME =  /usr/include/CppUTest/
+TARGET = sample_cpputest.ut
+SRCS = fp11_01_module_main.cpp Fp11_01_ModuleTestTarget.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	    $(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
+
+$(OBJS): $(SRCS)
+	    $(CXX) -c $(CXXFLAGS) $^
+
+%.o: %.cpp
+	    $(CXX) -c $(CXXFLAGS) $<
+
+.PHONY: clean
+clean:
+	    rm -f $(TARGET) $(OBJS) *.gcno *.gcov *
+	    find . -name "*.gcda" | xargs rm
+/==============================================================================/
+/=======================lec011/test/fp11_01/Makefile===========================/
+CXX = g++
+CXXFLAGS = -std=c++11 -static-libstdc++ -g -Wall -fprofile-arcs -ftest-coverage -I./ -I$(CPPUTEST_HOME)/include
+LDFLAGS = -L./ -L$(CPPUTEST_HOME)/lib -lCppUTest -lCppUTestExt
+CPPUTEST_HOME =  /usr/include/CppUTest/
+TARGET = sample_cpputest.ut
+SRCS = fp11_01_module_main.cpp Fp11_01_ModuleTestTarget.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	    $(CXX) -o $@ $^ $(CXXFLAGS) $(LDFLAGS)
+
+$(OBJS): $(SRCS)
+	    $(CXX) -c $(CXXFLAGS) $^
+
+%.o: %.cpp
+	    $(CXX) -c $(CXXFLAGS) $<
+
+.PHONY: clean
+clean:
+	    rm -f $(TARGET) $(OBJS) *.gcno *.gcov *
+	    find . -name "*.gcda" | xargs rm
+/==============================================================================/
+
+[簡単な説明]
+プログラム自体は特筆すべき点はなし。
+以下を参考にCppUtestを試験的に導入。
+https://qiita.com/tomoyuki-nakabayashi/items/816e35f2099b021992dd
+
+実行結果は以下
+/----------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011/test/fp11_01$ ./sample_cpputest.ut
+ TEST_SETUP called
+b
+ TEST_TEARDOWN called
+. TEST_SETUP called
+a
+ TEST_TEARDOWN called
+.
+OK (2 tests, 2 ran, 2 checks, 0 ignored, 0 filtered out, 0 ms)
+/----------------------------------------------------------------------/
+
+(参考文献)
+テスト駆動開発による組み込みプログラミング ―C言語とオブジェクト指向で学ぶアジャイルな設計
+オライリージャパン 2013/4/24 刊
+James W. Grenning (著), 蛸島 昭之 (監修), 笹井 崇司  (翻訳)
+
+[アンケート]
+Q1. 強い型の言語、とくに C 言語についてどう思いましたか。
+特になし。
+Q2. 言語が異なるとプログラミングの方法も異なると思いますか。
+よくわからない。
+Q3. 本日の全体的な感想と今後の要望をお書きください。
+特になし。

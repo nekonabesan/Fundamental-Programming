@@ -1,0 +1,452 @@
+基礎プログラミングおよび演習レポート ＃10
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/16
+
+[課題の再掲]
+「演習 1」「演習 3」～「演習 7」の (小) 課題から選択して 1 つ以上プログラムを作り、レポートを提出しなさい。
+プログラムと、課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が含まれること。
+アンケートの回答もおこなうこと。
+
+演習 3 クラス Buffer を打ち込み、動作を確認せよ。動いたら、以下の操作 (メソッド) を追加してみよ。
+a. 現在行を削除する (EOF 行は削除しないように注意…)
+b. 現在行と次の行の順序を交換する (EOF は交換しないように…)
+c. 1 つ前の行に戻る (実は大変かも)
+d. すべての行の順番を逆順にする (かなり過激)
+
+[実施したこととその結果]
+※ターミナルからの入力には以下を使用
+/==========================lec010/fp10_03.rb==========================/
+require __dir__ + '/app/model/buffer.rb'
+
+def edit
+  e = Buffer.new
+  while true do
+    printf(">")
+    line = gets; c = line[0..0]; s = line[1..-2]
+    if c == "q" then return
+    elsif c == "t" then e.top; e.print
+    elsif c == "p" then e.print
+    elsif c == "i" then e.insert(s)
+    # elsif c == "r" then e.read(s)
+    # elsif c == "w" then e.save(s)
+    # elsif c == "s" then e.subst(s); e.print
+    # elsif c == "d" then e.delete
+    else e.forward; e.print
+    end
+  end
+end
+/=====================================================================/
+/=====================lec010/app/model/buffer.rb======================/
+require 'fiddle'
+=begin
+演習 3 クラス Buffer を打ち込み、動作を確認せよ。動いたら、以下の操作 (メソッド) を追加して
+みよ。
+=end
+class Buffer
+  Cell = Struct.new(:data, :next)
+
+  def initialize
+    @tail = @cur = Cell.new("EOF", nil)
+    @head = @prev = Cell.new("HEAD", @cur)
+  end
+
+  def atend
+    begin
+      return @cur == @tail
+    rescue => e
+      return e
+    end
+  end
+
+  def top
+    begin
+      @prev = @head
+      @cur = @head.next
+    rescue => e
+      return e
+    end
+  end
+
+  def forward
+    begin
+      return if atend
+      @prev = @cur
+      @cur = @cur.next
+    rescue => e
+      return e
+    end
+  end
+
+  def insert(s)
+    begin
+      raise ArgumentError if s.nil?
+      @prev.next = Cell.new(s, @cur)
+      @prev = @prev.next
+    rescue => e
+      return e
+    end
+  end
+
+  def print
+    begin
+      #puts(" " + @cur.data)
+      return @cur.data
+    rescue => e
+      return e
+    end
+  end
+
+=begin
+a. 現在行を削除する (EOF 行は削除しないように注意…)
+=end
+  def a
+    begin
+      if @cur.data != "EOF" then
+        nxt = @cur.next
+        @cur = nil
+        @cur = @prev
+        @cur.next = nxt
+        return true
+      else
+        return "EOF"
+      end
+    rescue => e
+      return e
+    end
+  end
+
+=begin
+b. 現在行と次の行の順序を交換する (EOF は交換しないように…)
+=end
+  def b
+    begin
+      return "EOF" if @cur.next.data == "EOF"
+      if @cur.next.data != "EOF" then
+        buf = @cur
+        nxt = buf.next.next
+        @cur = buf.next
+        @cur.next = buf
+        @cur.next.next = nxt
+      end
+      return true
+    rescue => e
+      return e
+    end
+  end
+
+=begin
+c. 1 つ前の行に戻る (実は大変かも)
+=end
+  def c
+    begin
+      return true if @prev.data == "HEAD"
+      buf = Fiddle::Pointer[@cur.data].to_i
+      self.top
+      while true do
+        break if buf == Fiddle::Pointer[@cur.next.data].to_i
+        self.forward
+      end
+      return true
+    rescue => e
+      return e
+    end
+  end
+
+
+=begin
+d. すべての行の順番を逆順にする (かなり過激)
+=end
+  def d
+    begin
+      a = Array.new
+      self.top
+      a.push(@cur.data)
+      while true do
+        self.forward
+        a.push(@cur.data)
+        break if @cur.next.data == "EOF"
+      end
+      len = a.length - 1
+      self.top
+      for i in 0..len do
+        @cur.data = a[len - i]
+        self.forward
+      end
+      self.top
+      return true
+    rescue => e
+      return e
+    end
+  end
+end
+/=====================================================================/
+/======================lec010/spec/fp10_spec.rb=======================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../app/model/buffer.rb'
+
+
+describe "演習 3" do
+  context "Buffer" do
+    obj = Buffer.new
+    it "insert('abc')" do
+      obj.insert("abc")
+      obj.top
+      results = obj.print.to_s
+      expect(results).to match("abc")
+    end
+    it "insert('def')" do
+      obj.insert('def')
+      results = obj.print.to_s
+      expect(results).to match("abc")
+    end
+    it "top->print" do
+      obj.top
+      results = obj.print.to_s
+      expect(results).to match("def")
+    end
+    it "inset('ghi')" do
+      obj.insert('ghi')
+      obj.top
+      results = obj.print.to_s
+      expect(results).to match("ghi")
+    end
+    it "forward" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match("def")
+    end
+    it "forward" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match("abc")
+    end
+    it "forward" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match("EOF")
+    end
+    it "a" do
+      obj.top
+      results = obj.a
+      expect(results).to eq true
+    end
+    it "print" do
+      obj.top
+      result = obj.print.to_s
+      expect(result).to match('def')
+    end
+  end
+  context "a" do
+    obj = Buffer.new
+    obj.insert('abc')
+    obj.insert('def')
+    obj.insert('ghi')
+    obj.top
+    it "a" do
+      results = obj.a
+      expect(results).to eq true
+    end
+    it "print" do
+      obj.top
+      results = obj.print.to_s
+      expect(results).to match('def')
+    end
+    it "a" do
+      results = obj.a
+      expect(results).to eq true
+    end
+    it "a" do
+      obj.top
+      results = obj.a
+      expect(results).to eq true
+    end
+    it "a" do
+      obj.top
+      results = obj.a
+      expect(results).to match("EOF")
+    end
+  end
+  context "b" do
+    obj = Buffer.new
+    obj.insert('abc')
+    obj.insert('def')
+    obj.insert('ghi')
+    obj.top
+    it "b" do
+      results = obj.print.to_s
+      expect(results).to match('abc')
+    end
+    it "b" do
+      obj.b
+      results = obj.print.to_s
+      expect(results).to match('def')
+    end
+    it "b" do
+      obj.forward
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match('ghi')
+    end
+    it "b" do
+      results = obj.b
+      expect(results).to match('EOF')
+    end
+  end
+  context "c" do
+    obj = Buffer.new
+    obj.insert('abc')
+    obj.insert('def')
+    obj.insert('ghi')
+    obj.top
+    it "c" do
+      obj.c
+      results = obj.print.to_s
+      expect(results).to match("abc")
+    end
+    it "c" do
+      obj.forward
+      obj.c
+      results = obj.print.to_s
+      expect(results).to match("abc")
+    end
+    it "c" do
+      obj.forward
+      obj.forward
+      obj.c
+      results = obj.print.to_s
+      expect(results).to match("def")
+    end
+    it "c" do
+      obj.forward
+      obj.forward
+      obj.c
+      results = obj.print.to_s
+      expect(results).to match("ghi")
+    end
+    it "c" do
+      obj.forward
+      obj.c
+      results = obj.print.to_s
+      expect(results).to match("ghi")
+    end
+  end
+  context "d" do
+    obj = Buffer.new
+    obj.insert('abc')
+    obj.insert('def')
+    obj.insert('ghi')
+    it "d" do
+      obj.d
+      results = obj.print.to_s
+      expect(results).to match('ghi')
+    end
+    it "d" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match('def')
+    end
+    it "d" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match('abc')
+    end
+    it "d" do
+      obj.forward
+      results = obj.print.to_s
+      expect(results).to match('EOF')
+    end
+  end
+end
+/=====================================================================/
+
+[考察]
+Ruby処理系はメモリアロケーションを意識せずに「構造体」を扱うことが可能であり、
+本課題においても容易に構造体を定義し参照先の移動、順序変更が実施できた。
+またRubyにおいてはJavaにおけるイテレーションに相当する機能が遥かに容易に実装できる点も確認できた。
+データ構造を維持したまま配列と同様にループ処理が行える機能は特にRDBとの連携において有意であり、
+RubyにおいてはPHP、Perl配列、ハッシュ(連想配列)以上に簡便かつ高機能な実装が可能となる点も確認できた。
+(例)
+・phpの場合(配列)
+$vars = array("aaa","bbb","ccc");
+$line = 0;
+$buffer = array();
+// データをBufferへ格納
+// メソッド、変数、配列等が全て「オブジェクト」として初期化されるRubyと異なり
+// 基本的に配列またはハッシュとしてデータを扱う事になり
+// 実装のレベルでは「データ構造」として扱うことが出来る訳ではない
+for($i = 0; Si <= count($vars); $i++){
+  if($i == count($vars)){
+    $tmp = "EOF";
+  } else {
+    $tmp = $vars[$i];
+  }
+  $buffer[$i] = array('key' => $i, 'val' => $tmp);
+}
+
+// 参照
+for($i = 0; $i < count($buffer); $i++){
+  echo "key-> ".$buffer[$i]['key']." val-> ".$buffer[$i]['val']."\n";
+}
+/-------------------------------------------------------------------/
+・phpの場合(Entity)
+◆Entityクラス
+class Ent {
+  private $key;
+  private $val;
+
+  public function setKey($key){
+    $this->key = $key;
+  }
+  public function getKey(){
+    return $this->key;
+  }
+
+  public function setVal($val){
+    $this->val = $val;
+  }
+  public function getVal(){
+    return $this->val;
+  }
+}
+◆呼び出し元
+require_once './Ent.php';
+$vars = array("aaa","bbb","ccc");
+$buffer = array();
+
+// Entityを配列化する処理
+for($i = 0; $i <= count($vars); $i++){
+  // Entityを初期化
+  $obj = new Ent();
+  $obj->setKey($i);
+  if($i == count($vars)){
+    $obj->setVal("EOF");
+  } else {
+    $obj->setVal($vars[$i]);
+  }
+  array_push($buffer,$obj);
+}
+
+// Entityを参照する処理
+foreach($buffer as $key => $val){
+  // 「オブジェクト型」のデータ構造を扱う訳ではなく
+  // 内部的にはオブジェクトに「見える」ハッシュを扱っている
+  printf("value -> %5s\n",$val->getVal());
+}
+
+◆実行結果
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/Music$ php ./main.php
+value ->   aaa
+value ->   bbb
+value ->   ccc
+value ->   EOF
+
+
+[アンケート]
+Q1. 何らかの動的データ構造が扱えるようになりましたか。
+ある程度。
+Q2. 複雑な構造をクラスの中にパッケージ化する利点について納得しましたか。
+ある程度。
+Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。

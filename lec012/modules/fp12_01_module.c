@@ -1,7 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 const int TRUE = 1;
 const int FALSE = 0;
 
+//============================================================================//
+// 演習 1 上の例題を打ち込んで実行せよ ( 一部を出力するところも追加して動かしてみること ) 。
+// うまく動いたら、次のような関数を追加してみよ。
+//============================================================================//
 void sort2(double a, double b, double *p, double *q){
    if(a < b){
      *p = a;
@@ -37,7 +45,7 @@ void piarrayrev(int n, int a[]){
 // なければ-1 を返す) 関数 int iindex(int n, int a[], int x)。
 //============================================================================//
 int iindex(int n, int a[], int x){
-  unsigned int result = -1;
+  int result = -1;
   for(int i = 0; n > i; i++){
     if(a[i] == x){
       result = i;
@@ -62,7 +70,7 @@ int maxiarray(int n, int a[]){
 // d. 整数配列の最小値を返す関数 int miniarray(int n, int a[])。
 //============================================================================//
 int miniarray(int n, int a[]){
-  unsigned int min = a[0];
+  int min = a[0];
   for(int i = 0; n > i; i++){
     if(min > a[i]){
       min = a[i];
@@ -75,7 +83,7 @@ int miniarray(int n, int a[]){
 // e. 整数配列の合計値を返す関数 int sumiarray(int n, int a[])。
 //============================================================================//
 int sumiarray(int n, int a[]){
-  unsigned int result = 0;
+  int result = 0;
   for(int i = 0; n > i; i++){
     result += a[i];
   }
@@ -86,7 +94,7 @@ int sumiarray(int n, int a[]){
 // f. 整数配列の平均値を返す関数 double avgiarray(int n, int a[])。
 //============================================================================//
 double avgiarray(int n, int a[]){
-  unsigned int result = 0;
+  double result = 0;
   for(int i = 0; n > i; i++){
     result += a[i];
   }
@@ -98,13 +106,13 @@ double avgiarray(int n, int a[]){
 //============================================================================//
 void g01(int n, double a[]){
   for(int i = 0; n > i; i++){
-    printf("%s ", a[i]);
+    printf("%f ", a[i]);
   }
 }
 
 void g02(int n, double a[]){
   for(int i = n; i > n; i--){
-    printf("%s ", a[i]);
+    printf("%f ", a[i]);
   }
 }
 
@@ -129,8 +137,8 @@ double g04(int n, double a[]){
 }
 
 double g05(int n, double a[]){
-  double result = 0;
-  for(int i = 0; n > i; i++){
+  double result = 0.0;
+  for(int i = 0; i < n; i++){
     result += a[i];
   }
   return result;

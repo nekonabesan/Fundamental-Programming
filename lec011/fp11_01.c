@@ -12,8 +12,8 @@
 
 int main(void){
   // a. 円錐の底面の半径と高さを与え、体積を出力する。
-  printf("a(5, 10)\n");
-  printf("%f\n", a(5, 10));
+  printf("a(2.0, 5.0)\n");
+  printf("%f\n", a(2.0, 5.0));
   // b. 実数 x を与え、その平方値を出力する。
   printf("b(4)\n");
   printf("%f\n", b(4));

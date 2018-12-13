@@ -1,0 +1,133 @@
+活動内容報告 ＃09
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/03
+
+[作成したプログラム]
+■課題
+「演習 1」～「演習 2」で動かしたプログラム (どれか 1 つでよい) を含むレポートを提出しなさい。
+プログラムと、簡単な説明が含まれること。アンケートの回答もおこなうこと。
+
+演習 1
+ この例題を打ち込み動かせ。
+ 次に「ほえる」メソッド bark(引数無) と、「ほえる回数」を設定するメソッド setcount(回数を渡す) を追加せよ。
+ 最初は 3 回ほえるものとする。
+
+■ソースコード
+/=======================lec009/fp09_01.rb=======================/
+ require 'benchmark'
+ require 'bigdecimal'
+ require 'bigdecimal/util'
+ require __dir__ + '/../modules/fp_module.rb'
+ require __dir__ + '/app/models/dog.rb'
+
+ =begin
+ 演習 1 この例題を打ち込み動かせ。次に「ほえる」メソッド bark(引数無) と、「ほえる回数」を設
+ 定するメソッド setcount(回数を渡す) を追加せよ。最初は 3 回ほえるものとする。
+ =end
+ def main
+   a = Dog.new('pochi')
+   b = Dog.new('tama')
+   puts(a.talk)
+   puts(b.talk)
+   a.addspeed(5.0)
+   b.addspeed(8.0)
+   a.addspeed(10.0)
+   a.setCount(3)
+   a.bark
+   return true
+ end
+/===============================================================/
+/=====================lec009/app/modeles/dog.rb=================/
+=begin
+演習 1 この例題を打ち込み動かせ。次に「ほえる」メソッド bark(引数無) と、「ほえる回数」を設
+定するメソッド setcount(回数を渡す) を追加せよ。最初は 3 回ほえるものとする。
+=end
+class Dog
+
+  def initialize(name)
+    @name = name
+    @speed = 0.0
+    @count = 0
+  end
+
+  def setName(name)
+    @name = name
+  end
+  def getName
+    return @name
+  end
+
+  def setSpeed(speed)
+    @speed = speed
+  end
+  def getSpeed
+    return @speed
+  end
+
+  def setCount(count)
+    @count = count
+  end
+  def getCount
+    return @count
+  end
+
+  def talk
+    return 'my name is ' + @name
+  end
+
+  def addspeed(d)
+    @speed = @speed + d
+    return 'speed = ' + @speed.to_s
+  end
+
+  def bark
+    @count.to_i.times{ |i| puts(i) }
+  end
+end
+/===============================================================/
+■テストコード
+/===================lec009/spec/fp09_01_spec.rb=================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp09_01.rb'
+require __dir__ + '/../app/models/dog.rb'
+
+
+describe "演習 1" do
+  context "Dog" do
+    a = Dog.new("pochi")
+    b = Dog.new("tama")
+    it " a.talk" do
+      results = a.talk
+      expect(results).to match("my name is pochi")
+    end
+    it " b.talk" do
+      results = b.talk
+      expect(results).to match("my name is tama")
+    end
+    it "a.addspeed(5.0)" do
+      results = a.addspeed(5.0)
+      expect(results).to match("speed = 5.0")
+    end
+    it "b.addspeed(8.0)" do
+      results = b.addspeed(8.0)
+      expect(results).to match("speed = 8.0")
+    end
+    it "a.addspeed(10.0)" do
+      results = a.addspeed(10.0)
+      expect(results).to match("speed = 15.0")
+    end
+  end
+end
+/===============================================================/
+[簡単な説明]
+演習１の内容を実装しテスト実施。
+
+[アンケート]
+Q1. クラスの概念やその機能について納得しましたか。
+ある程度。
+Q2. オブジェクト指向というものにどのような感想を持ちましたか。
+ユニットテストはやり易い。
+Q3. 本日の全体的な感想と今後の要望をお書きください。
+特になし。

@@ -1,5 +1,11 @@
-*/coverage/
+coverage/
 *.o
 *.gcda
 *.gcno
 *.exe
+*.out
+googletest-release-*/
+gtest/
+*.ut
+*.ppm
+*.gif

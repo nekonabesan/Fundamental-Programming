@@ -1,0 +1,417 @@
+基礎プログラミングおよび演習レポート ＃09
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/09
+
+[課題の再掲]
+「演習 2」～「演習 5」の (小) 課題から選択して 1 つ以上プログラムを作り、レポートを提出しな
+さい。プログラムと、課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が含
+まれること。アンケートの回答もおこなうこと。
+
+演習 2 次のような機能と使い方を持つクラスを作成せよ。使用例の通りに使えることを確認すること。
+a. 「覚える」機能を持つクラス Memory。put(x) で与えた容を記憶し、get で取り出す。
+b. 「文字列を連結していく」クラス Concat。add(s) で文字列 sを今まで覚えているものに連結する (最初は空文字列)。
+  get で現在覚えている文字列を返す。reset で覚えている文字列を空文字列にリセット。
+  (文字列どうしを連結するのは「+」でできます。)
+c. 「最大 2 つ覚える」機能を持つクラス Memory2。put(x) で新しい内容を記憶させ、get で
+  取り出す。2 回取り出すと 2 回目はより古い内容が出てくる。取り出した値は忘れる。覚え
+  ている以上に取り出すと nil が返る (興味があれば「最大 N 個覚える」をやってもよい)。
+演習 3 有理数クラスをそのまま打ち込んで動かせ。動いたら、四則の他の演算も追加し、動作を確認せよ。
+  できれば、これを用いて浮動小数点では正確に行えない「実用的な」計算が正確にできることを確認してみよ。
+
+
+[実施したこととその結果]
+■ソースコード(演習2)
+/===================lec009/app/modeles/memory.rb================/
+class Memory
+  def initialize
+    @feeld
+  end
+
+  def put(var)
+    @feeld = var
+  end
+
+  def get
+    return @feeld
+  end
+end
+/===============================================================/
+/==================lec009/app/modeles/memory2.rb================/
+=begin
+c. 「最大 2 つ覚える」機能を持つクラス Memory2。put(x) で新しい内容を記憶させ、get で
+取り出す。2 回取り出すと 2 回目はより古い内容が出てくる。取り出した値は忘れる。覚え
+ている以上に取り出すと nil が返る (興味があれば「最大 N 個覚える」をやってもよい)。
+=end
+class Memory2
+  def initialize
+    @feeld1 = nil
+    @feeld2 = nil
+  end
+
+  def put(n)
+    @feeld2 = @feeld1
+    @feeld1 = n
+  end
+
+  def get
+    result = @feeld1
+    @feeld1 = @feeld2
+    @feeld2 = nil
+    return result
+  end
+
+end
+/===============================================================/
+/==================lec009/app/modeles/concat.rb=================/
+=begin
+b. 「文字列を連結していく」クラス Concat。add(s) で文字列 s を今まで覚えているものに
+連結する (最初は空文字列)。get で現在覚えている文字列を返す。reset で覚えている文
+字列を空文字列にリセット。(文字列どうしを連結するのは「+」でできます。)
+=end
+class Concat
+  def initialize
+    @feeld = ""
+  end
+
+  def add(str)
+    @feeld = @feeld + str.to_s
+  end
+
+  def get
+    return @feeld
+  end
+
+  def reset
+    @feeld = ""
+  end
+
+end
+/===============================================================/
+/===============================================================/
+■テストコード
+/===================lec009/spec/fp09_02_spec.rb=================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp09_02.rb'
+require __dir__ + '/../app/models/memory.rb'
+require __dir__ + '/../app/models/concat.rb'
+require __dir__ + '/../app/models/memory2.rb'
+=begin
+演習 2 次のような機能と使い方を持つクラスを作成せよ。使用例の通りに使えることを確認すること。
+=end
+=begin
+a. 「覚える」機能を持つクラス Memory。put(x) で与えた容を記憶し、get で取り出す。
+=end
+describe "演習 2" do
+  context "Memory" do
+    obj = Memory.new
+    obj.put(5)
+    it "get 5" do
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get 5" do
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get 10" do
+      obj.put(10)
+      results = obj.get
+      expect(results).to eq 10
+    end
+  end
+  context "Concat" do
+    obj = Concat.new
+    obj.add("This")
+    it "add(This)" do
+      results = obj.get
+      expect(results).to eq "This"
+    end
+    it "add(is)" do
+      obj.add("is")
+      results = obj.get
+      expect(results).to eq "Thisis"
+    end
+    it "add(a)" do
+      obj.add("a")
+      results = obj.get
+      expect(results).to eq "Thisisa"
+    end
+    it "reset" do
+      obj.reset
+      obj.add("pen")
+      results = obj.get
+      expect(results).to eq "pen"
+    end
+  end
+  context "Memory2" do
+    obj = Memory2.new
+    it ".put(1)" do
+      obj.put(1)
+      results = obj.get
+      expect(results).to eq 1
+    end
+    it "put(3)" do
+      obj.put(3)
+      obj.put(5)
+      results = obj.get
+      expect(results).to eq 5
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq 3
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq nil
+    end
+    it "put(7)->put(9)->get" do
+      obj.put(7)
+      obj.put(9)
+      results = obj.get
+      expect(results).to eq 9
+    end
+    it "put(11)->get" do
+      obj.put(11)
+      results = obj.get
+      expect(results).to eq 11
+    end
+    it "get" do
+      results = obj.get
+      expect(results).to eq 7
+    end
+  end
+end
+/===============================================================/
+■ソースコード(演習3)
+/===================lec009/app/modeles/ratio.rb=================/
+=begin
+演習 3 有理数クラスをそのまま打ち込んで動かせ。
+動いたら、四則の他の演算も追加し、動作を確認せよ。
+できれば、これを用いて浮動小数点では正確に行えない「実用的な」計算が正確にで
+きることを確認してみよ。
+=end
+class Ratio
+  begin
+    def initialize(a, b = 1)
+      if b == 0 then
+        @a = 1
+      end
+      if a == 0 then
+        @b = 1;
+      end
+      @a = a.to_i
+      @b = b.to_i
+      if b < 0 then
+        @a = -a
+        @b = -b
+      end
+      g = gcd(a.abs, b.abs)
+      @a = @a/g
+      @b = @b/g
+    rescue => e
+      return e
+    end
+  end
+
+  def getDivisor
+    return @b
+  end
+
+  def getDividend
+    return @a
+  end
+
+  def to_s
+    return "#{@a}/#{@b}"
+  end
+
+  def add(r)
+    begin
+      raise ArgumentError if r == nil
+      c = r.getDividend
+      d = r.getDivisor
+      # a/b+c/d = (ad+bc)/bd
+      return Ratio.new(@a*d + @b*c, @b*d)
+    rescue => e
+      return e
+    end
+  end
+
+  def subtraction(r)
+    begin
+      raise ArgumentError if r == nil
+      c = r.getDividend
+      d = r.getDivisor
+      # a/b-c/d = (ad-bc)/bd
+      return Ratio.new(@a*d - @b*c, @b*d)
+    rescue => e
+      return e
+    end
+  end
+
+  def times(r)
+    begin
+      raise ArgumentError if r == nil
+      return Ratio.new(@a*r.getDividend, @b*r.getDivisor)
+    rescue => e
+      return e
+    end
+  end
+
+  def div(r)
+    begin
+      raise ArgumentError if r == nil
+      return Ratio.new(@a*r.getDivisor, @b*r.getDividend)
+    rescue => e
+      return e
+    end
+  end
+
+  def gcd(x, y)
+    begin
+      raise ArgumentError if x == nil || y == nil
+      while true do
+        if x > y then
+          x = x % y
+          if x == 0 then
+            return y
+          end
+        else y = y % x
+          if y == 0 then
+            return x
+          end
+        end
+      end
+      return TRUE
+    rescue => e
+      return e
+    end
+  end
+end
+/===============================================================/
+/===============================================================/
+■テストコード
+/===================lec009/spec/fp09_03_spec.rb=================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp09_03.rb'
+require __dir__ + '/../app/models/ratio.rb'
+
+
+describe "演習 3 Ratio" do
+  context "Ratio initialize" do
+    it "Ratio.new(3,0)" do
+      obj = Ratio.new(3,0)
+      results = obj
+      expect(results.to_s).to match("3/0")
+    end
+    it "Ratio.new(0,3)" do
+      obj = Ratio.new(0,3)
+      results = obj
+      expect(results.to_s).to match("0/3")
+    end
+    it "Ratio.new(3,5)" do
+      obj = Ratio.new(3,5)
+      results = obj
+      expect(results.to_s).to match("3/5")
+    end
+    it " Ratio.new(8,7)" do
+      obj = Ratio.new(8,7)
+      results = obj
+      expect(results.to_s).to match("8/7")
+    end
+  end
+  context "Ratio add" do
+    it "add" do
+      a = Ratio.new(3,5)
+      b = Ratio.new(8,7)
+      results = a.add(b)
+      expect(results.to_s).to match("61/35")
+    end
+    it "add" do
+      a = Ratio.new(1,2)
+      b = Ratio.new(1,3)
+      results = a.add(b);
+      expect(results.to_s).to match("5/6")
+    end
+  end
+  context "Ratio subtraction" do
+    it "subtraction 01 throw exception" do
+      a = Ratio.new(1,4)
+      results = a.subtraction(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "subtraction" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(1,5)
+      results = a.subtraction(b)
+      expect(results.to_s).to match("1/20")
+    end
+  end
+  context "Ratio times" do
+    it "times 01 throw exception" do
+      a = Ratio.new(1,4)
+      results = a.times(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "times 02" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(1,5)
+      results = a.times(b)
+      expect(results.to_s).to match("1/20")
+    end
+    it "times 03" do
+      a = Ratio.new(2,3)
+      b = Ratio.new(1,5)
+      results = a.times(b)
+      expect(results.to_s).to match("2/15")
+    end
+  end
+  context "Ratio div" do
+    it "div 01 throw exception" do
+      a = Ratio.new(1,3)
+      results = a.div(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+    it "div 02" do
+      a = Ratio.new(1,3)
+      b = Ratio.new(1,5)
+      results = a.div(b)
+      expect(results.to_s).to match("5/3")
+    end
+    it "div 03" do
+      a = Ratio.new(1,4)
+      b = Ratio.new(4)
+      results = a.div(b)
+      expect(results.to_s).to match("1/1")
+    end
+  end
+end
+/===============================================================/
+[考察]
+◆演習2
+小問a~bの処理を
+・Memory
+・Memory2
+・Concat
+へ分割し実装した。
+上記の方針とすることで、クラス(乃至メソッド)毎の機能的スコープ(役割)が明確になり、
+クラス(メソッド)のもつ機能的な因果関係が「〇〇を☓☓する」という形式で一段論法的に集約できる。
+上記により
+・一段論法的因果関係の組み合わせで複雑な処理を実現できる。
+・個々の機能のテストスコープが明確化され品質が向上する。
+等オブジェクト指向的実装のメリットが確認できた。
+◆演習3
+設問の方針で実装しテスト実施。
+浮動小数点演算と異なり、
+設問の様に計算結果(期待値)が明確に特定できる場合、
+特にユニットテストの恩恵を得ることが出来る事が確認できた。
+
+[アンケート]
+Q1. クラス定義が書けるようになりましたか。
+ある程度。
+Q2. オブジェクト指向について納得しましたか。
+ある程度。
+Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。

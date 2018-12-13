@@ -3,21 +3,21 @@ require __dir__ + '/../fp10_01.rb'
 
 
 describe "演習 1" do
-  context "a" do
-    it "a(10)" do
-      results = a(10)
+  context "listsum" do
+    it "listsum(10)" do
+      results = listsum(10)
       expect(results).to eq 55
     end
-    it "a(100)" do
-      results = a(100)
+    it "listsum(100)" do
+      results = listsum(100)
       expect(results).to eq 5050
     end
-    it "a(22)" do
-      results = a(22)
+    it "listsum(22)" do
+      results = listsum(22)
       expect(results).to eq 253
     end
-    it "a(nil)" do
-      results = a(nil)
+    it "listsum(nil)" do
+      results = listsum(nil)
       expect(results).to be_a(ArgumentError)
     end
   end
@@ -39,39 +39,53 @@ describe "演習 1" do
       expect(results).to be_a(ArgumentError)
     end
   end
-  context "c" do
+  context "listcatrev" do
     it "" do
-      results = c("string")
+      results = listcatrev("string")
       expect(results).to match("gnirts")
     end
     it "" do
-      results = c('Hallo World!!')
+      results = listcatrev('Hallo World!!')
       expect(results).to match("!!dlroW ollaH")
     end
     it "" do
-      results = c('0123456789')
+      results = listcatrev('0123456789')
       expect(results).to match("9876543210")
     end
     it "c(nil)" do
-      results = c(nil)
+      results = listcatrev(nil)
       expect(results).to be_a(ArgumentError)
     end
   end
-  context "d" do
-    it "d('string')" do
-      results = d("string")
+  context "printmany" do
+    it "printmany('string')" do
+      results = printmany("string")
       expect(results).to match("sttrrriiiinnnnngggggg")
     end
-    it "d('Hallo World!!')" do
-      results = d("Hallo World!!")
+    it "printmany('Hallo World!!')" do
+      results = printmany("Hallo World!!")
       expect(results).to match("Haalllllllooooo      WWWWWWWoooooooorrrrrrrrrllllllllllddddddddddd!!!!!!!!!!!!!!!!!!!!!!!!!")
     end
-    it "d('0123456789')" do
-      results = d("0123456789")
+    it "printmany('0123456789')" do
+      results = printmany("0123456789")
       expect(results).to match("0112223333444445555556666666777777778888888889999999999")
     end
     it "" do
-      results = d(nil)
+      results = printmany(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "listoddsum" do
+    it "listoddsum(string)" do
+      results = listoddsum("string")
+      expect(results).to match("tig")
+    end
+    it "listoddsum(0123456789)" do
+      results = listoddsum("0123456789")
+      expect(results).to match("13579")
+    end
+    it "listoddsum(nil)" do
+      results = listoddsum(nil)
       expect(results).to be_a(ArgumentError)
     end
   end
@@ -81,7 +95,7 @@ describe "演習 1" do
       expect(results).to be_a(ArgumentError)
     end
   end
-  context "f" do
+  context "listrev" do
     it "listrev(nil)" do
       results = listrev(nil)
       expect(results).to be_a(ArgumentError)
