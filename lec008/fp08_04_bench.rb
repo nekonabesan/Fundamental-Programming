@@ -66,6 +66,19 @@ def d_bench(n = 100)
   end
 end
 
+#/===================================================/
+# 1回だけ実行
+#/===================================================/
+def d_bench2
+  begin
+    obj = Fp08_04.new
+    a = obj.d(1)
+    return a
+  rescue => e
+    return e
+  end
+end
+
 def avalage(a)
   begin
     raise ArgumentError if a.nil?

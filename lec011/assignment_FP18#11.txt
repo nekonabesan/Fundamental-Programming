@@ -1,0 +1,473 @@
+基礎プログラミングおよび演習レポート ＃11
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/23
+
+[課題の再掲]
+「演習 1」～「演習 6」の (小) 課題から「10 個以上」選択してプログラムを作り、レポートを提出しなさい。
+ただし、演習 3 以降が含まれる場合は「1 個以上」でよい。プログラムと、
+課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が含まれること。
+アンケートの回答もおこなうこと。
+
+演習 4 区間 2 分法によって平方根を求める C プログラムを作成しなさい。必要と思われる精度にし
+たとき、繰り返し回数がいくつになるか検討しなさい。
+
+[実施したこととその結果]
+/====================lec011/modules/fp11_04_module.c===========================/
+//-----------------------------------------------------------------------------//
+// Google Test用includeヘッダ
+// 本番ビルド時はコメントアウト
+//-----------------------------------------------------------------------------//
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+
+const int TRUE = 1;
+const int FALSE = 0;
+//const int DENOMINATOR = 10000000;
+//-----------------------------------------------------------------------------//
+// 演習 4 区間 2 分法によって平方根を求める C プログラムを作成しなさい。
+// 必要と思われる精度にしたとき、繰り返し回数がいくつになるか検討しなさい。
+//-----------------------------------------------------------------------------//
+double calc04(double x, int d){
+  double a = 0;
+  double b = x;
+  double c = 0;
+  double f = 0;
+  int i = 0;
+  while(1){
+    c = (a + b)/2;
+    f = pow(c, 2.0);
+    if(f == x || i == d){
+      break;
+    }else if(f < x){
+      a = c;
+    }else{
+      b = c;
+    }
+    i++;
+  }
+  return c;
+}
+/==============================================================================/
+/============================lec011/fp11_04.c==================================/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "modules/fp11_04_module.c"
+
+int main(void) {
+  // 演習 3
+  printf("%s\n", "演習 4");
+  printf("%.20f\n", 1.4142135623730951);
+  printf("calc04(2.0, 10) sqrt =>  %.20f\n", calc04(2.0, 10));
+  printf("calc04(2.0, 100) sqrt =>  %.20f\n", calc04(2.0, 100));
+  printf("calc04(2.0, 1000) sqrt =>  %.20f\n", calc04(2.0, 1000));
+  printf("calc04(2.0, 10000) sqrt =>  %.20f\n", calc04(2.0, 10000));
+  printf("calc04(2.0, 100000) sqrt =>  %.20f\n", calc04(2.0, 100000));
+  printf("calc04(2.0, 1000000) sqrt =>  %.20f\n", calc04(2.0, 1000000));
+  printf("calc04(2.0, 10000000) sqrt =>  %.20f\n", calc04(2.0, 10000000));
+  return FALSE;
+}
+/==============================================================================/
+/======================lec011/test/fp11_04/Makefile============================/
+# Makefile
+# all:より下の3行のインデント、
+# gtest-gen:より下の1行のインデント
+# は半角空白になっていますがタブ1個にしてください
+# target.cはCなのでgccで、それ以外はC++なのでg++でビルドします
+# gtest_main.ccはGoogleTestが用意してくれているmain関数、
+# gtest-all.ccがGoogleTest全部入りファイルです
+# -lpthreadをつけることにも注意。
+# makeかmake allしたらビルドして実行まで行います。
+all:
+			gcc -c ../../modules/fp11_04_module.c
+			g++ test.cpp googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp11_04_module.o
+			./a.out
+
+gtest-gen:
+			python googletest-release-1.8.1/googletest/scripts/fuse_gtest_files.py ./
+/==============================================================================/
+/=======================lec011/test/fp11_04/target.h===========================/
+// テスト対象関数のプロトタイプ宣言
+#ifndef _TARGET_H_
+#define _TARGET_H_
+
+double calc04(double x, int d);
+
+#endif /* _TARGET_H_ */
+/==============================================================================/
+/=======================lec011/test/fp11_04/test.cpp===========================/
+// テストケース記述ファイル
+#include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
+// テスト対象関数を呼び出せるようにするのだが
+// extern "C"がないとCと解釈されない、意外とハマりがち。
+extern "C" {
+  #include "target.h"
+}
+
+// fixtureNameはテストケース群をまとめるグループ名と考えればよい、任意の文字列
+// それ以外のclass～testing::Testまではおまじないと考える
+class fixtureName : public ::testing::Test {
+protected:
+    // fixtureNameでグループ化されたテストケースはそれぞれのテストケース実行前に
+    // この関数を呼ぶ。共通の初期化処理を入れておくとテストコードがすっきりする
+    virtual void SetUp(){
+    }
+    // SetUpと同様にテストケース実行後に呼ばれる関数。共通後始末を記述する。
+    virtual void TearDown(){
+    }
+};
+
+// 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
+TEST_F(fixtureName, sqrt01)
+{
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 100));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 1000));
+    EXPECT_NEAR(0.9, 1.1, calc04(1.0, 10000));
+}
+TEST_F(fixtureName, sqrt02)
+{
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 100));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 1000));
+    EXPECT_NEAR(1.39, 1.42, calc04(2.0, 10000));
+}
+// あえて失敗するテストケースも書いておく。
+TEST_F(fixtureName, sqrt03)
+{
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 100));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 1000));
+    EXPECT_NEAR(1.72, 1.74, calc04(3.0, 10000));
+}
+
+[考察]
+◆実行結果
+・演習４(区間 2 分法)
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011$ ./a.out
+演習 4
+1.41421356237309514547
+calc04(2.0, 10) sqrt =>  1.41503906250000000000
+calc04(2.0, 100) sqrt =>  1.41421356237309492343
+calc04(2.0, 1000) sqrt =>  1.41421356237309492343
+calc04(2.0, 10000) sqrt =>  1.41421356237309492343
+calc04(2.0, 100000) sqrt =>  1.41421356237309492343
+calc04(2.0, 1000000) sqrt =>  1.41421356237309492343
+calc04(2.0, 10000000) sqrt =>  1.41421356237309492343
+/------------------------------------------------------------------------------/
+１００回程度である程度実用的な精度が得られた。
+演習5の実行結果と比較したところ、
+・演習5(ニュートン法)
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011$ ./a.out
+演習 5
+1.41421356237309514547
+calc05(2.0, 1)        sqrt =>  1.41666666666666651864
+calc05(2.0, 2)        sqrt =>  1.41421568627450966460
+calc05(2.0, 3)        sqrt =>  1.41421356237468986983
+calc05(2.0, 4)        sqrt =>  1.41421356237309492343
+calc05(2.0, 5)        sqrt =>  1.41421356237309492343
+calc05(2.0, 10)       sqrt =>  1.41421356237309492343
+calc05(2.0, 100)      sqrt =>  1.41421356237309492343
+calc05(2.0, 1000)     sqrt =>  1.41421356237309492343
+calc05(2.0, 10000)    sqrt =>  1.41421356237309492343
+calc05(2.0, 100000)   sqrt =>  1.41421356237309492343
+calc05(2.0, 1000000)  sqrt =>  1.41421356237309492343
+calc05(2.0, 10000000) sqrt =>  1.41421356237309492343
+/------------------------------------------------------------------------------/
+試行回数10回以下で十分な精度が得られる。
+演習5の実行結果について、あまりに簡便に精度が得られるため以下のソースに対して、
+/=======================lec011/modules/fp11_05_module.c========================/
+const int TRUE = 1;
+const int FALSE = 0;
+//const int DENOMINATOR = 10000000;
+//-----------------------------------------------------------------------------//
+// 演習 5 ニュートン法によって平方根を求める C プログラムを作成しなさい。
+// 必要と思われる精度にしたとき、繰り返し回数がいくつになるか検討しなさい。
+// (ヒント: 繰り返しごとに現在の近似値を書き出すのでもよいですね。)
+//-----------------------------------------------------------------------------//
+double calc05(double n, int d){
+  double f = n;
+  double dx = 2 * n;
+  int cnt = 0;
+  while(1){
+    if(cnt > d){
+      break;
+    }
+    dx = f;
+    f = 0.5 * dx + 0.5 * n / dx;
+    cnt++;
+  }
+  return f;
+}
+/==============================================================================/
+以下のテストを実施。
+※Makefile他は略
+/========================lec011/test/fp11_05_test.cpp==========================/
+// テストケース記述ファイル
+#include "gtest/gtest.h" // googleTestを使用するおまじないはこれだけでOK
+// テスト対象関数を呼び出せるようにするのだが
+// extern "C"がないとCと解釈されない、意外とハマりがち。
+extern "C" {
+  #include "fp11_05_target.h"
+}
+
+// fixtureNameはテストケース群をまとめるグループ名と考えればよい、任意の文字列
+// それ以外のclass～testing::Testまではおまじないと考える
+class fixtureName : public ::testing::Test {
+protected:
+    // fixtureNameでグループ化されたテストケースはそれぞれのテストケース実行前に
+    // この関数を呼ぶ。共通の初期化処理を入れておくとテストコードがすっきりする
+    virtual void SetUp(){
+    }
+    // SetUpと同様にテストケース実行後に呼ばれる関数。共通後始末を記述する。
+    virtual void TearDown(){
+    }
+};
+
+// 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
+TEST_F(fixtureName, sqrt01)
+{
+  // 近似値
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 1));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 2));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 3));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 4));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 5));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 10));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 100));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 1000));
+  EXPECT_NEAR(0.99, 1.0, calc05(1.0, 10000));
+  // EQ
+  EXPECT_EQ(calc05(1.0, 1),1.0);
+}
+TEST_F(fixtureName, sqrt02)
+{
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 1));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 2));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 3));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 4));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 5));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 10));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 100));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 1000));
+  EXPECT_NEAR(1.414, 1.415, calc05(2.0, 10000));
+}
+TEST_F(fixtureName, sqrt03)
+{
+  EXPECT_NEAR(1.72, 1.74, calc05(3.0, 10));
+  EXPECT_NEAR(1.72, 1.74, calc05(3.0, 100));
+  EXPECT_NEAR(1.72, 1.74, calc05(3.0, 1000));
+  EXPECT_NEAR(1.72, 1.74, calc05(3.0, 10000));
+}
+TEST_F(fixtureName, sqrt25)
+{
+  // EQ
+  EXPECT_EQ(calc05(25.0, 1),5.0);
+}
+TEST_F(fixtureName, sqrt36)
+{
+  // EQ
+  EXPECT_EQ(calc05(36.0, 1),36.0);
+}
+// あえて失敗するテストケースも書いておく。
+/==============================================================================/
+試験対象の値が大きくなると精度と試行回数の関係に変化が生じるという想定の下UT実行。
+・UT実施結果
+/------------------------------------------------------------------------------/
+heepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011/test/fp11_05$ make
+gcc -c ../../modules/fp11_05_module.c
+g++ fp11_05_test.cpp ../googletest-release-1.8.1/googletest/src/gtest_main.cc gtest/gtest-all.cc -I. -lpthread fp11_05_module.o
+./a.out
+Running main() from ../googletest-release-1.8.1/googletest/src/gtest_main.cc
+[==========] Running 5 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 5 tests from fixtureName
+[ RUN      ] fixtureName.sqrt01
+[       OK ] fixtureName.sqrt01 (1 ms)
+[ RUN      ] fixtureName.sqrt02
+[       OK ] fixtureName.sqrt02 (0 ms)
+[ RUN      ] fixtureName.sqrt03
+[       OK ] fixtureName.sqrt03 (0 ms)
+[ RUN      ] fixtureName.sqrt25
+fp11_05_test.cpp:60: Failure
+Expected equality of these values:
+  calc05(25.0, 1)
+    Which is: 7.46154
+  5.0
+    Which is: 5
+[  FAILED  ] fixtureName.sqrt25 (0 ms)
+[ RUN      ] fixtureName.sqrt36
+fp11_05_test.cpp:65: Failure
+Expected equality of these values:
+  calc05(36.0, 1)
+    Which is: 10.223
+  36.0
+    Which is: 36
+[  FAILED  ] fixtureName.sqrt36 (0 ms)
+[----------] 5 tests from fixtureName (1 ms total)
+
+[----------] Global test environment tear-down
+[==========] 5 tests from 1 test case ran. (1 ms total)
+[  PASSED  ] 3 tests.
+[  FAILED  ] 2 tests, listed below:
+[  FAILED  ] fixtureName.sqrt25
+[  FAILED  ] fixtureName.sqrt36
+
+ 2 FAILED TESTS
+Makefile:11: recipe for target 'all' failed
+make: *** [all] Error 1
+/------------------------------------------------------------------------------/
+上記の実行結果を得た。
+予想通り試験対象値25、36の1回目でFAILED
+・以下のソースで25、36の戻り値を計測。
+/===============================lec011/fp11_05.c===============================/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include "modules/fp11_05_module.c"
+
+int main(void) {
+  // 演習 3
+  printf("%s\n", "演習 5");
+  printf("%.20f\n", 1.4142135623730951);
+  printf("calc05(2.0, 1)        sqrt =>  %.20f\n", calc05(2.0, 1));
+  printf("calc05(2.0, 2)        sqrt =>  %.20f\n", calc05(2.0, 2));
+  printf("calc05(2.0, 3)        sqrt =>  %.20f\n", calc05(2.0, 3));
+  printf("calc05(2.0, 4)        sqrt =>  %.20f\n", calc05(2.0, 4));
+  printf("calc05(2.0, 5)        sqrt =>  %.20f\n", calc05(2.0, 5));
+  printf("calc05(2.0, 10)       sqrt =>  %.20f\n", calc05(2.0, 10));
+  printf("calc05(2.0, 100)      sqrt =>  %.20f\n", calc05(2.0, 100));
+  printf("calc05(2.0, 1000)     sqrt =>  %.20f\n", calc05(2.0, 1000));
+  printf("calc05(2.0, 10000)    sqrt =>  %.20f\n", calc05(2.0, 10000));
+  printf("calc05(2.0, 100000)   sqrt =>  %.20f\n", calc05(2.0, 100000));
+  printf("calc05(2.0, 1000000)  sqrt =>  %.20f\n", calc05(2.0, 1000000));
+  printf("calc05(2.0, 10000000) sqrt =>  %.20f\n", calc05(2.0, 10000000));
+  //--------------------------------------------------------------------//
+  printf("%s\n", "//----------------------------------------------------//");
+  printf("%.20f\n", 1.4142135623730951);
+  printf("calc05(25.0, 1)       sqrt =>  %.20f\n", calc05(25.0, 1));
+  printf("calc05(25.0, 2)       sqrt =>  %.20f\n", calc05(25.0, 2));
+  printf("calc05(25.0, 3)       sqrt =>  %.20f\n", calc05(25.0, 3));
+  printf("calc05(25.0, 4)       sqrt =>  %.20f\n", calc05(25.0, 4));
+  printf("calc05(25.0, 5)       sqrt =>  %.20f\n", calc05(25.0, 5));
+  printf("calc05(25.0, 10)      sqrt =>  %.20f\n", calc05(25.0, 10));
+  printf("calc05(25.0, 100)     sqrt =>  %.20f\n", calc05(25.0, 100));
+  printf("calc05(25.0, 1000)    sqrt =>  %.20f\n", calc05(25.0, 1000));
+  //--------------------------------------------------------------------//
+  printf("%s\n", "//----------------------------------------------------//");
+  printf("%.20f\n", 1.4142135623730951);
+  printf("calc05(36.0, 1)       sqrt =>  %.20f\n", calc05(36.0, 1));
+  printf("calc05(36.0, 2)       sqrt =>  %.20f\n", calc05(36.0, 2));
+  printf("calc05(36.0, 3)       sqrt =>  %.20f\n", calc05(36.0, 3));
+  printf("calc05(36.0, 4)       sqrt =>  %.20f\n", calc05(36.0, 4));
+  printf("calc05(36.0, 5)       sqrt =>  %.20f\n", calc05(36.0, 5));
+  printf("calc05(36.0, 10)      sqrt =>  %.20f\n", calc05(36.0, 10));
+  printf("calc05(36.0, 100)     sqrt =>  %.20f\n", calc05(36.0, 100));
+  printf("calc05(36.0, 1000)    sqrt =>  %.20f\n", calc05(36.0, 1000));
+  return FALSE;
+}
+/==============================================================================/
+以下の実行結果を得た。
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011$ ./a.out
+演習 5
+1.41421356237309514547
+calc05(2.0, 1)        sqrt =>  1.41666666666666651864
+calc05(2.0, 2)        sqrt =>  1.41421568627450966460
+calc05(2.0, 3)        sqrt =>  1.41421356237468986983
+calc05(2.0, 4)        sqrt =>  1.41421356237309492343
+calc05(2.0, 5)        sqrt =>  1.41421356237309492343
+calc05(2.0, 10)       sqrt =>  1.41421356237309492343
+calc05(2.0, 100)      sqrt =>  1.41421356237309492343
+calc05(2.0, 1000)     sqrt =>  1.41421356237309492343
+calc05(2.0, 10000)    sqrt =>  1.41421356237309492343
+calc05(2.0, 100000)   sqrt =>  1.41421356237309492343
+calc05(2.0, 1000000)  sqrt =>  1.41421356237309492343
+calc05(2.0, 10000000) sqrt =>  1.41421356237309492343
+//----------------------------------------------------//
+1.41421356237309514547
+calc05(25.0, 1)       sqrt =>  7.46153846153846167510
+calc05(25.0, 2)       sqrt =>  5.40602696272799398969
+calc05(25.0, 3)       sqrt =>  5.01524760194489793719
+calc05(25.0, 4)       sqrt =>  5.00002317825394904105
+calc05(25.0, 5)       sqrt =>  5.00000000005372235989
+calc05(25.0, 10)      sqrt =>  5.00000000000000000000
+calc05(25.0, 100)     sqrt =>  5.00000000000000000000
+calc05(25.0, 1000)    sqrt =>  5.00000000000000000000
+//----------------------------------------------------//
+1.41421356237309514547
+calc05(36.0, 1)       sqrt =>  10.22297297297297369312
+calc05(36.0, 2)       sqrt =>  6.87222673764312919076
+calc05(36.0, 3)       sqrt =>  6.05535174484947891216
+calc05(36.0, 4)       sqrt =>  6.00025298411941854226
+calc05(36.0, 5)       sqrt =>  6.00000000533318900153
+calc05(36.0, 10)      sqrt =>  6.00000000000000000000
+calc05(36.0, 100)     sqrt =>  6.00000000000000000000
+calc05(36.0, 1000)    sqrt =>  6.00000000000000000000
+/------------------------------------------------------------------------------/
+検査対象値、平方値が大きくなる毎に試行回数が少ない場合に、
+得られる値が極端に期待値と乖離する特性が確認できた。
+(参考)
+/------------------------------------------------------------------------------/
+1.41421356237309514547
+calc05(2,500,000,000.0, 1)       sqrt =>  625000001.25000000000000000000
+calc05(2,500,000,000.0, 2)       sqrt =>  312500002.62500000000000000000
+calc05(2,500,000,000.0, 3)       sqrt =>  156250005.31249997019767761230
+calc05(2,500,000,000.0, 4)       sqrt =>  78125010.65624971687793731689
+calc05(2,500,000,000.0, 5)       sqrt =>  39062521.32812267541885375977
+calc05(2,500,000,000.0, 10)      sqrt =>  1221385.71516122156754136086
+calc05(2,500,000,000.0, 20)      sqrt =>  50000.00000000000000000000
+calc05(2,500,000,000.0, 30)      sqrt =>  50000.00000000000000000000
+calc05(2,500,000,000.0, 100)     sqrt =>  50000.00000000000000000000
+calc05(2,500,000,000.0, 1000)    sqrt =>  50000.00000000000000000000
+/------------------------------------------------------------------------------/
+※但し20回程度の試行回数で十分な精度は得られる。
+
+◆演習4GoogleTest実施結果
+/------------------------------------------------------------------------------/
+sheepdog@sheepdog-ThinkPad-X1-Carbon-6th:~/git/fp18/lec011/test/fp11_04$ ./a.out
+Running main() from googletest-release-1.8.1/googletest/src/gtest_main.cc
+[==========] Running 3 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 3 tests from fixtureName
+[ RUN      ] fixtureName.sqrt01
+[       OK ] fixtureName.sqrt01 (0 ms)
+[ RUN      ] fixtureName.sqrt02
+[       OK ] fixtureName.sqrt02 (0 ms)
+[ RUN      ] fixtureName.sqrt03
+[       OK ] fixtureName.sqrt03 (0 ms)
+[----------] 3 tests from fixtureName (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 3 tests from 1 test case ran. (0 ms total)
+[  PASSED  ] 3 tests.
+/------------------------------------------------------------------------------/
+◆GoogleTestの導入について
+以下を参考として
+https://qiita.com/igayu/items/9ff003309b237e9ae116
+http://opencv.jp/googletestdocs/primer.html#primer-assertions
+GoogleTestを導入した。
+GoogleTestはCppUTestとことなりインストール不要なためSOLサーバ内の任意のディレクトリ内でも実行可能。
+本課題の性質上、実行環境ごとにプロセッサ・アーキテクチャの差異等により戻り地の差異がありうる為、
+マッチャは近似を判定する「EXPECT_NEAR」を使用した。
+
+(参考文献)
+テスト駆動開発による組み込みプログラミング ―C言語とオブジェクト指向で学ぶアジャイルな設計
+オライリージャパン 2013/4/24 刊
+James W. Grenning (著), 蛸島 昭之 (監修), 笹井 崇司  (翻訳)
+
+[アンケート]
+Q1. C 言語でプログラムが書けるようになりましたか。
+ある程度。
+Q2. C と Ruby はどのように違うと感じていますか。
+ある程度。
+Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。

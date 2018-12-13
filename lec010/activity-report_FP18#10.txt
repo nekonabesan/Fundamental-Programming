@@ -1,0 +1,335 @@
+活動内容報告 ＃10
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/12/10
+
+「演習 1」「演習 3」で動かしたプログラム (どれか 1 つでよい) を含むレポートを提出しなさい。
+プログラムと、簡単な説明が含まれること。アンケートの回答もおこなうこと。
+
+演習 1 ここまでの例 (構築、長さ、プリント) を打ち込んで動かせ。
+動いたら、次のメソッドを作ってみよ (ループでも再帰でも好きな方でよい)。
+a. data に数値が入っている単連結リストに対して、その数値の合計を求める listsum。
+b. 各セルのdata(文字列)を連結した1つの文字列を返すlistcat。
+  文字列連結は「p.data.to s+ …」のように to s で文字列にしてから「+」を使えばよい。
+c. 上と同様だがただし逆順に連結する listcatrev。
+d. printlist と同様だが、1 行目は 1 回、2 行目は 2 回、
+  3 行目は 4 回、…と倍倍で打ち出す回数が増える printmany。
+  打ち出す順番は任意の順番で (ごちゃまぜで) よい。
+e. listsum と同様だが、ただし奇数番目のセルの値だけ合計する listoddsum。
+  ヒント: ループでも再帰でも「次をたどる」代わりに「次の次をたどる」ようにすれば 1つおきになります。
+  ただし「次が nil」になることもあるのに注意。再帰では別の方法として、
+  自分自身を再帰呼び出しする代わりに、奇数番目用 (加算をする) は偶数番目用 (加算しない) を呼び、
+  偶数番目用は奇数番目用を呼ぶ、というふうに交互にやる方法もあります。これを相互再帰と呼びます。
+f. 単リストの並び順を逆向きにした単リストを返す listrev。
+  これには元のリストを変更してしまう版と変更しない版とが考えられるが、どちらでもよいことにする。
+
+[作成したプログラム]
+/========================lec010/fp10_01.rb=========================/
+require 'benchmark'
+require 'bigdecimal'
+require 'bigdecimal/util'
+require '../modules/fp_module.rb'
+#/=============================================================================/
+# 演習 1 ここまでの例 (構築、長さ、プリント) を打ち込んで動かせ。
+# 動いたら、次のメソッドを作ってみよ (ループでも再帰でも好きな方でよい)。
+#/=============================================================================/
+# a. 用の構造体定義
+Cell = Struct.new(:data, :next)
+Cell2 = Struct.new(:data, :next, :prev)
+
+#/=============================================================================/
+# a. data に数値が入っている単連結リストに対して、その数値の合計を求める listsum。
+#/=============================================================================/
+def listsum(n = 10)
+  begin
+    raise ArgumentError if n.nil?
+    address = Array.new
+    result = 0
+    for i in 0..n do
+      p = Cell.new(i,nil)
+      address.push(p)
+    end
+    p = listcat(address)
+    while true do
+      result += p.data
+      break if p.next == nil
+      p = p.next
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# b. 各セルのdata(文字列)を連結した1つの文字列を返すlistcat。
+#  文字列連結は「p.data.to s+ …」のように to s で文字列にしてから「+」を使えばよい。
+#/=============================================================================/
+def b(str)
+  begin
+    raise ArgumentError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = listcat(t)
+    while true do
+      result += p.data.to_s
+      break if p.next == nil
+      p = p.next
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# c. 上と同様だがただし逆順に連結する listcatrev。
+#/=============================================================================/
+def listcatrev(str)
+  begin
+    raise ArgumentError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = listcat(t)
+    r = listrev(p)
+    while true do
+      result += r.data
+      break if r.next == nil
+      r = r.next
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# d. printlist と同様だが、1 行目は 1 回、2 行目は 2 回、3 行目は 4 回、…と倍倍で打ち出す
+# 回数が増える printmany。打ち出す順番は任意の順番で (ごちゃまぜで) よい。
+#/=============================================================================/
+def printmany(str)
+  begin
+    raise ArgumentError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = listcat(t)
+    t.length.times do |i|
+      (i + 1).times{ result += p.data.to_s }
+      p = p.next
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# e. listsum と同様だが、ただし奇数番目のセルの値だけ合計する listoddsum。
+#   ヒント: ループでも再帰でも「次をたどる」代わりに「次の次をたどる」ようにすれば 1つおきになります。
+#   ただし「次が nil」になることもあるのに注意。再帰では別の方法として、
+#   自分自身を再帰呼び出しする代わりに、奇数番目用 (加算をする) は偶数番目用 (加算しない) を呼び、
+#   偶数番目用は奇数番目用を呼ぶ、というふうに交互にやる方法もあります。これを相互再帰と呼びます。
+#/=============================================================================/
+def listoddsum(str)
+  begin
+    raise ArgumentError if str.nil?
+    s = str.split("")
+    t = Array.new
+    result = ""
+    s.each_with_index do |val,i|
+       p = Cell.new(val,nil)
+       t.push(p)
+    end
+    p = listcat(t)
+    t.length.times do |i|
+      result += p.data.to_s if i != 0 && i % 2 != 0
+      p = p.next
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# 配列化された構造体への参照から単連結リストを生成するメソッド
+# param Array
+# return Constructor(先頭要素へのポインタ)
+#/=============================================================================/
+def listcat(array)
+  begin
+    raise ArgumentError if array.nil?
+    cnt = array.length - 1
+    nxt = nil
+    result = nil
+    while cnt >= 0 do
+      array[cnt].next = nxt
+      nxt = array[cnt]
+      result = array[cnt]
+      cnt -= 1
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+#/=============================================================================/
+# f. 単リストの並び順を逆向きにした単リストを返す listrev。
+# これには元のリストを変更してしまう版と変更しない版とが考えられるが、どちらでもよいことにする。
+#/=============================================================================/
+def listrev(p)
+  begin
+    raise ArgumentError if p.nil?
+    a = Array.new
+    r = Array.new
+    while true do
+      a.push(p)
+      break if p.next.nil?
+      p = p.next
+    end
+    len = a.length - 1
+    while len >= 0 do
+      r.push(a[len])
+      len -= 1
+    end
+    return listcat(r)
+  rescue => e
+    return e
+  end
+end
+/==================================================================/
+/===================lec010/spec/fp10_01_spec.rb====================/
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp10_01.rb'
+
+
+describe "演習 1" do
+  context "listsum" do
+    it "listsum(10)" do
+      results = listsum(10)
+      expect(results).to eq 55
+    end
+    it "listsum(100)" do
+      results = listsum(100)
+      expect(results).to eq 5050
+    end
+    it "listsum(22)" do
+      results = listsum(22)
+      expect(results).to eq 253
+    end
+    it "listsum(nil)" do
+      results = listsum(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "b" do
+    it "b('stirng')" do
+      results = b('string')
+      expect(results).to match("string")
+    end
+    it "b('Hallo World!!')" do
+      results = b('Hallo World!!')
+      expect(results).to match("Hallo World!!")
+    end
+    it "b('0123456789')" do
+      results = b('0123456789')
+      expect(results).to match("0123456789")
+    end
+    it "b(nil)" do
+      results = b(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "listcatrev" do
+    it "" do
+      results = listcatrev("string")
+      expect(results).to match("gnirts")
+    end
+    it "" do
+      results = listcatrev('Hallo World!!')
+      expect(results).to match("!!dlroW ollaH")
+    end
+    it "" do
+      results = listcatrev('0123456789')
+      expect(results).to match("9876543210")
+    end
+    it "c(nil)" do
+      results = listcatrev(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "printmany" do
+    it "printmany('string')" do
+      results = printmany("string")
+      expect(results).to match("sttrrriiiinnnnngggggg")
+    end
+    it "printmany('Hallo World!!')" do
+      results = printmany("Hallo World!!")
+      expect(results).to match("Haalllllllooooo      WWWWWWWoooooooorrrrrrrrrllllllllllddddddddddd!!!!!!!!!!!!!!!!!!!!!!!!!")
+    end
+    it "printmany('0123456789')" do
+      results = printmany("0123456789")
+      expect(results).to match("0112223333444445555556666666777777778888888889999999999")
+    end
+    it "" do
+      results = printmany(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "listoddsum" do
+    it "listoddsum(string)" do
+      results = listoddsum("string")
+      expect(results).to match("tig")
+    end
+    it "listoddsum(0123456789)" do
+      results = listoddsum("0123456789")
+      expect(results).to match("13579")
+    end
+    it "listoddsum(nil)" do
+      results = listoddsum(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "listcat" do
+    it "listcat(nil)" do
+      results = listrev(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  context "listrev" do
+    it "listrev(nil)" do
+      results = listrev(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+end
+/==================================================================/
+
+[簡単な説明]
+実装については設問の通り。
+UT実施。
+
+[アンケート]
+Q1. 動的データ構造とはどのようなものか理解しましたか。
+ある程度。
+Q2. 連結リストの操作ができるようになりましたか。
+ある程度。
+Q3. 本日の全体的な感想と今後の要望をお書きください。
+特になし。

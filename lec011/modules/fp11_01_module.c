@@ -35,8 +35,7 @@ int calc1(int n, int t){
 // a. 円錐の底面の半径と高さを与え、体積を出力する。
 //-----------------------------------------------------------------------//
 double a(double r, double h) {
-  double s = 3.14 * pow(r, 2.0) * h;
-  double v = (1/3) * s * h;
+  double v = ((1.0/3.0) * 3.14 * pow(r, 2.0) * h);
   return v;
 }
 
