@@ -81,9 +81,10 @@ double rt_x(double x, double y, double xc, double yc, double rd){
 //--------------------------------------------------------------//
 double rt_y(double x, double y, double xc, double yc, double rd){
   // 数学座標と同じ様にするためにy座標値を反転
-  y = -y;
-  yc = -yc;
-  return -1.0 * ((x - xc) * sin(rd) + (y - yc) * cos(rd) + yc);
+  // 正回転の場合コメントアウト？？
+  //y = -y;
+  //yc = -yc;
+  return 1.0 * ((x - xc) * sin(rd) + (y - yc) * cos(rd) + yc);
 }
 
 //----------------------------------------------------------------------------//
