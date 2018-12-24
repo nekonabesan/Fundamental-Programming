@@ -31,7 +31,7 @@ int main(void) {
   double y;
   double rd;
   struct gp g = calc_gp(x0, y0, x1, y1, x2, y2);
-  for(int angle = 0; angle <= 360; angle+=30){
+  for(int angle = 0; angle <= 360; angle+=1){
     rd = angle * PI / 180.0;
     sx0 = rt_x(x0, y0, g.x, g.y, rd);
     sy0 = rt_y(x0, y0, g.x, g.y, rd);
@@ -52,46 +52,53 @@ int main(void) {
       px0 = sx0;
       py0 = sy0;
       if(sx1 > sx2){
-        px2 = sx1;
-        py2 = sy1;
-        px1 = sx2;
-        py1 = sy2;
-      }else if(sx2 > sx1){
-        px2 = sx2;
-        py2 = sy2;
         px1 = sx1;
         py1 = sy1;
+        px2 = sx2;
+        py2 = sy2;
+      }else if(sx2 >= sx1){
+        px1 = sx2;
+        py1 = sy2;
+        px2 = sx1;
+        py2 = sy1;
       }
     }else if(sy1 > sy0 && sy1 > sy2){
       px0 = sx1;
       py0 = sy1;
       if(sx0 > sx2){
-        px2 = sx0;
-        py2 = sy0;
-        px1 = sx2;
-        py1 = sy2;
-      }else if(sx2 > sx0){
-        px2 = sx2;
-        py2 = sy2;
         px1 = sx0;
         py1 = sy0;
+        px2 = sx2;
+        py2 = sy2;
+      }else if(sx2 >= sx0){
+        px1 = sx2;
+        py1 = sy2;
+        px2 = sx0;
+        py2 = sy0;
       }
     }else if(sy2 > sy0 && sy2 > sy1){
       px0 = sx2;
       py0 = sy2;
       if(sx0 > sx1){
-        px2 = sx0;
-        py2 = sy0;
-        px1 = sx1;
-        py1 = sy1;
-      }else if(sx1 > sx0){
-        px2 = sx1;
-        py2 = sy1;
         px1 = sx0;
         py1 = sy0;
+        px2 = sx1;
+        py2 = sy1;
+      }else if(sx1 >= sx0){
+        px1 = sx1;
+        py1 = sy1;
+        px2 = sx0;
+        py2 = sy0;
       }
     }
     //
+    printf("px0 => %f\n", px0);
+    printf("py0 => %f\n", py0);
+    printf("px1 => %f\n", px1);
+    printf("py1 => %f\n", py1);
+    printf("px2 => %f\n", px2);
+    printf("py2 => %f\n", py2);
+    printf("%s","================================\n");
     img_clear();
     img_triangle(c1, px0, py0, px1, py1, px2, py2);
     img_write();
