@@ -53,6 +53,7 @@ bool img_putpixel(struct color c, int x, int y) {
   return true;
 }
 
+//--------------------------------------------------------------//
 // (参)http://www.ohshiro.tuis.ac.jp/~ohshiro/prog/game07_call_by_reference_pointer.html
 // 座標(x, y) を，(xc, yc)を中心に θラジアン回転した座標は，次の式で計算できることが知られている。
 // 回転した後のX座標 =  (x - xc) * cosθ - (y - yc) * sinθ + xc
