@@ -1,4 +1,4 @@
-#define RMAX 1000
+#define MAX 10000
 #define TRUE 1
 #define FALSE 0
 
@@ -23,9 +23,11 @@ protected:
     }
 };
 
+struct pat {
+  char a[MAX];
+};
+
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
-
-
 //============================================================================//
 // 配列を複製する処理
 // @param char Array c1 参照元の配列
@@ -64,6 +66,13 @@ TEST_F(fixtureName, reversal){
   free(c1);
 }
 
+//============================================================================//
+// startからlen文字を削除する処理
+// @param char Array c2[]
+// @param int strat
+// @param int len
+// @result void
+//============================================================================//
 TEST_F(fixtureName, concat_prefix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -79,6 +88,9 @@ TEST_F(fixtureName, concat_prefix)
   free(match);
 }
 
+//============================================================================//
+// c. ^(先頭に固定) を実現してみなさい。
+//============================================================================//
 TEST_F(fixtureName, chk_prefix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -98,6 +110,9 @@ TEST_F(fixtureName, chk_prefix)
   free(match);
 }
 
+//============================================================================//
+// c. $(末尾に固定) を実現してみなさい。
+//============================================================================//
 TEST_F(fixtureName, chk_suffix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -117,7 +132,14 @@ TEST_F(fixtureName, chk_suffix)
   free(match);
 }
 
-
+//====================================================//
+// pattern、pos文字目までのマッチング
+// param char *match
+// param char *pattern
+// param int l1
+// param int pos
+// return int result
+//====================================================//
 TEST_F(fixtureName, normal_match)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -125,22 +147,24 @@ TEST_F(fixtureName, normal_match)
   // test01
   strcpy(match, "string");
   strcpy(pattern, "str");
-  int l1 = strlen(match);
-  int result = normal_match(match, pattern, l1, 0);
-  EXPECT_EQ(result, 1);
-  result = normal_match(match, pattern, l1, 1);
-  EXPECT_EQ(result, 1);
-  result = normal_match(match, pattern, l1, 2);
-  EXPECT_EQ(result, 1);
+  int result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
+  strcpy(pattern, "tri");
+  result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
+  strcpy(pattern, "ing");
+  result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
   // test02
   strcpy(pattern, "abc");
-  l1 = strlen(match);
-  result = normal_match(match, pattern, l1, 0);
-  EXPECT_EQ(result, 0);
-  result = normal_match(match, pattern, l1, 1);
-  EXPECT_EQ(result, 0);
-  result = normal_match(match, pattern, l1, 2);
-  EXPECT_EQ(result, 0);
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
+  strcpy(pattern, "stg");
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
+  strcpy(pattern, "mng");
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
   // 領域開放
   free(match);
   free(pattern);
@@ -189,6 +213,35 @@ TEST_F(fixtureName, mach1)
   // 領域開放
   free(match);
   free(pattern);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに文字を追加する処理
+// param  char *pattern
+// return bool
+//====================================================//
+TEST_F(fixtureName, addpat)
+{
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat)*1);
+  struct pat s;
+  naf[0] = s;
+  naf[1] = s;
+  naf[1].a[0] = '\0';
+  char array[] = "str";
+  //strcpy(a, "str");
+  EXPECT_EQ(addpat(naf, array[0], 3), 1);
+  EXPECT_EQ(addpat(naf, array[1], 3), 1);
+  EXPECT_EQ(addpat(naf, array[2], 3), 1);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  free(naf);
+}
+
+TEST_F(fixtureName, raddpat)
+{
+
 }
 
 // あえて失敗するテストケースも書いておく。

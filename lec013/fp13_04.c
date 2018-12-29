@@ -6,7 +6,7 @@ int main(void){
   strcpy(match, "string");
   strcpy(pattern, "tri");
   int l1 = strlen(match);
-  bool flg = normal_match(match, pattern, l1, 2);
+  int flg = pattern_match(match, pattern);
   printf("%d\n", flg);
   //printf("%d\n", pattern_match(match, pattern));
   free(match);

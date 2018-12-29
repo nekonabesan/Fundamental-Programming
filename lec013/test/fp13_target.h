@@ -24,7 +24,9 @@ void reversal(char c[]);
 void concat_prefix(char c2[], int start = 0, int leng = 0);
 bool chk_prefix(char c2[]);
 bool chk_suffix(char c2[]);
-bool normal_match(char match[], char pattern[], int l1, int pos);
+bool normal_match(char match[], char pattern[]);
+int addpat(struct pat naf[], char str, int len);
+int raddpat(struct pat naf[], char str, int len);
 int pattern_match(char match[], char pattern[]);
 
 #endif /* _TARGET_H_ */
