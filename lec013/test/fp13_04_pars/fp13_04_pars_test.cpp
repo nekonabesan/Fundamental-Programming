@@ -56,6 +56,8 @@ TEST_F(fixtureName, pars01)
   EXPECT_EQ(apars[4].seq, 0x00);
   EXPECT_EQ(apars[5].c, 0x67);
   EXPECT_EQ(apars[5].seq, 0x00);
+  EXPECT_EQ(apars[6].c, 0x00);
+  EXPECT_EQ(apars[6].seq, 0x00);
   // 領域開放
   free(apars);
 }
@@ -81,6 +83,8 @@ TEST_F(fixtureName, pars02)
   EXPECT_EQ(apars[5].seq, 0x00);
   EXPECT_EQ(apars[6].c, 0x67);
   EXPECT_EQ(apars[6].seq, 0x00);
+  EXPECT_EQ(apars[7].c, 0x00);
+  EXPECT_EQ(apars[7].seq, 0x00);
   // 領域開放
   free(apars);
 }
@@ -112,6 +116,8 @@ TEST_F(fixtureName, pars03)
   EXPECT_EQ(apars[8].seq, 0x00);
   EXPECT_EQ(apars[9].c, 0x67);
   EXPECT_EQ(apars[9].seq, 0x00);
+  EXPECT_EQ(apars[10].c, 0x00);
+  EXPECT_EQ(apars[10].seq, 0x00);
   // 領域開放
   free(apars);
 }

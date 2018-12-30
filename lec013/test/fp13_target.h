@@ -18,17 +18,24 @@ void mystrcat(char s1[], char s2[]);
 int mystrcmp(char s1[], char s2[]);
 // 演習2
 // 演習3
+//==================================================//
 // 演習4
+//==================================================//
+// fp13_04_module.c
 void cpary(char c1[], char c2[]);
 void reversal(char c[]);
 void concat_prefix(char c2[], int start = 0, int leng = 0);
 bool chk_prefix(char c2[]);
 bool chk_suffix(char c2[]);
 bool normal_match(char match[], char pattern[]);
-int addpat(struct pat naf[], char str, int len);
-int raddpat(struct pat naf[], char str, int len);
 int pattern_match(char match[], char pattern[]);
 // fp14_04_pars.c
 bool pars(struct analysis apars[], char pattern[]);
+// fp14_04_naf.c
+int countapars(struct analysis apars[]);
+int countnaf(struct pat naf[]);
+int addpat(struct pat naf[], char c, int l1);
+int raddpat(struct pat naf[], char str, int len);
+bool convnaf(struct analysis apars[], struct pat naf[], char pattern[], char match[]);
 
 #endif /* _TARGET_H_ */

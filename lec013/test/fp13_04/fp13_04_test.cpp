@@ -23,11 +23,126 @@ protected:
     }
 };
 
+struct analysis {
+  char c;
+  char seq;
+};
 struct pat {
   char a[MAX];
 };
 
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
+//====================================================//
+// 構文解釈の格納された配列の要素数を数える処理
+// @param struct analysis apars[]
+// @return int cnt
+//====================================================//
+TEST_F(fixtureName, countapars)
+{
+    struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+    char *pattern = (char *)malloc(10 * sizeof(char));
+    // test01
+    strcpy(pattern, "str");
+    pars(apars, pattern);
+    EXPECT_EQ(countapars(apars),3);
+    free(apars);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに文字を追加する処理
+// param  char *pattern
+// return bool
+//====================================================//
+TEST_F(fixtureName, addpat)
+{
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat)*1);
+  char *array = (char *)malloc(3 * sizeof(char));
+  naf[1].a[0] = 0x00;
+  strcpy(array, "str");
+  EXPECT_EQ(addpat(naf, array[0], 3), 0);
+  EXPECT_EQ(addpat(naf, array[1], 3), 0);
+  EXPECT_EQ(addpat(naf, array[2], 3), 0);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  // 領域開放
+  free(naf);
+  free(array);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに1文字を追加した
+// パターンと０文字追加したパターンを追加する処理
+// @param pat *naf
+// @param char str
+// @param int len
+// @return bool
+//====================================================//
+TEST_F(fixtureName, raddpat)
+{
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 1);
+  char *array = (char *)malloc(3 * sizeof(char));
+  naf[0].a[0] = 0x00;
+  naf[1].a[0] = 0x00;
+  strcpy(array, "str");
+  char str = 0x61;
+  EXPECT_TRUE(raddpat(naf, str, 6));
+  // 領域開放
+  free(naf);
+  free(array);
+}
+
+//====================================================//
+// 構文解釈の処理
+// @param struct analysis *apars
+// @param struct pat *naf
+// @param char *pattern
+// @param char *match
+// @return bool
+//====================================================//
+TEST_F(fixtureName, convnaf01)
+{
+  struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
+  char *match = (char *)malloc(10 * sizeof(char));
+  char *pattern = (char *)malloc(10 * sizeof(char));
+  // test01
+  strcpy(match, "string");
+  strcpy(pattern, "str");
+  EXPECT_TRUE(pars(apars, pattern));
+  EXPECT_TRUE(convnaf(apars, naf, pattern, match));
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  // 領域開放
+  free(apars);
+  free(naf);
+  free(match);
+  free(pattern);
+}
+TEST_F(fixtureName, convnaf02)
+{
+  struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
+  char *match = (char *)malloc(10 * sizeof(char));
+  char *pattern = (char *)malloc(10 * sizeof(char));
+  // test01
+  strcpy(match, "string");
+  strcpy(pattern, "s*t?r+");
+  /*EXPECT_TRUE(pars(apars, pattern));
+  EXPECT_TRUE(convnaf(apars, naf, pattern, match));
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x73);
+  EXPECT_EQ(naf[2].a[2], 0x73);*/
+  // 領域開放
+  free(apars);
+  free(naf);
+  free(match);
+  free(pattern);
+}
+
+
 //============================================================================//
 // 配列を複製する処理
 // @param char Array c1 参照元の配列
@@ -170,7 +285,7 @@ TEST_F(fixtureName, normal_match)
   free(pattern);
 }
 
-TEST_F(fixtureName, mach1)
+/*TEST_F(fixtureName, mach1)
 {
   char *match = (char *)malloc(10 * sizeof(char));
   char *pattern = (char *)malloc(10 * sizeof(char));
@@ -215,35 +330,6 @@ TEST_F(fixtureName, mach1)
   free(pattern);
 }
 
-//====================================================//
-// 大域変数nafに格納された構造体の変数aに文字を追加する処理
-// param  char *pattern
-// return bool
-//====================================================//
-TEST_F(fixtureName, addpat)
-{
-  struct pat *naf = (struct pat*)malloc(sizeof(struct pat)*1);
-  struct pat s;
-  naf[0] = s;
-  naf[1] = s;
-  naf[1].a[0] = '\0';
-  char array[] = "str";
-  //strcpy(a, "str");
-  EXPECT_EQ(addpat(naf, array[0], 3), 1);
-  EXPECT_EQ(addpat(naf, array[1], 3), 1);
-  EXPECT_EQ(addpat(naf, array[2], 3), 1);
-  EXPECT_EQ(naf[0].a[0], 0x73);
-  EXPECT_EQ(naf[0].a[1], 0x74);
-  EXPECT_EQ(naf[0].a[2], 0x72);
-  EXPECT_EQ(naf[0].a[3], 0x00);
-  free(naf);
-}
-
-TEST_F(fixtureName, raddpat)
-{
-
-}
-
 // あえて失敗するテストケースも書いておく。
 TEST_F(fixtureName, mach2)
 {
@@ -268,4 +354,4 @@ TEST_F(fixtureName, mach2)
   // 領域開放
   free(match);
   free(pattern);
-}
+}*/

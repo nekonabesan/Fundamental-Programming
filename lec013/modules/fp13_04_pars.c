@@ -19,7 +19,7 @@ bool pars(struct analysis apars[], char pattern[]){
   // 字句解析
   // 構文解析処理
   for(int i = 1; i <= strlen(pattern); i++){
-    if(!realloc(apars, 1)){
+    if(!realloc(apars, 2)){
       return false;
     }
     // 現在位置の文字を判定しひとつ前の文字に対する処理を実行する
@@ -58,6 +58,8 @@ bool pars(struct analysis apars[], char pattern[]){
       // 構文木の作成
       // ORは実装しない為、未実装
     pos++;
+    apars[pos].c = 0x00;
+    apars[pos].seq = 0x00;
   }
   return true;
 }
