@@ -28,5 +28,7 @@ bool normal_match(char match[], char pattern[]);
 int addpat(struct pat naf[], char str, int len);
 int raddpat(struct pat naf[], char str, int len);
 int pattern_match(char match[], char pattern[]);
+// fp14_04_pars.c
+bool pars(struct analysis apars[], char pattern[]);
 
 #endif /* _TARGET_H_ */
