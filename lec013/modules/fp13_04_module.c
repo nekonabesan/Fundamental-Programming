@@ -294,6 +294,7 @@ int pattern_match(char match[], char pattern[]) {
   if(flg == true){
     result = 1;
   }
+  free(apars);
   free(naf);
   return result;
 }
