@@ -1,6 +1,7 @@
 // テスト対象関数のプロトタイプ宣言
 #ifndef _TARGET_H_
 #define _TARGET_H_
+#define CODE_ZERO_EXCEPTION 0x01
 
 //=================================================//
 // 以下に関数を宣言
@@ -35,7 +36,8 @@ bool pars(struct analysis apars[], char pattern[]);
 int countapars(struct analysis apars[]);
 int countnaf(struct pat naf[]);
 int addpat(struct pat naf[], char c, int l1);
-int raddpat(struct pat naf[], char str, int len);
+struct pat* zero_or_one(struct pat naf[], char str, int len, int flg);
+struct pat* raddpat(struct pat naf[], char str, int len, int flg);
 bool convnaf(struct analysis apars[], struct pat naf[], char pattern[], char match[]);
 
 #endif /* _TARGET_H_ */

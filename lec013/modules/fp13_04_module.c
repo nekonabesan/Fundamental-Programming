@@ -2,6 +2,20 @@
 #include "fp13_04_pars.c"
 #include "fp13_04_naf.c"
 
+struct pat naf[MAX];
+//====================================================//
+// NAFの配列を初期化する処理
+// @return bool
+//====================================================//
+bool initialize(void){
+  for(int i = 0; i < MAX; i++){
+    for(int j = 0; j < 10; j++){
+      naf[i].a[j] = 0x00;
+    }
+  }
+  return true;
+}
+
 //============================================================================//
 // 配列を複製する処理
 // @param char Array c1
@@ -150,32 +164,52 @@ int pattern_match(char match[], char pattern[]) {
   bool suffix = chk_suffix(pattern);
 
   struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
-  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 3);
+  struct pat *anaf = naf;
+  naf[0].a[0] = 0x00;
+  naf[0].a[1] = 0x00;
+  naf[0].a[2] = 0x00;
 
   // patternの構文解析
   if(!pars(apars, pattern)){
       return -1;
   }
 
+/*int cc = 0;
+while(1){
+  printf("%c\n", apars[cc].c);
+  cc++;
+  if(apars[cc].c == 0x00){
+    printf("%s", "\n");
+    break;
+  }
+}*/
+
+  // NAF配列初期化
+  if(!initialize()){
+    return -1;
+  }
+
   // NAF変換
-  if(!convnaf(apars, naf, pattern, match)){
-      return -1;
+  if(!convnaf(apars, anaf, pattern, match)){
+    return -1;
   }
 
   // NAF変換結果の格納された配列の要素数を数える処理
-  int cnt = countnaf(naf);
-//int cnt = 3;
+  int cnt = countnaf(anaf);
+printf("last count naf : %d\n", cnt);
+
   // パターンマッチング
-  for(int i = 0; i <= cnt; i++){
-    printf("%s\n",naf[i].a);
-    if(normal_match(match, naf[i].a)){
+  for(int i = 0; i < cnt; i++){
+    printf("last : %s\n",anaf[i].a);
+    if(normal_match(match, anaf[i].a)){
       result = 1;
       break;
     }
   }
 
+  // 領域開放
   free(apars);
-  free(naf);
 
   return result;
 }
