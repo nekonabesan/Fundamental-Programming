@@ -46,14 +46,3 @@ TEST_F(fixtureName, img_triangle)
   c.b = 255;
   EXPECT_TRUE(img_triangle(c,1,1,1,1,1,1));
 }
-
-// bool rt_triangle(struct color c, double x0, double y0, double x1, double y1, double x2, double y2);
-TEST_F(fixtureName, img_rtriangle)
-{
-  struct color c;
-  c.r = 0;
-  c.g = 127;
-  c.b = 255;
-  // test01
-  EXPECT_TRUE(rt_triangle(c,1,1,1,1,1,1));
-}
