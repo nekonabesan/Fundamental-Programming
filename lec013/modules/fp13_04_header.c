@@ -4,9 +4,9 @@
 #include <stdbool.h>
 
 #define MAX 10000
-#define ZERO_OR_ONE 0
-#define ZERO_TO_N 1
-#define ONE_TO_N 2
+//#define ZERO_OR_ONE 0
+//#define ZERO_TO_N 1
+//#define ONE_TO_N 2
 #define CODE_ZERO_EXCEPTION 0x01
 //============================================================================//
 // 演習 4 上のコードを打ち込み、パターンが正しく処理されていることを確認しなさい。

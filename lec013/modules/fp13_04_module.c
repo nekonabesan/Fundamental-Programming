@@ -164,7 +164,7 @@ int pattern_match(char match[], char pattern[]) {
   bool suffix = chk_suffix(pattern);
 
   struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
-  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 3);
+  //struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 3);
   struct pat *anaf = naf;
   naf[0].a[0] = 0x00;
   naf[0].a[1] = 0x00;
@@ -189,14 +189,18 @@ while(1){
   if(!initialize()){
     return -1;
   }
-
   // NAF変換
   if(!convnaf(apars, anaf, pattern, match)){
     return -1;
   }
+  // CODE_ZERO_EXCEPTIONを取り除く処理
+  /*if(!delete_cze(anaf)){
+    return -1;
+  }*/
 
   // NAF変換結果の格納された配列の要素数を数える処理
   int cnt = countnaf(anaf);
+
 printf("last count naf : %d\n", cnt);
 
   for(int i = 0; i < cnt; i++){

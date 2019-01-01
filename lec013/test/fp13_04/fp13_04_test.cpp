@@ -1,4 +1,4 @@
-#define MAX 10000
+//#define MAX 10000
 #define TRUE 1
 #define FALSE 0
 
@@ -121,26 +121,51 @@ TEST_F(fixtureName, addpat)
 // @param int flg
 // @return struct pat* naf
 //====================================================//
-TEST_F(fixtureName, zero_or_one)
+TEST_F(fixtureName, zero_or_one01)
 {
-  /*struct pat naf[3];
+  struct pat naf[10];
   struct pat *anaf = naf;
-  strcpy(naf[0].a,"str");
-  char str = 0x61;
-  zero_or_one(anaf, str, 6, 0);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "str");
+  char str = 0x69;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // test01
+  zero_or_one(anaf, str, len, flg);
+  EXPECT_EQ(strlen(naf[0].a), 4);
   EXPECT_EQ(naf[0].a[0], 0x73);
   EXPECT_EQ(naf[0].a[1], 0x74);
   EXPECT_EQ(naf[0].a[2], 0x72);
-  EXPECT_EQ(naf[0].a[3], 0x61);
+  EXPECT_EQ(naf[0].a[3], 0x69);
   EXPECT_EQ(naf[0].a[4], 0x00);
-  //
+  EXPECT_EQ(strlen(naf[1].a), 4);
   EXPECT_EQ(naf[1].a[0], 0x73);
   EXPECT_EQ(naf[1].a[1], 0x74);
   EXPECT_EQ(naf[1].a[2], 0x72);
-  EXPECT_EQ(naf[1].a[3], 0x00);*/
+  EXPECT_EQ(naf[1].a[3], 0x01);
+  EXPECT_EQ(naf[0].a[4], 0x00);
   // 領域開放
 }
-
+TEST_F(fixtureName, zero_or_one02)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  anaf[0].a[0] = 0x00;
+  anaf[0].a[1] = 0x00;
+  anaf[1].a[0] = 0x00;
+  anaf[1].a[1] = 0x00;
+  char str = 0x73;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // test02
+  zero_or_one(anaf, str, len, flg);
+  EXPECT_EQ(strlen(naf[0].a), 1);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x00);
+  EXPECT_EQ(strlen(naf[1].a), 1);
+  EXPECT_EQ(naf[1].a[0], 0x01);
+  EXPECT_EQ(naf[1].a[1], 0x00);
+}
 //====================================================//
 // 大域変数nafに格納された構造体の変数aに1文字を追加した
 // パターンと０文字追加したパターンを追加する処理
@@ -148,26 +173,31 @@ TEST_F(fixtureName, zero_or_one)
 // @param char str
 // @param int len
 // @param int flg
-// @return struct pat* naf
+// @return bool
 //====================================================//
-TEST_F(fixtureName, raddpat)
+TEST_F(fixtureName, raddpat_b)
 {
-  /*struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
-  struct pat *anaf = (struct pat*)malloc(sizeof(struct pat) * 3);
+  struct pat naf[10];
+  struct pat *anaf = naf;
   char *array = (char *)malloc(3 * sizeof(char));
-  naf[1].a[0] = 0x00;
+  anaf[1].a[0] = 0x00;
   strcpy(naf[0].a, "str");
-  char str = 0x61;
-  anaf = raddpat(naf, str, 6, 0);
-  EXPECT_EQ(strlen(naf[0].a),4);
-  EXPECT_EQ(naf[0].a[0], 0x73);
-  EXPECT_EQ(naf[0].a[3], 0x61);
-  EXPECT_EQ(strlen(naf[1].a),3);
-  EXPECT_EQ(naf[1].a[0], 0x73);
+  char str = 0x69;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // b. 「?」(直前の文字があってもなくてもよい) を実現してみなさい。
+  //EXPECT_TRUE(initialize());
+  EXPECT_TRUE(raddpat(anaf, str, len, flg));
+  EXPECT_EQ(strlen(anaf[0].a), 4);
+  EXPECT_EQ(anaf[0].a[0], 0x73);
+  EXPECT_EQ(anaf[0].a[3], 0x69);
+  EXPECT_EQ(anaf[0].a[4], 0x00);
+  EXPECT_EQ(strlen(anaf[1].a),4);
+  EXPECT_EQ(anaf[1].a[0], 0x73);
+  EXPECT_EQ(anaf[1].a[2], 0x72);
+  EXPECT_EQ(anaf[1].a[3], 0x01);
   // 領域開放
-  free(naf);
-  free(anaf);
-  free(array);*/
+  free(array);
 }
 
 //====================================================//

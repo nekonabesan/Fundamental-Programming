@@ -51,6 +51,30 @@ int countnaf(struct pat anaf[]){
 }
 
 //====================================================//
+// CODE_ZERO_EXCEPTIONを取り除く処理
+// @param struct pat* anaf
+// return bool
+//====================================================//
+bool delete_cze(struct pat anaf[]){
+  int cnt = 0;
+  int pos = 0;
+  while(1){
+    pos = strlen(anaf[cnt].a);
+    if(anaf[cnt].a[0] == 0x00){
+      break;
+    }
+    for(int i = 0; i < pos; i++){
+      if(anaf[cnt].a[i] == CODE_ZERO_EXCEPTION){
+        anaf[cnt].a[i] = 0x00;
+        break;
+      }
+    }
+    cnt++;
+  }
+  return true;
+}
+
+//====================================================//
 // 大域変数nafに格納された構造体の変数aに1文字を追加する処理
 // @param  char *pattern
 // @param char c
@@ -102,17 +126,21 @@ int addpat(struct pat anaf[], char c, int l1){
 bool zero_or_one(struct pat anaf[], char str, int len, int flg){
   int cnt = countnaf(anaf);
   int pos = 0;
+  int eof = 0;
+  int tmn = 0;
   // 置換用領域を初期化
   // NAFのデータを一時配列へ退避する
   for(int i = 0; i < cnt; i++){
-    for(int j = 0; j < strlen(anaf[i].a); j++){
+    tmn = strlen(anaf[i].a);
+    for(int j = 0; j < tmn; j++){
       tmp[i].a[j] = anaf[i].a[j];
+      tmp[i].a[j + 1] = 0x00;
       tmp[i + 1].a[j] = 0x00;
     }
   }
   // NAFに格納された文字列の最後尾に1文字1追記
   //if(strlen(naf[0].a) == 0){
-  if(anaf[0].a[0] == 0x00){
+  if(tmp[0].a[0] == 0x00){
     // 初期化処理
     // NAFが空の場合先頭へ1文字追記
     anaf[0].a[0] = str;
@@ -124,23 +152,58 @@ bool zero_or_one(struct pat anaf[], char str, int len, int flg){
   } else {
     // 最後尾へ1文字追記
     for(int i = 0; i < cnt; i++){
-      for(int j = 0; j < strlen(anaf[i].a); j++){
+      tmn = strlen(tmp[i].a) + 1;
+      eof = tmn - 1;
+      for(int j = 0; j < tmn; j++){
         // 0文字のパターンは上書き処理
-        if(anaf[i].a[j] == CODE_ZERO_EXCEPTION){
-          anaf[i].a[j] = str;
-          anaf[i].a[j + 1] = 0x00;
+        if(tmp[i].a[j] == CODE_ZERO_EXCEPTION){
+          anaf[pos].a[j] = str;
+          anaf[pos].a[j + 1] = 0x00;
           break;
         }
-        if(j == (strlen(anaf[i].a)) - 1){
-          anaf[i].a[j + 1] = str;
-          anaf[i].a[j + 2] = 0x00;
+        if(j == eof){
+          //printf("tmp : %s\n", tmp[i].a);
+          //printf("tmn : %d\n", tmn);
+          //printf("eof : %d\n", eof);
+          anaf[pos].a[j] = str;
+          anaf[pos].a[j + 1] = 0x00;
           break;
+        } else if(j < eof) {
+          anaf[pos].a[j] = tmp[i].a[j];
+          anaf[pos].a[j + 1] = 0x00;
         }
       }
+      //printf("pos : %d\n", pos);
+      //printf("anaf : %s\n", anaf[pos].a);
+      pos++;
     }
-    // 終端文字追記
-    anaf[cnt].a[0] = 0x00;
+    // 配列anafへtmpの内容をコピーする
+    // 最後尾へ0文字追記
+    for(int i = 0; i <= cnt; i++){
+      tmn = strlen(tmp[i].a) + 1;
+      eof = tmn - 1;
+      for(int j = 0; j < tmn; j++){
+        // 0文字のパターンは最後尾にフラグを追記
+        if(j == eof) {
+          //printf("tmp : %s\n", tmp[i].a);
+          //printf("tmn : %d\n", tmn);
+          //printf("eof : %d\n", eof);
+          anaf[pos].a[j] = CODE_ZERO_EXCEPTION;
+          anaf[pos].a[j + 1] = 0x00;
+          break;
+        } else if(j < eof) {
+          //printf("tmp : %s\n", tmp[i].a);
+          anaf[pos].a[j] = tmp[i].a[j];
+          anaf[pos].a[j + 1] = 0x00;
+        }
+      }
+      //printf("pos : %d\n", pos);
+      //printf("anaf : %s\n", anaf[pos].a);
+      pos++;
+    }
+
   }
+
 
   // 一時配列初期化
   inittmp();
@@ -215,7 +278,6 @@ bool one_to_n(struct pat anaf[], char str, int len, int flg){
         pos++;
       }
     }
-    printf("pos : %d\n", pos);
     pos = 0;
     // 最後尾へ文字を追記する処理
     // len - strlen(tmp[i].a) * len - strlen(tmp[i].a) * i パターンの文字列を生成
@@ -232,12 +294,9 @@ bool one_to_n(struct pat anaf[], char str, int len, int flg){
             anaf[pos].a[initial + l + 1] = 0x00;
           //}
         }
-        printf("%s\n", anaf[pos].a);
         pos++;
-        //printf("%d\n", i + j);
       }
     }
-    printf("pos : %d\n", pos);
   }
 
   // 一時配列初期化
@@ -254,20 +313,20 @@ bool one_to_n(struct pat anaf[], char str, int len, int flg){
 // @param char str
 // @param int len
 // @param int flg
-// @return struct pat* naf
+// @return bool
 //====================================================//
 bool raddpat(struct pat anaf[], char str, int len, int flg){
   switch (flg) {
     // 0または1文字のパターン
-    case ZERO_OR_ONE:
+    case MAY_OR_MAY_NOT_BE_PRESENT:
       zero_or_one(anaf, str, len, flg);
       break;
     // 0またはN文字
-    case ZERO_TO_N:
+    case ZERO_OR_MORE_ITERATIONS:
       zero_to_n(anaf, str, len, flg);
       break;
     // 1文字またはN文字
-    case ONE_TO_N:
+    case ONE_OR_MORE_ITERATIONS:
       one_to_n(anaf, str, len, flg);
       break;
   }
@@ -294,7 +353,6 @@ bool convnaf(struct analysis apars[], struct pat anaf[], char pattern[], char ma
   // 一時配列初期化
   inittmp();
   // NAF変換
-  printf("cnt_apars : %d\n", cnt_apars);
   for(int i = 0; i < cnt_apars; i++){
     /*if(apars[i].c == 0x00){
       break;
@@ -305,17 +363,17 @@ bool convnaf(struct analysis apars[], struct pat anaf[], char pattern[], char ma
       case ONE_OR_MORE_ITERATIONS:
         // N回のパターン
         // pattern配列の末尾に文字を追加する。
-        raddpat(anaf, apars[i].c, l1, ONE_TO_N);
+        raddpat(anaf, apars[i].c, l1, ONE_OR_MORE_ITERATIONS);
         break;
       // に加えて「*」(0 回以上の繰り返し) も記述できるようにしてみなさい。
       case ZERO_OR_MORE_ITERATIONS:
         // 0回のパターン
         // N回のパターン
-        //raddpat(anaf, apars[i].c, l1, ZERO_TO_N);
+        //raddpat(anaf, apars[i].c, l1, ZERO_OR_MORE_ITERATIONS);
         break;
       // b. 「?」(直前の文字があってもなくてもよい) を実現してみなさい。
       case MAY_OR_MAY_NOT_BE_PRESENT:
-        raddpat(anaf, apars[i].c, l1, ZERO_OR_ONE);
+        raddpat(anaf, apars[i].c, l1, MAY_OR_MAY_NOT_BE_PRESENT);
         break;
       // 実装しない
       //case START_MALTI_PATTERN:
