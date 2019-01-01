@@ -194,9 +194,9 @@ while(1){
     return -1;
   }
   // CODE_ZERO_EXCEPTIONを取り除く処理
-  /*if(!delete_cze(anaf)){
+  if(!delete_cze(anaf)){
     return -1;
-  }*/
+  }
 
   // NAF変換結果の格納された配列の要素数を数える処理
   int cnt = countnaf(anaf);
