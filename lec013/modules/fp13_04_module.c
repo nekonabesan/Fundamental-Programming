@@ -199,9 +199,13 @@ while(1){
   int cnt = countnaf(anaf);
 printf("last count naf : %d\n", cnt);
 
-  // パターンマッチング
   for(int i = 0; i < cnt; i++){
     printf("last : %s\n",anaf[i].a);
+  }
+
+  // パターンマッチング
+  for(int i = 0; i < cnt; i++){
+    //printf("last : %s\n",anaf[i].a);
     if(normal_match(match, anaf[i].a)){
       result = 1;
       break;

@@ -123,21 +123,21 @@ TEST_F(fixtureName, addpat)
 //====================================================//
 TEST_F(fixtureName, zero_or_one)
 {
-  struct pat naf[3];
+  /*struct pat naf[3];
   struct pat *anaf = naf;
   strcpy(naf[0].a,"str");
   char str = 0x61;
   zero_or_one(anaf, str, 6, 0);
-  /*EXPECT_EQ(anaf[0].a[0], 0x73);
-  EXPECT_EQ(anaf[0].a[1], 0x74);
-  EXPECT_EQ(anaf[0].a[2], 0x72);
-  EXPECT_EQ(anaf[0].a[3], 0x61);
-  EXPECT_EQ(anaf[0].a[4], 0x00);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x61);
+  EXPECT_EQ(naf[0].a[4], 0x00);
   //
-  EXPECT_EQ(anaf[1].a[0], 0x73);
-  EXPECT_EQ(anaf[1].a[1], 0x74);
-  EXPECT_EQ(anaf[1].a[2], 0x72);
-  EXPECT_EQ(anaf[1].a[3], 0x00);*/
+  EXPECT_EQ(naf[1].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x74);
+  EXPECT_EQ(naf[1].a[2], 0x72);
+  EXPECT_EQ(naf[1].a[3], 0x00);*/
   // 領域開放
 }
 
