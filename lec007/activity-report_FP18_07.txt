@@ -1,0 +1,167 @@
+活動内容報告 ＃07
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/11/12
+
+[実施した課題]
+演習 1 次の手順で単純選択法のプログラムを作成しなさい。
+a まず、「配列 a の i 番～j 番の中での最小要素の番号を返す」メソッド arraminrange(a,
+i, j) を作成する。正しく動作することを確認すること。
+b. 続いて、それと swap(a, i, j) を呼び出しながら配列を整列する単純選択法のメソッド
+selectionsort(a) を作成する。正しく動作することを確認すること。
+
+[作成したプログラム]
+lec007/fp07_01.rb
+/==============================================================================/
+require 'benchmark'
+require 'bigdecimal'
+require 'bigdecimal/util'
+
+=begin
+演習 1 次の手順で単純選択法のプログラムを作成しなさい。
+a まず、「配列 a の i 番～j 番の中での最小要素の番号を返す」メソッド arraminrange(a,
+i, j) を作成する。正しく動作することを確認すること。
+=end
+def arraminrange(a,i,j)
+  begin
+    raise ArgumentError if a.nil? || i.nil? || j.nil?
+    min = a[i]
+    index = i
+    for k in i..j do
+      if a[k] < min then
+        min = a[k]
+        index = k
+      end
+    end
+    return index.to_i
+  rescue => e
+    return e
+  end
+end
+
+=begin
+b. 続いて、それと swap(a, i, j) を呼び出しながら配列を整列する単純選択法のメソッド
+selectionsort(a) を作成する。正しく動作することを確認すること。
+=end
+def swap(a,i,j)
+  begin
+    raise ArgumentError if a.nil? || i.nil? || j.nil?
+    tmp = a[i]
+    a[i] = a[j]
+    a[j] = tmp
+    return a
+  rescue => e
+    return e
+  end
+end
+
+def selectionsort(a)
+  begin
+    raise ArgumentError if a.nil?
+    #/==============計測開始==============/
+    #time = Benchmark.realtime do
+      s = a.size.to_i - 1
+      for i in 0..s do
+        a = swap(a,i,arraminrange(a,i,s))
+      end
+    #end
+    #puts("処理時間 #{time}s")
+    #/=============計測終了===============/
+    return a
+  rescue => e
+    return e
+  end
+end
+/==============================================================================/
+lec007/fp07_bench.rb
+※抜粋
+/==============================================================================/
+require '../modules/fp_module.rb'
+require './fp07_01.rb'
+require './fp07_02.rb'
+require './fp07_05.rb'
+require './fp07_06.rb'
+
+=begin
+=end
+def fp07_01(times)
+  begin
+    raise ArgumentError if times.nil? || times.zero?
+    obj = FpModule.new
+    a = obj.randarray(times.to_i)
+    time = obj.bench do
+      selectionsort(a)
+    end
+    return time
+  rescue => e
+    return e
+  end
+end
+/==============================================================================/
+modules/fp_module.rb
+※抜粋
+/==============================================================================/
+require 'bigdecimal'
+require 'bigdecimal/util'
+class FpModule
+
+  #/-----------------------------------------------------------/
+  # 第8講
+  # return int 実行時間
+  #/-----------------------------------------------------------/
+  def  bench(count = 1)
+    begin
+      t1 = Process.times.utime
+      count.times do yield end #← count 回繰り返し yield を実行
+        t2 = Process.times.utime
+        return t2-t1
+      rescue => e
+        return e
+      end
+  end
+
+  #/-----------------------------------------------------------/
+  # 第7講
+  # 議事乱数から生成された配列を返すメソッド
+  # return Array(int)
+  #/-----------------------------------------------------------/
+  def randarray(n)
+    begin
+      return Array.new(n) do rand(10000) end
+    rescue => e
+      return e
+    end
+  end
+end
+/==============================================================================/
+
+[簡単な説明]
+lec007/fp07_01.rb
+→演習１の課題を実装したソースファイル
+lec007/fp07_bench.rb
+→演習１～7のソースにランダムに生成した配列を渡し、実行時間を計測する処理
+　※FpModule.randarrayを呼び出しベンチ対象のメソッドに渡す配列を得る
+modules/fp_module.rb
+→「randarray」引数に渡された要素数の配列を返すメソッド
+[複数のサイズでの計測結果]
+$ irb
+irb(main):001:0> load 'fp07_bench.rb'
+=> true
+irb(main):002:0> fp07_01 100
+=> 0.0
+irb(main):003:0> fp07_01 1000
+=> 0.016
+irb(main):004:0> fp07_01 10000
+=> 2.453
+irb(main):005:0> fp07_01 100000
+=> 250.25
+irb(main):006:0>
+
+[アンケート]
+Q1. 整列アルゴリズムを少なくとも1つは理解しましたか。
+ある程度。
+Q2. 時間計算量という考え方についてどう思いましたか。
+上記の概念を使いこなせていないと考えます。
+Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+特になし。

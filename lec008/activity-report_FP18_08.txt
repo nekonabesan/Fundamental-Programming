@@ -1,0 +1,381 @@
+﻿基礎プログラミングおよび演習レポート ＃08
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/11/18
+
+[課題の再掲]
+演習 4 次のようなシミュレーションをやってみよ。
+a. サイコロを 2 個振った目の合計の分布を調べる。
+b. 60%の確率で表がでるイカサマコインで
+「10 回投げて表が出た回数の金額だけもらう」場合の金額の分布を調べる。
+c. サイコロを 3 個振ってうち 2 個が同じ目 (もう 1 個は違う目) である確率がどれくらいか調べる。
+d. 次のようなすごろくをあがるのにサイコロを何回振るか分布を調べる。
+
+[実施したこととその結果]
+■サイコロ関連を集約したクラス
+/*======================lec008/fp08_04.rb======================*/
+require 'benchmark'
+require 'bigdecimal'
+require 'bigdecimal/util'
+require '../modules/fp_module.rb'
+
+#/===================================================/
+# 演習 4 次のようなシミュレーションをやってみよ。
+#/===================================================/
+class Fp08_04
+  #/===================================================/
+  # a. サイコロを 2 個振った目の合計の分布を調べる。
+  #/===================================================/
+  def a(n)
+    begin
+      raise ArgumentError if n.nil?
+      results = Array.new
+      n.times do
+        results.push((rand(6) + 1) + (rand(6) + 1))
+      end
+      return results
+    rescue => e
+      return e
+    end
+  end
+
+  #/===================================================/
+  # b. 60%の確率で表がでるイカサマコインで「10 回投げて表が出た回数の金額だけもらう」場
+  # 合の金額の分布を調べる。
+  #/===================================================/
+  def b(n)
+    begin
+      raise ArgumentError if n.nil?
+      results = Array.new
+      amt = 0
+      n.times do
+        10.times do
+          amt += 1 if 60 >= rand(100)
+        end
+        results.push(amt)
+        amt = 0
+      end
+      return results
+    rescue => e
+      return e
+    end
+  end
+
+  #/===================================================/
+  # c. サイコロを 3 個振ってうち 2 個が同じ目
+  #  (もう 1 個は違う目) である確率がどれくらいか調べる。
+  #/===================================================/
+  def c(n)
+    begin
+      raise ArgumentError if n.nil?
+      result = 0.0
+      cnt = 0
+      a = 0
+      b = 0
+      c = 0
+      n.times do
+        a = rand(6)
+        b = rand(6)
+        c = rand(6)
+        cnt += 1 if a == b || b == c || a == c
+      end
+      return ((cnt.to_s.to_d / n.to_s.to_d) * 100.0).to_i
+    rescue => e
+      return e
+    end
+  end
+
+  #/===================================================/
+  # d. 次のようなすごろくをあがるのにサイコロを何回振るか分布を調べる。
+  # 升目20(0～19)
+  # No.03 ５進む
+  # No.07 No.17へ移動
+  # No.11 １０戻る
+  # No.13 ３進む
+  # No.18 振り出し
+  #/===================================================/
+  def d(n)
+    begin
+      raise ArgumentError if n.nil?
+      position = 0
+      cnt = 0
+      ds = 0
+      results = Array.new
+      n.times do
+        cnt = 0
+        position = 0
+        while 19 >= position do
+          position += rand(6)
+          cnt += 1
+          position += 5 if position == 3
+          position = 17 if position == 7
+          position -= 10 if position == 11
+          position += 3 if position == 13
+          position = 0 if position == 18
+        end
+        results.push(cnt)
+      end
+      return results
+    rescue => e
+      return e
+    end
+  end
+end
+/*=============================================================*/
+■メソッドを呼び出して引数回試行し結果の平均値と中央値を返す処理
+/*===================lec008/fp08_04_bench.rb===================*/
+require __dir__ + '/fp08_04.rb'
+require __dir__ + '/../lec007/fp07_01.rb'
+require __dir__ + '/../modules/fp_module.rb'
+
+#/===================================================/
+# a. サイコロを 2 個振った目の合計の分布を調べる。
+#/===================================================/
+def a_bench(n = 100)
+  begin
+     raise ArgumentError if n.nil? || 1 > n
+     obj = Fp08_04.new
+     a = obj.a(n)
+     avg = avalage(a)
+     med = median(a)
+     return {'avalage' => avg, 'median' => med}
+  rescue => e
+    return e
+  end
+end
+
+#/===================================================/
+# b. 60%の確率で表がでるイカサマコインで
+#「10 回投げて表が出た回数の金額だけもらう」場合の金額の分布を調べる。
+#/===================================================/
+def b_bench(n = 100)
+  begin
+     raise ArgumentError if n.nil? || 1 > n
+     obj = Fp08_04.new
+     a = obj.b(n)
+     avg = avalage(a)
+     med = median(a)
+     return {'avalage' => avg, 'median' => med}
+  rescue => e
+    return e
+  end
+end
+
+#/===================================================/
+# c. サイコロを 3 個振ってうち 2 個が同じ目 (もう 1 個は違う目)
+# である確率がどれくらいか調べる。
+#/===================================================/
+def c_bench(n = 100)
+  begin
+     raise ArgumentError if n.nil? || 1 > n
+     obj = Fp08_04.new
+     result = obj.c(n)
+     return result
+  rescue => e
+    return e
+  end
+end
+
+#/===================================================/
+# d. 次のようなすごろくをあがるのにサイコロを何回振るか分布を調べる。
+#/===================================================/
+def d_bench(n = 100)
+  begin
+    raise ArgumentError if n.nil? || 1 > n
+    obj = Fp08_04.new
+    a = obj.d(n)
+    avg = avalage(a)
+    med = median(a)
+    return {'avalage' => avg, 'median' => med}
+  rescue => e
+    return e
+  end
+end
+
+#/===================================================/
+# 1回だけ実行
+#/===================================================/
+def d_bench2
+  begin
+    obj = Fp08_04.new
+    a = obj.d(1)
+    return a
+  rescue => e
+    return e
+  end
+end
+
+def avalage(a)
+  begin
+    raise ArgumentError if a.nil?
+    l = a.size - 1
+    sum = 0
+    a.each_with_index{|val,i| sum += val}
+    return sum / l
+  rescue => e
+    return e
+  end
+end
+
+def median(a)
+  begin
+    raise ArgumentError if a.nil?
+    l = a.size - 1
+    b = selectionsort(a)
+    result = 0
+    if l % 2 == 0 then
+      result = (b[l / 2] + b[(l / 2) + 1]) / 2
+    else
+      result = b[l / 2]
+    end
+    return result
+  rescue => e
+    return e
+  end
+end
+
+/*=============================================================*/
+■実行結果
+/*-------------------------------------------------------------*/
+◆１０回
+平均値７～１２回、ばらつき大
+/*-------------------------------------------------------------*/
+irb(main):013:0> d_bench 10
+=> {"avalage"=>12, "median"=>9}
+irb(main):014:0> d_bench 10
+=> {"avalage"=>9, "median"=>7}
+irb(main):015:0> d_bench 10
+=> {"avalage"=>10, "median"=>8}
+irb(main):016:0> d_bench 10
+=> {"avalage"=>13, "median"=>9}
+irb(main):017:0> d_bench 10
+=> {"avalage"=>11, "median"=>8}
+irb(main):018:0> d_bench 10
+=> {"avalage"=>7, "median"=>5}
+/*-------------------------------------------------------------*/
+◆50回
+平均値９～１０回、ばらつきが少なくなってくる
+/*-------------------------------------------------------------*/
+irb(main):024:0> d_bench 50
+=> {"avalage"=>10, "median"=>8}
+irb(main):025:0> d_bench 50
+=> {"avalage"=>9, "median"=>7}
+irb(main):026:0> d_bench 50
+=> {"avalage"=>8, "median"=>7}
+irb(main):027:0> d_bench 50
+=> {"avalage"=>10, "median"=>8}
+irb(main):028:0> d_bench 50
+=> {"avalage"=>10, "median"=>9}
+/*-------------------------------------------------------------*/
+◆100回
+50回とほぼ変わらず
+/*-------------------------------------------------------------*/
+irb(main):019:0> d_bench 100
+=> {"avalage"=>9, "median"=>8}
+irb(main):020:0> d_bench 100
+=> {"avalage"=>10, "median"=>8}
+irb(main):021:0> d_bench 100
+=> {"avalage"=>10, "median"=>8}
+irb(main):022:0> d_bench 100
+=> {"avalage"=>9, "median"=>7}
+irb(main):023:0> d_bench 100
+=> {"avalage"=>9, "median"=>8}
+/*-------------------------------------------------------------*/
+◆1000回
+平均値９、中央値８へ集約
+/*-------------------------------------------------------------*/
+irb(main):029:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):030:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):031:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):032:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):033:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):034:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):035:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):036:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):037:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+irb(main):038:0> d_bench 1000
+=> {"avalage"=>9, "median"=>8}
+[考察]
+20回実行してみる
+/*-------------------------------------------------------------*/
+irb(main):056:0> load 'fp08_04_bench.rb'
+=> true
+irb(main):057:0> d_bench2
+=> [7]
+irb(main):058:0> d_bench2
+=> [20]
+irb(main):059:0> d_bench2
+=> [6]
+irb(main):060:0> d_bench2
+=> [9]
+irb(main):061:0> d_bench2
+=> [4]
+irb(main):062:0> d_bench2
+=> [8]
+irb(main):063:0> d_bench2
+=> [9]
+irb(main):064:0> d_bench2
+=> [4]
+irb(main):065:0> d_bench2
+=> [9]
+irb(main):066:0> d_bench2
+=> [11]
+irb(main):067:0> d_bench2
+=> [3]
+irb(main):068:0> d_bench2
+=> [7]
+irb(main):069:0> d_bench2
+=> [9]
+irb(main):070:0> d_bench2
+=> [22]
+irb(main):071:0> d_bench2
+=> [10]
+irb(main):072:0> d_bench2
+=> [12]
+irb(main):073:0> d_bench2
+=> [22]
+irb(main):074:0> d_bench2
+=> [10]
+irb(main):075:0> d_bench2
+=> [13]
+irb(main):076:0> d_bench2
+=> [12]
+/*-------------------------------------------------------------*/
+以下の実行結果を得た。
+戻り値|出現回数
+------+--------
+    3 |      1
+    4 |      2
+    6 |      1
+    7 |      2
+    8 |      1
+    9 |      4
+   10 |      2
+   11 |      1
+   12 |      2
+   13 |      1
+   20 |      1
+   22 |      2
+------+--------
+最瀕値は９、中央値は９となり、
+この結果からも試行回数を増やした際の期待値が推定できた。
+最小値は3回で「～進む」を2つ引き当てたパターンと思われる。
+[アンケート]
+Q1. 乱数を使ったアルゴリズムの利点を納得しましたか。
+ある程度
+Q2. シミュレーションは書けるようになりそうですか。
+困難と考える
+Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+特になし
+
+
