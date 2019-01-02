@@ -17,6 +17,8 @@ struct ent {
 struct ent2 {
   char *key;
   char *val;
+  struct ent *prev;
+  struct ent *next;
 };
 
 struct ent tbl[MAXTBL];
