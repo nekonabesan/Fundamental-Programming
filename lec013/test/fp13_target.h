@@ -66,6 +66,7 @@ int countapars(struct analysis apars[]);
 int countnaf(struct pat naf[]);
 int addpat(struct pat naf[], char c, int l1);
 bool zero_or_one(struct pat anaf[], char str, int len, int flg);
+bool zero_to_n(struct pat anaf[], char str, int len, int flg);
 bool one_to_n(struct pat anaf[], char str, int len, int flg);
 bool raddpat(struct pat anaf[], char str, int len, int flg);
 bool convnaf(struct analysis apars[], struct pat naf[], char pattern[], char match[]);

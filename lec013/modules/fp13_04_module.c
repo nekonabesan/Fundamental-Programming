@@ -174,17 +174,6 @@ int pattern_match(char match[], char pattern[]) {
   if(!pars(apars, pattern)){
       return -1;
   }
-
-/*int cc = 0;
-while(1){
-  printf("%c\n", apars[cc].c);
-  cc++;
-  if(apars[cc].c == 0x00){
-    printf("%s", "\n");
-    break;
-  }
-}*/
-
   // NAF配列初期化
   if(!initialize()){
     return -1;
@@ -197,19 +186,11 @@ while(1){
   if(!delete_cze(anaf)){
     return -1;
   }
-
   // NAF変換結果の格納された配列の要素数を数える処理
   int cnt = countnaf(anaf);
 
-printf("last count naf : %d\n", cnt);
-
-  for(int i = 0; i < cnt; i++){
-    printf("last : %s\n",anaf[i].a);
-  }
-
   // パターンマッチング
   for(int i = 0; i < cnt; i++){
-    //printf("last : %s\n",anaf[i].a);
     if(normal_match(match, anaf[i].a)){
       result = 1;
       break;
