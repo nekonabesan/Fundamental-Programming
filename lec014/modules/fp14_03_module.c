@@ -44,6 +44,10 @@ void set_tableszize2(int val){
 
 //============================================================================//
 // a. 登録できる値を整数 1 個から変更しなさい (整数 2 個とか文字列とか)。
+// @param struct ent2* p
+// @param char key
+// @param char val
+// @return struct ent2* t
 //============================================================================//
 struct ent2 * add_struct(struct ent2* p, char key[], char val[]){
   if(key == NULL || val == NULL) {
@@ -78,9 +82,10 @@ bool del_struct(struct ent2 *p){
     prev->next = next;
   }
   tblsize2 -= 1;
-  //printf("%p\n", p);
   memset(p->key, 0x00 , sizeof(char) * strlen(p->key));
   memset(p->val, 0x00 , sizeof(char) * strlen(p->val));
+  free(p->key);
+  free(p->val);
   free(p);
   return true;
 }
@@ -98,9 +103,10 @@ bool del_array(struct ent2 *p){
   while(next){
     pos = next;
     next = pos->next;
-    //printf("%p\n", pos);
     memset(pos->key, 0x00 , sizeof(char) * strlen(pos->key));
     memset(pos->val, 0x00 , sizeof(char) * strlen(pos->val));
+    free(p->key);
+    free(p->val);
     free(pos);
     tblsize2 -= 1;
   }

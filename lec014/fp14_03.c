@@ -37,11 +37,11 @@ int main(void){
     printf("%s\n", start2->key);
   }
   // 領域開放
-  free(key1);
+  /*free(key1);
   free(val1);
   free(key2);
   free(val2);
   free(key3);
-  free(val3);
+  free(val3);*/
   return 0;
 }
