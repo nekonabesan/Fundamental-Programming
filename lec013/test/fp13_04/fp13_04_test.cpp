@@ -146,6 +146,7 @@ TEST_F(fixtureName, zero_or_one01)
   EXPECT_EQ(naf[1].a[3], 0x01);
   EXPECT_EQ(naf[0].a[4], 0x00);
   // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
 }
 TEST_F(fixtureName, zero_or_one02)
 {
@@ -167,6 +168,8 @@ TEST_F(fixtureName, zero_or_one02)
   EXPECT_EQ(strlen(naf[1].a), 1);
   EXPECT_EQ(naf[1].a[0], 0x01);
   EXPECT_EQ(naf[1].a[1], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
 }
 
 //====================================================//
@@ -223,7 +226,8 @@ TEST_F(fixtureName, zero_to_n01)
   EXPECT_EQ(naf[5].a[0], 0x73);
   EXPECT_EQ(naf[5].a[1], 0x01);
   EXPECT_EQ(naf[5].a[2], 0x00);
-  // test01
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
 }
 TEST_F(fixtureName, zero_to_n02)
 {
@@ -267,7 +271,8 @@ TEST_F(fixtureName, zero_to_n02)
   EXPECT_EQ(naf[4].a[1], 0x74);
   EXPECT_EQ(naf[4].a[2], 0x01);
   EXPECT_EQ(naf[4].a[3], 0x00);
-  // test01
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
 }
 TEST_F(fixtureName, zero_to_n03)
 {
@@ -306,7 +311,130 @@ TEST_F(fixtureName, zero_to_n03)
   // 0
   EXPECT_EQ(naf[6].a[0], 0x01);
   EXPECT_EQ(naf[6].a[1], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
 }
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに1～N文字を追加した
+// パターンの処理
+// @param struct pat* anaf
+// @param char str
+// @param int len
+// @param int flg
+// @return bool
+//====================================================//
+TEST_F(fixtureName, one_to_n01)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "a");
+  char str = 0x62;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x62);
+  EXPECT_EQ(naf[0].a[2], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[2], 0x62);
+  EXPECT_EQ(naf[1].a[3], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[3], 0x62);
+  EXPECT_EQ(naf[2].a[4], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[4], 0x62);
+  EXPECT_EQ(naf[3].a[5], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x61);
+  EXPECT_EQ(naf[4].a[5], 0x62);
+  EXPECT_EQ(naf[4].a[6], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, one_to_n02)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "ab");
+  char str = 0x63;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x62);
+  EXPECT_EQ(naf[0].a[2], 0x63);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[1], 0x62);
+  EXPECT_EQ(naf[1].a[2], 0x63);
+  EXPECT_EQ(naf[1].a[3], 0x63);
+  EXPECT_EQ(naf[1].a[4], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[1], 0x62);
+  EXPECT_EQ(naf[2].a[2], 0x63);
+  EXPECT_EQ(naf[2].a[3], 0x63);
+  EXPECT_EQ(naf[2].a[4], 0x63);
+  EXPECT_EQ(naf[2].a[5], 0x00);
+  // 2
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[1], 0x62);
+  EXPECT_EQ(naf[3].a[2], 0x63);
+  EXPECT_EQ(naf[3].a[3], 0x63);
+  EXPECT_EQ(naf[3].a[4], 0x63);
+  EXPECT_EQ(naf[3].a[5], 0x63);
+  EXPECT_EQ(naf[3].a[6], 0x00);
+  //
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, one_to_n03)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  char str = 0x61;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[1], 0x61);
+  EXPECT_EQ(naf[1].a[2], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[2], 0x61);
+  EXPECT_EQ(naf[2].a[3], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[3], 0x61);
+  EXPECT_EQ(naf[3].a[4], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x61);
+  EXPECT_EQ(naf[4].a[4], 0x61);
+  EXPECT_EQ(naf[4].a[5], 0x00);
+  // 4
+  EXPECT_EQ(naf[5].a[0], 0x61);
+  EXPECT_EQ(naf[5].a[5], 0x61);
+  EXPECT_EQ(naf[5].a[6], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+
 
 //====================================================//
 // 大域変数nafに格納された構造体の変数aに1文字を追加した

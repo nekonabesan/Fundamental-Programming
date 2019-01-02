@@ -320,6 +320,7 @@ bool one_to_n(struct pat anaf[], char str, int len, int flg){
       for(int j = 0; j <= i; j++){
         anaf[i].a[j] = str;
         anaf[i].a[j + 1] = 0x00;
+        anaf[i + 1].a[j] = 0x00;
       }
     }
     return true;
