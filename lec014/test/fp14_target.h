@@ -23,6 +23,8 @@ struct ent {
 struct ent2 {
   char *key;
   char *val;
+  struct ent *prev;
+  struct ent *next;
 };
 
 struct ent tbl[MAXTBL];
@@ -49,11 +51,12 @@ void makerot2(struct color *p);
 void addtocolor(struct color *p, int dr, int dg, int db);
 void varcolor(struct color *p);
 // 演習3
-int tbl_get(char *k);
-bool tbl_put(char *k, int v);
-void set_tableszize2(int val);
-bool add_struct(char key[], char val[]);
-bool del_struct(char key[]);
+struct ent2 * add_struct(struct ent2* p, char key[], char val[]);
+bool del_struct(struct ent2 *p);
+bool del_array(struct ent2 *p);
+struct ent2 * show_structs(struct ent2* p);
+struct ent2 * initialize(char key[], char val[]);
+struct ent2 * head_address(struct ent2 *pos);
 // 演習5
 static unsigned int hash(char *s);
 static struct ent *lookup(struct ent *p, char *k);
