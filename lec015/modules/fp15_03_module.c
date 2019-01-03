@@ -35,8 +35,6 @@ struct color * writecolor(struct color* t, unsigned char r, unsigned char g, uns
   t->r = r;
   t->g = g;
   t->b = b;
-  //t->prev = NULL;
-  //t->next = NULL;
   return t;
 }
 
@@ -45,10 +43,10 @@ struct color * writecolor(struct color* t, unsigned char r, unsigned char g, uns
 // @return struct color *t
 //--------------------------------------------------------------//
 struct color * initialize(struct color *t) {
-  //struct color *t = (struct color*)malloc(sizeof(struct color) * 1);
-  t = writecolor(t, 255, 255, 255);
-  //t->prev = NULL;
-  //t->next = NULL;
+  unsigned char r = 255;
+  unsigned char g = 255;
+  unsigned char b = 255;
+  t = writecolor(t, r, g, b);
   return t;
 }
 
@@ -136,14 +134,13 @@ bool del_color_array(struct color *p){
     return false;
   }
   struct color *pos = p;
-  struct color *next = pos->next;
-  while(next){
-    pos = next;
-    next = pos->next;
-    pos->r = 0;
-    pos->g = 0;
-    pos->b = 0;
-    free(pos);
+  //struct color *next = NULL;
+  while(pos->next){
+    //pos->r = 0;
+    //pos->g = 0;
+    //pos->b = 0;
+    pos = pos->next;
+    free(pos->prev);
   }
   return true;
 }

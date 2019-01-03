@@ -25,10 +25,10 @@ struct color * imgtriangle(struct color *p, double x0, double y0, double x1, dou
       && (x2 - x1)*(y - y1) - (y2 - y1)*(x - x1) <= 0) {
         imgputpixel(p, x, y, r, g, b);
       } else {
-        p->y = y;
-        p->x = x;
         p = p->next;
       }
+      p->y = y;
+      p->x = x;
     }
   }
   return p;

@@ -4,7 +4,6 @@
 //#include "modules/fp15_circle.c"
 
 int main(void) {
-  struct color c1;
   unsigned char r = 0;
   unsigned char g = 0;
   unsigned char b = 255;
