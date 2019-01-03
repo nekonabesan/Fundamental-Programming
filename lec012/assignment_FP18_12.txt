@@ -2,7 +2,7 @@
 学籍番号:1820004
 氏名:大竹春生
 ペア学籍番号・氏名(または「個人作業」):個人作業
-提出日付:
+提出日付:2019/01/20
 
 [課題の再掲]
 「演習 1」～「演習 7」の (小) 課題から 1 つ以上を選択してプログラムを作り、レポートを提出しなさい。
@@ -28,6 +28,8 @@ https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec012/test/
 ◆課題コード(演習5)
 ・lec012/modules/fp12_05_module.c
 https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec012/modules/fp12_05_module.c
+・lec012/fp12_05.c
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec012/fp12_05.c
 
 ◆テストコード(演習5)
 ・lec012/test/fp12_05/Makefile
