@@ -106,11 +106,14 @@ TEST_F(fixtureName, del_struct01)
   EXPECT_STREQ(p1->val, "val1");
   EXPECT_STREQ(p2->key, "key2");
   EXPECT_STREQ(p2->val, "val2");
-
   EXPECT_EQ((unsigned long)p1->prev, (unsigned long)NULL);
   EXPECT_EQ((unsigned long)p1->next, (unsigned long)p2);
   EXPECT_EQ((unsigned long)p2->prev, (unsigned long)p1);
   EXPECT_EQ((unsigned long)p2->next, (unsigned long)NULL);
+  EXPECT_STREQ(p3->key, NULL);// 解放後のアドレスを参照して失敗するケース
+  EXPECT_STREQ(p3->val, NULL);// 解放後のアドレスを参照して失敗するケース
+  EXPECT_STREQ(k3, NULL);// 解放後のアドレスを参照して失敗するケース
+  EXPECT_STREQ(v3, NULL);// 解放後のアドレスを参照して失敗するケース
   // test02
   EXPECT_TRUE(del_struct(p2));
   EXPECT_STREQ(p1->key, "key1");
