@@ -39,14 +39,14 @@ int main(void) {
     sy1 = rt_y(x1, y1, gpos.x, gpos.y, rd);
     sx2 = rt_x(x2, y2, gpos.x, gpos.y, rd);
     sy2 = rt_y(x2, y2, gpos.x, gpos.y, rd);
-    printf("rad => %f\n", rd);
+    /*printf("rad => %f\n", rd);
     printf("sx0 => %f\n", sx0);
     printf("sy0 => %f\n", sy0);
     printf("sx1 => %f\n", sx1);
     printf("sy1 => %f\n", sy1);
     printf("sx2 => %f\n", sx2);
     printf("sy2 => %f\n", sy2);
-    printf("%s","----------------------------------\n");
+    printf("%s","----------------------------------\n");*/
     //
     if(sy0 > sy1 && sy0 > sy2){
       px0 = sx0;
@@ -92,13 +92,13 @@ int main(void) {
       }
     }
     //
-    printf("px0 => %f\n", px0);
+    /*printf("px0 => %f\n", px0);
     printf("py0 => %f\n", py0);
     printf("px1 => %f\n", px1);
     printf("py1 => %f\n", py1);
     printf("px2 => %f\n", px2);
     printf("py2 => %f\n", py2);
-    printf("%s","================================\n");
+    printf("%s","================================\n");*/
     // リストを初期化する処理
     p = imgclear();
     // リストへ三角形の画像情報を上書きする処理

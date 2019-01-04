@@ -186,11 +186,8 @@ bool imgwrite(struct color *p, int filecnt) {
 //--------------------------------------------------------------//
 struct color * imgputpixel(struct color *p, int x, int y, unsigned char r, unsigned char g, unsigned char b) {
   if(x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) {
-    return false;
+    //return false;
   }
-  /*buf[HEIGHT-y-1][x][0] = c.r;
-  buf[HEIGHT-y-1][x][1] = c.g;
-  buf[HEIGHT-y-1][x][2] = c.b;*/
   p->r = r;
   p->g = g;
   p->b = b;

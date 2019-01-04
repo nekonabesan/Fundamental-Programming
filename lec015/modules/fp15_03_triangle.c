@@ -18,18 +18,20 @@
 // @return bool true of false
 //----------------------------------------------------------------------------//
 struct color * imgtriangle(struct color *p, double x0, double y0, double x1, double y1, double x2, double y2, unsigned char r, unsigned char g, unsigned char b){
+  struct color *c = p;
   for(int y = 0; y < HEIGHT; y++){
     for(int x = 0; x < WIDTH; x++){
       if((x1 - x0)*(y - y0) - (y1 - y0)*(x - x0) <= 0
       && (x2 - x0)*(y - y0) - (y2 - y0)*(x - x0) >= 0
       && (x2 - x1)*(y - y1) - (y2 - y1)*(x - x1) <= 0) {
-        imgputpixel(p, x, y, r, g, b);
+        printf("%d\n", x);
+        c = imgputpixel(c, x, y, r, g, b);
       } else {
-        p = p->next;
+        c = imgputpixel(c, x, y, 255, 255, 255);
       }
-      p->y = y;
-      p->x = x;
+      //p->y = y;
+      //p->x = x;
     }
   }
-  return p;
+  return c;
 }
