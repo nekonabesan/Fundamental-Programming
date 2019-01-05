@@ -1,0 +1,44 @@
+活動内容報告 ＃12
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:
+
+
+「演習 1」または「演習 2」で動かしたプログラム (どれか 1 つでよい) を含むレポートを提出しなさい。
+プログラムと、簡単な説明が含まれること。アンケートの回答もおこなうこと。
+
+演習 1 上の例題を打ち込んで実行せよ ( 一部を出力するところも追加して動かしてみること ) 。
+うまく動いたら、次のような関数を追加してみよ。
+a. 整数配列を「後ろから順に」打ち出す関数 void piarrayrev(int n, int a[]) 。
+b. 整数配列と整数値を渡し、指定した整数値が配列の何番に入っているかを返す ( 入ってい
+なければ -1 を返す ) 関数 int iindex(int n, int a[], int x) 。
+c. 整数配列の最大値を返す関数 int maxiarray(int n, int a[]) 。
+d. 整数配列の最小値を返す関数 int miniarray(int n, int a[]) 。
+e. 整数配列の合計値を返す関数 int sumiarray(int n, int a[]) 。
+f. 整数配列の平均値を返す関数 double avgiarray(int n, int a[]) 。
+g. 実数配列の打ち出し / 後ろから順に打ち出し / 最大値 / 最小値 / 合計値 / 平均値を返す関数。
+h. 好きな方法で整数配列を整列する関数。テスト用に乱数が必要なら付録を参照のこと。
+i. その他配列を受け取り好きな処理をする関数。
+
+[作成したプログラム]
+※文字制限の為ソースコードは以下のアドレス参照
+・lec012/modules/fp12_01_module.c
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec012/modules/fp12_01_module.c
+・fp18/lec012/test/fp12_01/fp12_01_test.c
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec012/test/fp12_01/fp12_01_test.cpp
+
+[簡単な説明]
+プログラム自体は特筆すべき点はなし。
+以下を参考にGoogleTestを試験的に導入。
+https://qiita.com/igayu/items/9ff003309b237e9ae116
+http://opencv.jp/googletestdocs/primer.html#primer-assertions
+
+[アンケート]
+Q1. C 言語のアドレスとポインタについてどう思いましたか。
+資源管理の観点が不十分な実装を行った場合は危険と思われる。
+Q2. C 言語の配列機能についてどう思いましたか。
+終端の判定が曖昧な場合オーバーフローが生じる為、
+参照対象の領域に関する考慮を欠いた実装を行うと危険と思われる。
+Q3. 本日の全体的な感想と今後の要望をお書きください。
+特になし。

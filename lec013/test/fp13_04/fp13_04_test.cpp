@@ -1,4 +1,4 @@
-#define RMAX 1000
+//#define MAX 10000
 #define TRUE 1
 #define FALSE 0
 
@@ -23,7 +23,501 @@ protected:
     }
 };
 
+struct analysis {
+  char c;
+  char seq;
+};
+struct pat {
+  char a[MAX];
+};
+
 // 成功するテストケース。細かい説明はGoogleTestのマニュアルを見てね。
+//====================================================//
+// 構文解釈の格納された配列の要素数を数える処理
+// @param struct analysis apars[]
+// @return int cnt
+//====================================================//
+TEST_F(fixtureName, countapars01)
+{
+    struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+    char *pattern = (char *)malloc(10 * sizeof(char));
+    // test01
+    strcpy(pattern, "str");
+    pars(apars, pattern);
+    EXPECT_EQ(countapars(apars), 3);
+    free(apars);
+    free(pattern);
+}
+TEST_F(fixtureName, countapars02)
+{
+    struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+    char *pattern = (char *)malloc(10 * sizeof(char));
+    // test01
+    strcpy(pattern, "s?t+r*");
+    pars(apars, pattern);
+    EXPECT_EQ(countapars(apars), 3);
+    free(apars);
+    free(pattern);
+}
+
+//====================================================//
+// NAF変換結果の格納された配列の要素数を数える処理
+// @param struct analysis apars[]
+// @return int cnt
+//====================================================//
+TEST_F(fixtureName, countnaf01)
+{
+  struct pat naf[3];
+  struct pat *anaf = naf;
+  // test01
+  strcpy(anaf[0].a, "str");
+  anaf[1].a[0] = 0x00;
+  anaf[2].a[0] = 0x00;
+  EXPECT_EQ(countnaf(anaf), 1);
+  // test02
+  naf[1].a[0] = CODE_ZERO_EXCEPTION;
+  EXPECT_EQ(countnaf(anaf), 2);
+}
+TEST_F(fixtureName, countnaf02)
+{
+    struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 3);
+    // test01
+    naf[0].a[0] = 0x00;
+    naf[1].a[0] = 0x00;
+    naf[2].a[0] = 0x00;
+    EXPECT_EQ(countnaf(naf), 0);
+    free(naf);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに文字を追加する処理
+// param  char *pattern
+// return bool
+//====================================================//
+TEST_F(fixtureName, addpat)
+{
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat)*1);
+  char *array = (char *)malloc(3 * sizeof(char));
+  naf[1].a[0] = 0x00;
+  strcpy(array, "str");
+  EXPECT_EQ(addpat(naf, array[0], 3), 0);
+  EXPECT_EQ(addpat(naf, array[1], 3), 0);
+  EXPECT_EQ(addpat(naf, array[2], 3), 0);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  // 領域開放
+  free(naf);
+  free(array);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに0文字を追加した
+// パターンと1文字追加したパターンを追加する処理
+// @param struct pat* anaf
+// @param char str
+// @param int len
+// @param int flg
+// @return struct pat* naf
+//====================================================//
+TEST_F(fixtureName, zero_or_one01)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "str");
+  char str = 0x69;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // test01
+  zero_or_one(anaf, str, len, flg);
+  EXPECT_EQ(strlen(naf[0].a), 4);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x69);
+  EXPECT_EQ(naf[0].a[4], 0x00);
+  EXPECT_EQ(strlen(naf[1].a), 4);
+  EXPECT_EQ(naf[1].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x74);
+  EXPECT_EQ(naf[1].a[2], 0x72);
+  EXPECT_EQ(naf[1].a[3], 0x01);
+  EXPECT_EQ(naf[0].a[4], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, zero_or_one02)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[0].a[0] = 0x00;
+  anaf[0].a[1] = 0x00;
+  anaf[1].a[0] = 0x00;
+  anaf[1].a[1] = 0x00;
+  char str = 0x73;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // test02
+  zero_or_one(anaf, str, len, flg);
+  EXPECT_EQ(strlen(naf[0].a), 1);
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x00);
+  EXPECT_EQ(strlen(naf[1].a), 1);
+  EXPECT_EQ(naf[1].a[0], 0x01);
+  EXPECT_EQ(naf[1].a[1], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに0～N文字を追加した
+// パターンの処理
+// @param struct pat* naf
+// @param char str
+// @param int len
+// @param int flg
+// @return struct pat* naf
+//====================================================//
+TEST_F(fixtureName, zero_to_n01)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "s");
+  char str = 0x74;
+  int len = 6;
+  int flg = ZERO_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x74);
+  EXPECT_EQ(naf[1].a[2], 0x74);
+  EXPECT_EQ(naf[1].a[3], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x73);
+  EXPECT_EQ(naf[2].a[1], 0x74);
+  EXPECT_EQ(naf[2].a[2], 0x74);
+  EXPECT_EQ(naf[2].a[3], 0x74);
+  EXPECT_EQ(naf[2].a[4], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x73);
+  EXPECT_EQ(naf[3].a[1], 0x74);
+  EXPECT_EQ(naf[3].a[2], 0x74);
+  EXPECT_EQ(naf[3].a[3], 0x74);
+  EXPECT_EQ(naf[3].a[4], 0x74);
+  EXPECT_EQ(naf[3].a[5], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x73);
+  EXPECT_EQ(naf[4].a[1], 0x74);
+  EXPECT_EQ(naf[4].a[2], 0x74);
+  EXPECT_EQ(naf[4].a[3], 0x74);
+  EXPECT_EQ(naf[4].a[4], 0x74);
+  EXPECT_EQ(naf[4].a[5], 0x74);
+  EXPECT_EQ(naf[4].a[6], 0x00);
+  // 5
+  EXPECT_EQ(naf[5].a[0], 0x73);
+  EXPECT_EQ(naf[5].a[1], 0x01);
+  EXPECT_EQ(naf[5].a[2], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, zero_to_n02)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "st");
+  char str = 0x72;
+  int len = 6;
+  int flg = ZERO_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x74);
+  EXPECT_EQ(naf[1].a[2], 0x72);
+  EXPECT_EQ(naf[1].a[3], 0x72);
+  EXPECT_EQ(naf[1].a[4], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x73);
+  EXPECT_EQ(naf[2].a[1], 0x74);
+  EXPECT_EQ(naf[2].a[2], 0x72);
+  EXPECT_EQ(naf[2].a[3], 0x72);
+  EXPECT_EQ(naf[2].a[4], 0x72);
+  EXPECT_EQ(naf[2].a[5], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x73);
+  EXPECT_EQ(naf[3].a[1], 0x74);
+  EXPECT_EQ(naf[3].a[2], 0x72);
+  EXPECT_EQ(naf[3].a[3], 0x72);
+  EXPECT_EQ(naf[3].a[4], 0x72);
+  EXPECT_EQ(naf[3].a[5], 0x72);
+  EXPECT_EQ(naf[3].a[6], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x73);
+  EXPECT_EQ(naf[4].a[1], 0x74);
+  EXPECT_EQ(naf[4].a[2], 0x01);
+  EXPECT_EQ(naf[4].a[3], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, zero_to_n03)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  char str = 0x73;
+  int len = 6;
+  int flg = ZERO_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x73);
+  EXPECT_EQ(naf[1].a[2], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x73);
+  EXPECT_EQ(naf[2].a[1], 0x73);
+  EXPECT_EQ(naf[2].a[2], 0x73);
+  EXPECT_EQ(naf[2].a[3], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x73);
+  EXPECT_EQ(naf[3].a[3], 0x73);
+  EXPECT_EQ(naf[3].a[4], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x73);
+  EXPECT_EQ(naf[4].a[4], 0x73);
+  EXPECT_EQ(naf[4].a[5], 0x00);
+  // 5
+  EXPECT_EQ(naf[5].a[0], 0x73);
+  EXPECT_EQ(naf[5].a[5], 0x73);
+  EXPECT_EQ(naf[5].a[6], 0x00);
+  // 0
+  EXPECT_EQ(naf[6].a[0], 0x01);
+  EXPECT_EQ(naf[6].a[1], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに1～N文字を追加した
+// パターンの処理
+// @param struct pat* anaf
+// @param char str
+// @param int len
+// @param int flg
+// @return bool
+//====================================================//
+TEST_F(fixtureName, one_to_n01)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "a");
+  char str = 0x62;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x62);
+  EXPECT_EQ(naf[0].a[2], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[2], 0x62);
+  EXPECT_EQ(naf[1].a[3], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[3], 0x62);
+  EXPECT_EQ(naf[2].a[4], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[4], 0x62);
+  EXPECT_EQ(naf[3].a[5], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x61);
+  EXPECT_EQ(naf[4].a[5], 0x62);
+  EXPECT_EQ(naf[4].a[6], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, one_to_n02)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  strcpy(anaf[0].a, "ab");
+  char str = 0x63;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x62);
+  EXPECT_EQ(naf[0].a[2], 0x63);
+  EXPECT_EQ(naf[0].a[3], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[1], 0x62);
+  EXPECT_EQ(naf[1].a[2], 0x63);
+  EXPECT_EQ(naf[1].a[3], 0x63);
+  EXPECT_EQ(naf[1].a[4], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[1], 0x62);
+  EXPECT_EQ(naf[2].a[2], 0x63);
+  EXPECT_EQ(naf[2].a[3], 0x63);
+  EXPECT_EQ(naf[2].a[4], 0x63);
+  EXPECT_EQ(naf[2].a[5], 0x00);
+  // 2
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[1], 0x62);
+  EXPECT_EQ(naf[3].a[2], 0x63);
+  EXPECT_EQ(naf[3].a[3], 0x63);
+  EXPECT_EQ(naf[3].a[4], 0x63);
+  EXPECT_EQ(naf[3].a[5], 0x63);
+  EXPECT_EQ(naf[3].a[6], 0x00);
+  //
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+TEST_F(fixtureName, one_to_n03)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+  anaf[1].a[0] = 0x00;
+  char str = 0x61;
+  int len = 6;
+  int flg = ONE_OR_MORE_ITERATIONS;
+  zero_to_n(anaf, str, len, flg);
+  // 0
+  EXPECT_EQ(naf[0].a[0], 0x61);
+  EXPECT_EQ(naf[0].a[1], 0x00);
+  // 1
+  EXPECT_EQ(naf[1].a[0], 0x61);
+  EXPECT_EQ(naf[1].a[1], 0x61);
+  EXPECT_EQ(naf[1].a[2], 0x00);
+  // 2
+  EXPECT_EQ(naf[2].a[0], 0x61);
+  EXPECT_EQ(naf[2].a[2], 0x61);
+  EXPECT_EQ(naf[2].a[3], 0x00);
+  // 3
+  EXPECT_EQ(naf[3].a[0], 0x61);
+  EXPECT_EQ(naf[3].a[3], 0x61);
+  EXPECT_EQ(naf[3].a[4], 0x00);
+  // 4
+  EXPECT_EQ(naf[4].a[0], 0x61);
+  EXPECT_EQ(naf[4].a[4], 0x61);
+  EXPECT_EQ(naf[4].a[5], 0x00);
+  // 4
+  EXPECT_EQ(naf[5].a[0], 0x61);
+  EXPECT_EQ(naf[5].a[5], 0x61);
+  EXPECT_EQ(naf[5].a[6], 0x00);
+  // 領域開放
+  memset(anaf , 0x00 , sizeof(pat) * 10);
+}
+
+
+//====================================================//
+// 大域変数nafに格納された構造体の変数aに1文字を追加した
+// パターンと０文字追加したパターンを追加する処理
+// @param pat *naf
+// @param char str
+// @param int len
+// @param int flg
+// @return bool
+//====================================================//
+TEST_F(fixtureName, raddpat_b)
+{
+  struct pat naf[10];
+  struct pat *anaf = naf;
+  char *array = (char *)malloc(3 * sizeof(char));
+  anaf[1].a[0] = 0x00;
+  strcpy(naf[0].a, "str");
+  char str = 0x69;
+  int len = 6;
+  int flg = MAY_OR_MAY_NOT_BE_PRESENT;
+  // b. 「?」(直前の文字があってもなくてもよい) を実現してみなさい。
+  //EXPECT_TRUE(initialize());
+  EXPECT_TRUE(raddpat(anaf, str, len, flg));
+  EXPECT_EQ(strlen(anaf[0].a), 4);
+  EXPECT_EQ(anaf[0].a[0], 0x73);
+  EXPECT_EQ(anaf[0].a[3], 0x69);
+  EXPECT_EQ(anaf[0].a[4], 0x00);
+  EXPECT_EQ(strlen(anaf[1].a),4);
+  EXPECT_EQ(anaf[1].a[0], 0x73);
+  EXPECT_EQ(anaf[1].a[2], 0x72);
+  EXPECT_EQ(anaf[1].a[3], 0x01);
+  // 領域開放
+  free(array);
+}
+
+//====================================================//
+// 構文解釈の処理
+// @param struct analysis *apars
+// @param struct pat *naf
+// @param char *pattern
+// @param char *match
+// @return bool
+//====================================================//
+TEST_F(fixtureName, convnaf01)
+{
+  struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
+  char *match = (char *)malloc(10 * sizeof(char));
+  char *pattern = (char *)malloc(10 * sizeof(char));
+  // test01
+  strcpy(match, "string");
+  strcpy(pattern, "str");
+  EXPECT_TRUE(pars(apars, pattern));
+  EXPECT_TRUE(convnaf(apars, naf, pattern, match));
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[0].a[1], 0x74);
+  EXPECT_EQ(naf[0].a[2], 0x72);
+  // 領域開放
+  free(apars);
+  free(naf);
+  free(match);
+  free(pattern);
+}
+TEST_F(fixtureName, convnaf02)
+{
+  struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+  struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 2);
+  char *match = (char *)malloc(10 * sizeof(char));
+  char *pattern = (char *)malloc(10 * sizeof(char));
+  // test01
+  strcpy(match, "string");
+  strcpy(pattern, "s*t?r+");
+  /*EXPECT_TRUE(pars(apars, pattern));
+  EXPECT_TRUE(convnaf(apars, naf, pattern, match));
+  EXPECT_EQ(naf[0].a[0], 0x73);
+  EXPECT_EQ(naf[1].a[1], 0x73);
+  EXPECT_EQ(naf[2].a[2], 0x73);*/
+  // 領域開放
+  free(apars);
+  free(naf);
+  free(match);
+  free(pattern);
+}
 
 
 //============================================================================//
@@ -64,6 +558,13 @@ TEST_F(fixtureName, reversal){
   free(c1);
 }
 
+//============================================================================//
+// startからlen文字を削除する処理
+// @param char Array c2[]
+// @param int strat
+// @param int len
+// @result void
+//============================================================================//
 TEST_F(fixtureName, concat_prefix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -79,6 +580,9 @@ TEST_F(fixtureName, concat_prefix)
   free(match);
 }
 
+//============================================================================//
+// c. ^(先頭に固定) を実現してみなさい。
+//============================================================================//
 TEST_F(fixtureName, chk_prefix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -98,6 +602,9 @@ TEST_F(fixtureName, chk_prefix)
   free(match);
 }
 
+//============================================================================//
+// c. $(末尾に固定) を実現してみなさい。
+//============================================================================//
 TEST_F(fixtureName, chk_suffix)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -117,7 +624,14 @@ TEST_F(fixtureName, chk_suffix)
   free(match);
 }
 
-
+//====================================================//
+// pattern、pos文字目までのマッチング
+// param char *match
+// param char *pattern
+// param int l1
+// param int pos
+// return int result
+//====================================================//
 TEST_F(fixtureName, normal_match)
 {
   char *match = (char *)malloc(10 * sizeof(char));
@@ -125,28 +639,30 @@ TEST_F(fixtureName, normal_match)
   // test01
   strcpy(match, "string");
   strcpy(pattern, "str");
-  int l1 = strlen(match);
-  int result = normal_match(match, pattern, l1, 0);
-  EXPECT_EQ(result, 1);
-  result = normal_match(match, pattern, l1, 1);
-  EXPECT_EQ(result, 1);
-  result = normal_match(match, pattern, l1, 2);
-  EXPECT_EQ(result, 1);
+  int result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
+  strcpy(pattern, "tri");
+  result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
+  strcpy(pattern, "ing");
+  result = normal_match(match, pattern);
+  EXPECT_TRUE(result);
   // test02
   strcpy(pattern, "abc");
-  l1 = strlen(match);
-  result = normal_match(match, pattern, l1, 0);
-  EXPECT_EQ(result, 0);
-  result = normal_match(match, pattern, l1, 1);
-  EXPECT_EQ(result, 0);
-  result = normal_match(match, pattern, l1, 2);
-  EXPECT_EQ(result, 0);
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
+  strcpy(pattern, "stg");
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
+  strcpy(pattern, "mng");
+  result = normal_match(match, pattern);
+  EXPECT_FALSE(result);
   // 領域開放
   free(match);
   free(pattern);
 }
 
-TEST_F(fixtureName, mach1)
+/*TEST_F(fixtureName, mach1)
 {
   char *match = (char *)malloc(10 * sizeof(char));
   char *pattern = (char *)malloc(10 * sizeof(char));
@@ -215,4 +731,4 @@ TEST_F(fixtureName, mach2)
   // 領域開放
   free(match);
   free(pattern);
-}
+}*/

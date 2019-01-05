@@ -1,36 +1,20 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
+#include "fp13_04_header.c"
+#include "fp13_04_pars.c"
+#include "fp13_04_naf.c"
 
-//============================================================================//
-// 演習 4 上のコードを打ち込み、パターンが正しく処理されていることを確認しなさい。
-// OK なら、次のことをやってみなさい。
-//============================================================================//
-//============================================================================//
-// a . 「+」(1 回以上の繰り返し) に加えて「*」(0 回以上の繰り返し) も記述できるようにしてみなさい。
-//============================================================================//
-#define ONE_OR_MORE_ITERATIONS 0x2b
-#define ZERO_OR_MORE_ITERATIONS 0x2a
-//============================================================================//
-// b. 「?」(直前の文字があってもなくてもよい) を実現してみなさい。
-//============================================================================//
-#define MAY_OR_MAY_NOT_BE_PRESENT 0x3f
-//============================================================================//
-// d. 文字クラス[...](...の文字のいずれかならあてはまる)を実現してみなさい。
-// [^...](...のいずれでもなければ) も実現できるとなおよいです。
-//============================================================================//
-#define START_MALTI_PATTERN 0x5b
-#define END_MALTI_PATTERN 0x5d
-//============================================================================//
-// e. ここまでに出て来た特殊文字の機能をなくすエスケープ記号「\」を実現しなさい
-// (この文字に続いて特殊文字があった場合通常の文字として扱う)。
-//============================================================================//
-#define ESCAPE_SEQENCE 0x5c
-//============================================================================//
-// f. その他、パターンマッチにおいてあると面白いと思う好きな機能を選び実現しなさい
-//============================================================================//
-
+struct pat naf[MAX];
+//====================================================//
+// NAFの配列を初期化する処理
+// @return bool
+//====================================================//
+bool initialize(void){
+  for(int i = 0; i < MAX; i++){
+    for(int j = 0; j < 10; j++){
+      naf[i].a[j] = 0x00;
+    }
+  }
+  return true;
+}
 
 //============================================================================//
 // 配列を複製する処理
@@ -136,20 +120,20 @@ bool chk_suffix(char c2[]){
 }
 
 //====================================================//
-// pattern、pos文字目までのマッチング
-// param char *match
-// param char *pattern
-// param int l1
-// param int pos
-// return int result
+// @pattern、pos文字目までのマッチング
+// @param char *match
+// @param char *pattern
+// @param int pos
+// @return bool result
 //====================================================//
-bool normal_match(char match[], char pattern[], int l1, int pos){
-  int result;
+bool normal_match(char match[], char pattern[]){
+  bool result = false;
+  int l1 = strlen(match);
   int l2 = strlen(pattern);
   for(int i = 0; i < l1; i++){
-    result = true;
-    for(int j = 0; j <= pos; j++){
-      if(pattern[j] != match[i + j]){
+    for(int j = 0; j < l2; j++){
+      result = true;
+      if(match[i + j] != pattern[j]){
         result = false;
         break;
       }
@@ -161,9 +145,8 @@ bool normal_match(char match[], char pattern[], int l1, int pos){
   return result;
 }
 
-
 //====================================================//
-//
+// 正規表現処理
 // param  char *match
 // param  char *pattern
 // return int result
@@ -172,49 +155,50 @@ int pattern_match(char match[], char pattern[]) {
   if(match == "" || pattern == "" || match == NULL || pattern == NULL){
     return -1;
   }
-  //
+
+  bool flg = false;
+  int result = -1;
   // 接頭語チェック
   bool prefix = chk_prefix(pattern);
   // 接尾語チェック
   bool suffix = chk_suffix(pattern);
 
-  //
-  //char *mat = match;
-  //char *pat = pattern;
-  int l1 = strlen(match);
-  int l2 = strlen(pattern);
-  int pos = 0;
-  int result = -1;
-  bool flg = true;
-  //
+  struct analysis *apars = (struct analysis*)malloc(sizeof(struct analysis) * 2);
+  //struct pat *naf = (struct pat*)malloc(sizeof(struct pat) * 3);
+  struct pat *anaf = naf;
+  naf[0].a[0] = 0x00;
+  naf[0].a[1] = 0x00;
+  naf[0].a[2] = 0x00;
 
-  while(1){
-    switch (pattern[pos]) {
-      /*case ONE_OR_MORE_ITERATIONS:
-        break;
-      case ZERO_OR_MORE_ITERATIONS:
-        break;
-      case MAY_OR_MAY_NOT_BE_PRESENT:
-        break;
-      case START_MALTI_PATTERN:
-        break;*/
-      default:
-        /*if(normal_match(match, pattern, l1, pos) == false){
-          flg = false;
-        }*/
-        flg = normal_match(match, pattern, l1, pos);
-        break;
-    }
-    // 終了判定
-    if(flg == false || (l2 - 1) == pos){
-      // アンマッチ確定で処理中断
-      if(pos == (l2 - 1) && flg == true){
-        result = 1;
-      }
+  // patternの構文解析
+  if(!pars(apars, pattern)){
+      return -1;
+  }
+  // NAF配列初期化
+  if(!initialize()){
+    return -1;
+  }
+  // NAF変換
+  if(!convnaf(apars, anaf, pattern, match)){
+    return -1;
+  }
+  // CODE_ZERO_EXCEPTIONを取り除く処理
+  if(!delete_cze(anaf)){
+    return -1;
+  }
+  // NAF変換結果の格納された配列の要素数を数える処理
+  int cnt = countnaf(anaf);
+
+  // パターンマッチング
+  for(int i = 0; i < cnt; i++){
+    if(normal_match(match, anaf[i].a)){
+      result = 1;
       break;
     }
-    //
-    pos++;
   }
+
+  // 領域開放
+  free(apars);
+
   return result;
 }

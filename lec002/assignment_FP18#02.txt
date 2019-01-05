@@ -1,0 +1,638 @@
+基礎プログラミングおよび演習レポート ＃02
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:2018/10/09
+
+[課題の再掲]
+演習 4 次のような、繰り返しを使ったプログラムを作成せよ。
+a. 非負整数 n を受け取り、2^n を計算する。
+b. 非負整数 n を受け取り、n! = n × (n ? 1) × ? ? ? × 2 × 1 を計算する。
+c. 非負整数 n と r(? n) を受け取り、nCr を計算する。
+d. x と計算する項の数 n を与えて、次のテイラー展開を計算する。
+
+演習 5 a と b の最大公約数を gcd(a, b) と記す。正の整数 x、y の gcd(x, y) を求めることを考える。
+演習 6 「正の整数 N を受け取り、N が素数なら true、そうでなければ false を返す Ruby プログラム」を書け。
+演習 7 「正の整数 N を受け取り、N 以下の素数をすべて打ち出す Ruby プログラム」を書け。待ち
+時間 10 秒以内でいくつの N まで処理できるか調べて報告せよ。
+(もちろん N が大きくなるように工夫してくれるとなおよい。)
+
+[実施したこととその結果]
+演習 4
+//========================fp18/fp02_04.rb========================//
+require 'bigdecimal'
+require 'bigdecimal/util'
+
+=begin
+a. 非負整数 n を受け取り、2のn乗 を計算する。
+=end
+def a(n)
+	begin
+		raise ArgumentError if n == nil
+		n = n.to_i.abs
+		result = 1
+		while n > 0 do
+			result = result * 2
+			n -= 1
+		end
+		return result
+	rescue => e
+		return e
+	end
+end
+
+=begin
+b. 非負整数 n を受け取り、n! = n × (n ? 1) × ? ? ? × 2 × 1 を計算する。
+=end
+def b(n)
+	begin
+		raise ArgumentError if n == nil
+		n = n.to_i.abs
+		result = 1
+		while n > 0 do
+			n -= 1
+			result += (result * n)
+		end
+		return result
+	rescue => e
+		return e
+	end
+end
+
+=begin
+c. 非負整数 n と r(? n) を受け取り、nCr を計算する。
+=end
+def c(n,r)
+	begin
+		raise ArgumentError if n == nil || r == nil
+		n = n.to_s.to_i.abs
+		r = r.to_s.to_i.abs
+		if r > n then raise "Error" end
+		n_i = b(n)
+		r_i = b(r) * b(n - r)
+		return n_i / r_i
+	rescue => e
+		return e
+	end
+end
+
+=begin
+d. x と計算する項の数 n を与えて、次のテイラー展開を計算する
+=end
+def d(x, n)
+	begin
+		raise ArgumentError if x == nil || n == nil
+		x = x.to_i.abs
+		n = n.to_i.abs
+		sin_x = 0.0
+		cos_x = 0.0
+		sw = 1
+		result = []
+		for i in 0..n do
+			if i == 0 then
+				cos_x += (x_n(x,i).to_s.to_d / b(i).to_s.to_d)
+			elsif (i.to_s.to_d % 2.to_s.to_d) == 0 then
+				cos_x += (x_n(x,i).to_s.to_d / b(i).to_s.to_d) if sw.positive?
+				cos_x -= (x_n(x,i).to_s.to_d / b(i).to_s.to_d) if sw.negative?
+			else
+				sin_x += (x_n(x,i).to_s.to_d / b(i).to_s.to_d) if sw.positive?
+				sin_x -= (x_n(x,i).to_s.to_d / b(i).to_s.to_d) if sw.negative?
+				sw = sw * -1
+			end
+		end
+		result.push(sin_x)
+		result.push(cos_x)
+	rescue => e
+		return e
+	end
+end
+
+=begin
+=end
+def x_n(x,n)
+	begin
+		raise ArgumentError if x == nil || n == nil
+		n = n.to_s.to_i.abs
+		r = r.to_s.to_i.abs
+		result = 1
+		for i in 1..n do
+			result = result * x
+		end
+		return result
+	rescue => e
+		return e
+	end
+end
+
+=begin
+=end
+def factorial(a)
+	begin
+		raise ArgumentError if a == nil
+		result = a.to_i.abs
+		while a.to_i > 1 do
+			result = result * a -= 1
+		end
+		return result
+	rescue => e
+		return e
+	end
+end
+//===============================================================//
+//==================fp18/spec/fp02_04_spec.rb====================//
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp02_04.rb'
+
+describe "演習4" do
+  describe "a" do
+    it "a(2)" do
+      puts("a(2)")
+      results = a(2)
+      puts(results)
+      expect(results).to eq 4
+    end
+    it "a(2)" do
+      puts("a(2)")
+      results = a(4)
+      puts(results)
+      expect(results).to eq 16
+    end
+    it "a(nil)" do
+      results = a(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  describe "b" do
+    it "b(3)" do
+      puts("b(3)")
+      results = b(3)
+      puts(results)
+      expect(results).to eq 6
+    end
+    it "b(4)" do
+      puts("b(4)")
+      results = b(4)
+      puts(results)
+      expect(results).to eq 24
+    end
+    it "b(nil)" do
+      results = b(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  describe "c" do
+    it "c(5,2)" do
+      puts("c(5,2)")
+      results = c(5,2)
+      puts(results)
+      expect(results).to eq 10
+    end
+    it "c(7,3)" do
+      puts("c(7,3)")
+      results = c(7,3)
+      puts(results)
+      expect(results).to eq 35
+    end
+    it "c(2,2)" do
+      puts("c(2,2)")
+      results = c(2,2)
+      puts(results)
+      expect(results).to eq 1
+    end
+    it "c(1,nil)" do
+      results = c(1,nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  describe "d" do
+    it "d(1,7)" do
+      #puts("d(1,7)")
+      results = d(1,7)
+      #puts(results)
+      expect(results[0].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+      expect(results[1].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+    end
+    it "d(0,0)" do
+      #puts("d(0,0)")
+      results = d(0,0)
+      #puts(results)
+      expect(results[0].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+      expect(results[1].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+    end
+    it "d(0,nil)" do
+      #puts("d(0,nil)")
+      results = d(0,1)
+      #puts(results)
+      expect(results[0].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+      expect(results[1].to_s).to match(/^[-]*?[0-9]{1}\.[0-9]+[e]*?[+-]*?[0-9]*?$/)
+    end
+    it "d(1,nil)" do
+      results = d(1,nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  describe "x_n" do
+    it "x_n(2.0,2)" do
+      results = x_n(2.0,2)
+      expect(results).to eq 4.0
+    end
+    it "x_n(3.3)" do
+      results = x_n(3,3)
+      expect(results).to eq 27
+    end
+    it "x_n(2,nil)" do
+      results = x_n(2,nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+  describe "factorial" do
+    it "factorial(3)" do
+      results = factorial(3)
+      expect(results).to eq 6
+    end
+    it "factorial(3)" do
+      results = factorial(4.0)
+      expect(results).to eq 24.0
+    end
+    it "factorial(nil)" do
+      results = factorial(nil)
+      expect(results).to be_a(ArgumentError)
+    end
+  end
+end
+//===============================================================//
+
+演習 5
+//========================fp18/fp02_05.rb========================//
+require 'bigdecimal'
+require 'bigdecimal/util'
+
+def main(a,b)
+  begin
+    raise ArgumentError if a == nil || b == nil
+    a.to_i.abs
+    b.to_i.abs
+    result = 0;
+    if a > b then
+      l = a
+      s = b
+    elsif b > a then
+      l = b
+      s = a
+    elsif a == b then
+      return a
+    end
+    for i in 1..s do
+      if s % i == 0 && l % i == 0 then
+result = i
+      end
+    end
+    return result
+  rescue => e
+    e
+  end
+end
+//===============================================================//
+//==================fp18/spec/fp02_05_spec.rb====================//
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp02_05.rb'
+
+describe "演習5" do
+  it "main(4,4)" do
+    results = main(4,4)
+    expect(results).to eq 4
+  end
+  it "main(27,81)" do
+    results = main(36,81)
+    expect(results).to eq 9
+  end
+  it "main(21,14)" do
+    results = main(21,14)
+    expect(results).to eq 7
+  end
+  it "main(nil,9)" do
+    results = main(nil,9)
+    expect(results).to be_a(ArgumentError)
+  end
+end
+//===============================================================//
+
+演習 6
+//========================fp18/fp02_06.rb========================//
+require 'bigdecimal'
+require 'bigdecimal/util'
+class Fp02_06
+  #/-----------------------------------------------------------/
+  # 正の整数 N を受け取り、N が素数なら true、
+  # そうでなければ false を返す Ruby プログラム
+  #/-----------------------------------------------------------/
+  def p(n)
+    begin
+      raise ArgumentError if n == nil || n == 0
+      n = n.to_i.abs
+      for i in 2..(n - 1) do
+return false if (n % i) == 0
+      end
+      return true
+    rescue => e
+      return e
+    end
+  end
+end
+//===============================================================//
+//==================fp18/spec/fp02_06_spec.rb====================//
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp02_06.rb'
+
+describe "演習6" do
+  it "p(0)" do
+    obj = Fp02_06.new
+    results = obj.p(0)
+    expect(results).to be_a(ArgumentError)
+  end
+  it "p(1)" do
+    obj = Fp02_06.new
+    results = obj.p(1)
+    expect(results).to eq true
+  end
+  it "p(2)" do
+    obj = Fp02_06.new
+    results = obj.p(2)
+    expect(results).to eq true
+  end
+  it "p(3)" do
+    obj = Fp02_06.new
+    results = obj.p(3)
+    expect(results).to eq true
+  end
+  it "p(4)" do
+    obj = Fp02_06.new
+    results = obj.p(4)
+    expect(results).to eq false
+  end
+  it "p(5)" do
+    obj = Fp02_06.new
+    results = obj.p(5)
+    expect(results).to eq true
+  end
+  it "p(6)" do
+    obj = Fp02_06.new
+    results = obj.p(6)
+    expect(results).to eq false
+  end
+  it "p(7)" do
+    obj = Fp02_06.new
+    results = obj.p(7)
+    expect(results).to eq true
+  end
+  it "p(11)" do
+    obj = Fp02_06.new
+    results = obj.p(11)
+    expect(results).to eq true
+  end
+  it "p(nil)" do
+    obj = Fp02_06.new
+    results = obj.p(nil)
+    expect(results).to be_a(ArgumentError)
+  end
+  it "p(0)" do
+    obj = Fp02_06.new
+    results = obj.p(0)
+    expect(results).to be_a(ArgumentError)
+  end
+end
+//===============================================================//
+
+演習 7
+//========================fp18/fp02_07.rb========================//
+require './fp02_06'
+require 'benchmark'
+require 'bigdecimal'
+require 'bigdecimal/util'
+
+def main(n)
+  begin
+    raise ArgumentError if n == nil
+    obj = Fp02_06.new
+    n = n.to_i.abs
+    result = []
+    #/==============計測開始==============/
+    time = Benchmark.realtime do
+      for i in 2..n do
+result.push(i) if obj.p(i)
+      end
+    end
+    puts("処理時間 #{time}s")
+    #/=============計測終了===============/
+    return result
+  rescue => e
+    return e
+  end
+end
+//===============================================================//
+//==================fp18/spec/fp02_07_spec.rb====================//
+require __dir__ + "/spec_helper"
+require __dir__ + '/../fp02_07.rb'
+
+describe "演習7" do
+  it "71" do
+    results = main(71)
+    #puts(results)
+    expect(results).to match_array([2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71])
+  end
+  it "nil" do
+    results = main(nil)
+    expect(results).to be_a(ArgumentError)
+  end
+end
+
+//===============================================================//
+
+[考察]
+演習 4 次のような、繰り返しを使ったプログラムを作成せよ。
+a. 非負整数 n を受け取り、2^n を計算する。
+   →ループによりN乗計算を実現
+b. 非負整数 n を受け取り、n! = n × (n ? 1) × ? ? ? × 2 × 1 を計算する。
+   →ループ処理及びデクリメントにより階乗計算を実現
+c. 非負整数 n と r(? n) を受け取り、nCr を計算する。
+   →公式を実装に当てはめ。
+     階乗計算は小門bのメソッドを呼び出す実装とした。
+d. x と計算する項の数 n を与えて、次のテイラー展開を計算する。
+   整数値のN乗を計算するメソッドx_nを実装。
+   階乗計算は小門bのメソッドを呼び出す実装とした。
+   メソッドの戻り値は倍精度浮動小数点型へキャストし計算精度を担保する実装とした。
+   ※戻り値はsin(x)、cos(x)
+   irb(main):004:0> d(1,2)
+   => [0.1e1, 0.5e0]
+   irb(main):005:0> d(1,3)
+   => [0.833333333333333333e0, 0.5e0]
+   irb(main):006:0> d(1,4)
+   => [0.833333333333333333e0, 0.541666666666666667e0]
+   irb(main):007:0> d(1,5)
+   => [0.841666666666666666e0, 0.541666666666666667e0]
+   irb(main):008:0> d(1,6)
+   => [0.841666666666666666e0, 0.540277777777777778e0]
+
+演習 5 a と b の最大公約数を gcd(a, b) と記す。正の整数 x、y の gcd(x, y) を求めることを考える。
+   →引数を大小比較し(引数(小))回変数iをインクリメントしa、bと商を計算。余りを判定し0の場合戻り値へ代入。
+
+演習 6 「正の整数 N を受け取り、N が素数なら true、そうでなければ false を返す Ruby プログラム」を書け。
+   →初期値2のループカウンタと商を取り余り0の場合false(bool)を返す
+     ループカウンタが(N-1)までにfalseを帰さない場合ture(bool)を返す
+     ※ループ回数は(N-1)ではなく2/Nとしても良い
+
+演習 7 「正の整数 N を受け取り、N 以下の素数をすべて打ち出す Ruby プログラム」を書け。待ち
+時間 10 秒以内でいくつの N まで処理できるか調べて報告せよ。
+(もちろん N が大きくなるように工夫してくれるとなおよい。)
+以下は第２構、演習７を素直に実装したソースの実行結果
+irb(main):016:0> main 10000
+処理時間 0.44407682202290744s
+=> nil
+irb(main):017:0> main 20000
+処理時間 1.5340828569605947s
+=> nil
+irb(main):018:0> main 30000
+処理時間 3.290000287001021s
+=> nil
+irb(main):019:0> main 40000
+処理時間 5.72210799891036s
+=> nil
+irb(main):020:0> main 50000
+処理時間 8.670242263935506s
+=> nil
+irb(main):021:0> main 60000
+処理時間 12.359204275999218s
+=> nil
+[2018/10/09(追記)]
+素数判定メソッドを以下の方針で修正した
+※N/2>2の場合チェック対象の数をN/2とする
+//=====================lec002/fp02_06.rb=========================//
+require 'bigdecimal'
+require 'bigdecimal/util'
+class Fp02_06
+  #/-----------------------------------------------------------/
+  # 正の整数 N を受け取り、N が素数なら true、
+  # そうでなければ false を返す Ruby プログラム
+  #/-----------------------------------------------------------/
+  def p(n)
+    begin
+      raise ArgumentError if n == nil || n == 0
+      n = n.to_i.abs
+      lim = n - 1
+      lim = (n / 2) + 1 if n / 2 > 2 
+      for i in 2..lim do
+return false if (n % i) == 0
+      end
+      return true
+    rescue => e
+      return e
+    end
+  end
+end
+//===============================================================//
+実行結果は以下、30％強程度の実行時間削減に成功した
+irb(main):006:0> main 10000
+処理時間 0.37056536599993706s
+=> nil
+irb(main):007:0> main 50000
+処理時間 4.754007152048871s
+=> nil
+irb(main):008:0> main 60000
+処理時間 8.030008991016075s
+=> nil
+irb(main):009:0> main 70000
+処理時間 9.366281298920512s
+
+更に素数判定のmainメソッドを以下の方針で修正した
+※ループカウンタの初期値を3とする
+※カウントアップをの値を「2」とする(2の倍数をチェック対象から外す)
+//========================fp18/fp02_07.rb========================//
+require './fp02_06'
+require 'benchmark'
+require 'bigdecimal'
+require 'bigdecimal/util'
+
+def main(n)
+  begin
+    raise ArgumentError if n == nil
+    obj = Fp02_06.new
+    n = n.to_i.abs
+    results = Array.new
+    results.push(2)
+    i = 3
+    #/==============計測開始==============/
+    time = Benchmark.realtime do
+      while n >= i do
+        results.push(i) if obj.p(i)
+        i += 2
+      end
+    end
+    puts("処理時間 #{time}s")
+    #/=============計測終了===============/
+    #return results
+  rescue => e
+    return e
+  end
+end
+//===============================================================//
+実行結果は以下、10％程度の実行時間削減に成功した
+irb(main):067:0> main 10000
+処理時間 0.22813073394354433s
+=> nil
+irb(main):068:0> main 50000
+処理時間 4.530459361965768s
+=> nil
+irb(main):069:0> main 70000
+処理時間 8.506244432064705s
+=> nil
+irb(main):070:0> main 80000
+処理時間 11.072210018988699s
+=> nil
+
+(参)第3構、演習6、aの実行結果
+a. 素数は値の大きいところではまばらにしかないので、これまでに見つかった素数を配列に
+覚えておき、新たな素数の候補をチェックする時に「これまで見つかった素数で割ってみ
+て割り切れなければ素数」という方針にすれば、チェックする回数がかなり少なくできる。
+irb(main):004:0> a_1(10000)
+処理時間 0.484117547981441s
+=> nil
+irb(main):005:0> a_1(20000)
+処理時間 1.7236389309400693s
+=> nil
+irb(main):006:0> a_1(30000)
+処理時間 3.645911558996886s
+=> nil
+irb(main):007:0> a_1(40000)
+処理時間 6.268437084974721s
+=> nil
+irb(main):008:0> a_1(50000)
+処理時間 9.660024140030146s
+=> nil
+irb(main):009:0> a_1(60000)
+処理時間 13.733674773015082s
+=> nil
+(参)第3構、演習6、bの実行結果
+b. 別の考え方として、N 未満の素数を打ち出すのに次の方針を用いるのはどうだろう。......
+irb(main):010:0> b(10000)
+(全検索)処理時間 1.6319533460773528s
+=> nil
+irb(main):011:0> b(20000)
+(全検索)処理時間 5.674405217985623s
+=> nil
+irb(main):012:0> b(30000)
+(全検索)処理時間 12.21108232694678s
+=> nil
+特に本来高速となるべき第3構、演習6のソースの実行時間が極めて低速となった。
+※上記は何れも素数判定用処理の実装は等価であり第３構用ソースの実装に問題があると考える。
+[2018/10/09追記]
+素数判定のプログラムについて、
+素朴な実装からスタートし結果的には40%程度の高速化に成功した。
+
+[アンケート]
+Q1. 枝分かれや繰り返しの動き方が納得できましたか?
+納得できた。
+Q2. 枝分かれと繰り返しのどっちが難しいですか? それはなぜ?
+どちらも難しくはないと判断。
+※現時点で数学的センスが問われている訳ではない為
+Q3. リフレクション(今回の課題で分かったこと)・感想・要望をどうぞ。
+rspecの実行環境を整備して欲しい。

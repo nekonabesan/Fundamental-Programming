@@ -1,0 +1,111 @@
+基礎プログラミングおよび演習レポート ＃14
+学籍番号:1820004
+氏名:大竹春生
+ペア学籍番号・氏名(または「個人作業」):個人作業
+提出日付:
+
+[課題の再掲]
+「演習 1」～「演習 6」の (小) 課題から 1 つ以上を選択してプログラムを作り、レポートを提出しなさい。
+プログラムと、課題に対する報告・考察 (やってみた結果・そこから分かったことの記述) が
+含まれること。アンケートの回答もおこなうこと。
+
+演習 3 上の例題をそのまま打ち込んで動かしなさい。動いたら次の変更をしてみなさい。
+a. 登録できる値を整数 1 個から変更しなさい (整数 2 個とか文字列とか)。
+b. 今は表は追加と書き換えしかできないが、削除機能をつけてみなさい。
+c. 表の中身を全部まとめて表示する機能をつけてみなさい。
+(ヒント: この機能そのものは tbllinear1.c の中に置くのが自然で、main からそれを呼び出す。
+どういう場合にこの機能が呼ばれることにするかは好きに決めてかまいません。)
+d. そのほか、面白いと思う機能をつけてみなさい。
+
+[実施したこととその結果]
+◆ソースコード
+※文字数制限の関係上Gitアドレスを掲載する
+・lec014/fp14_common.h
+※構造体定義
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec014/fp14_common.h
+・develop/lec014/modules/fp14_03_module.c
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec014/modules/fp14_03_module.c
+
+◆テストコード
+※文字数制限の関係上Gitアドレスを掲載する
+・lec014/test/fp14_03/fp14_03_test.cpp
+https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec014/test/fp14_03/fp14_03_test.cpp
+
+[考察]
+◆概要
+線形リストは片方向、双方向を共に比較的簡単に実装できる特性がある。
+本課題において可能な限りダイナミック・アロケーションを意識し双方向リストを実装した。
+
+◆考察
+・リストについて
+実装例は大域変数を用いた実装となっているが、本課題においては、
+標準ライブラリのメモリ・アロケーション機能を利用し可能な限りセキュアな実装を試みた。
+木構造と異なり線形リストは特段に困難な実装とはならなかった。
+・動的メモリ管理について
+memsetにおいてメンバの領域を初期化後構造体のポインタをfreeし、
+初期化後のアドレスに対してアクセスするテストケースを実装してみた。
+あるアドレスではNULLが得られた一方、他のアドレスは直ちにシステム側で上書きされることが確認できた。
+▽以下
+※lec014/test/fp14_03/fp14_03_test.cppのケース「del_struct01」へ
+※https://github.com/nekonabesan/Fundamental-Programming/blob/develop/lec014/test/fp14_03/fp14_03_test.cpp
+EXPECT_STREQ(p3->key, NULL);// 解放後のアドレスを参照して失敗するケース
+EXPECT_STREQ(p3->val, NULL);// 解放後のアドレスを参照して失敗するケース
+EXPECT_STREQ(k3, NULL);// 解放後のアドレスを参照して失敗するケース
+EXPECT_STREQ(v3, NULL);// 解放後のアドレスを参照して失敗するケース
+を追記。
+構造体に格納されたchar型配列に対して
+/------------------------------------------------------------------------------/
+Running main() from ../googletest-release-1.8.1/googletest/src/gtest_main.cc
+[==========] Running 5 tests from 1 test case.
+[----------] Global test environment set-up.
+[----------] 5 tests from fixtureName
+[ RUN      ] fixtureName.add_struct
+[       OK ] fixtureName.add_struct (0 ms)
+[ RUN      ] fixtureName.del_struct01
+fp14_03_test.cpp:115: Failure
+Expected equality of these values:
+  p3->val
+    Which is: "p\x1\xC7\xE7\xFF\x7F"
+  __null
+    Which is: NULL
+fp14_03_test.cpp:116: Failure
+Expected equality of these values:
+  k3
+    Which is: "\x18\xBA&\x6" "C\x7F"
+  __null
+    Which is: NULL
+fp14_03_test.cpp:117: Failure
+Expected equality of these values:
+  v3
+    Which is: "\xF0\x10\xC7\xE7\xFF\x7F"
+  __null
+    Which is: NULL
+[  FAILED  ] fixtureName.del_struct01 (10 ms)
+[ RUN      ] fixtureName.show_structs
+[       OK ] fixtureName.show_structs (0 ms)
+[ RUN      ] fixtureName.initialize
+[       OK ] fixtureName.initialize (0 ms)
+[ RUN      ] fixtureName.head_address
+[       OK ] fixtureName.head_address (0 ms)
+[----------] 5 tests from fixtureName (16 ms total)
+
+[----------] Global test environment tear-down
+[==========] 5 tests from 1 test case ran. (21 ms total)
+[  PASSED  ] 4 tests.
+[  FAILED  ] 1 test, listed below:
+[  FAILED  ] fixtureName.del_struct01
+
+ 1 FAILED TEST
+Makefile:11: recipe for target 'all' failed
+make: *** [all] Error 1
+/------------------------------------------------------------------------------/
+Which is:...以下で得られた値がシステムに上書きされた内容。
+マルチバイト文字コード？と思われるデータが上書きされている。
+
+[アンケート]
+Q1. 構造体を使ったプログラムが書けるようになりましたか。
+ある程度。
+Q2. 表と検索とはどういうことか理解しましたか。
+ある程度。
+Q3. 課題に対する感想と今後の要望をお書きください。
+特になし。
