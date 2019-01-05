@@ -102,9 +102,8 @@ int main(void) {
     // リストを初期化する処理
     p = imgclear();
     // リストへ三角形の画像情報を上書きする処理
-    p = imgtriangle(p, px0, py0, px1, py1, px2, py2, r, g, b);
+    p = imgtriangle(head_color(p), px0, py0, px1, py1, px2, py2, r, g, b);
     // リストのポインタを先頭へ戻す処理
-    //p = head_color(p);
     // 画像データをファイルへ出力する処理
     if(!imgwrite(head_color(p), angle)){
       return -1;

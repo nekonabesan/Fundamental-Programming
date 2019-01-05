@@ -60,24 +60,22 @@ struct color * imgclear(void) {
   struct color *n =NULL;
   struct color *prev = NULL;
   struct color *start = NULL;
-  for(int i = 0; i < HEIGHT; i++){
-    for(int j = 0; j < WIDTH; j++) {
+  for(int y = 0; y < HEIGHT; y++){
+    for(int x = 0; x < WIDTH; x++) {
       t = (struct color*)malloc(sizeof(struct color) * 1);
       // リストの先頭要素を取得
-      if(i == 0 && j == 0){
+      if(x == 0 && y == 0){
         start = t;
+        t->prev = NULL;
       }
       t = initialize(t);
       if(prev){
         t->prev = prev;
         prev->next = t;
-      } else {
-        // リストの先頭要素に対する処理
-        t->prev = NULL;
       }
       prev = t;
-      t->y = i;
-      t->x = j;
+      t->y = y;
+      t->x = x;
       t->next = NULL;
     }
   }
@@ -90,7 +88,7 @@ struct color * imgclear(void) {
 // @return struct ent2 *start
 //--------------------------------------------------------------//
 struct color * head_color(struct color *pos){
-  if(pos->prev == NULL){
+  if(pos->prev == NULL || pos == NULL){
     return pos;
   }
   struct color *head = pos->prev;
@@ -193,7 +191,11 @@ struct color * imgputpixel(struct color *p, int x, int y, unsigned char r, unsig
   p->b = b;
   p->x = x;
   p->y = y;
-  return p->next;
+  if(p->next){
+    return p->next;
+  } else {
+    return p;
+  }
 }
 
 //--------------------------------------------------------------//
