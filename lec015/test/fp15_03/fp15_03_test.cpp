@@ -120,10 +120,14 @@ TEST_F(fixtureName, head_color)
   // test01
   pos = head_color(start);
   EXPECT_EQ((unsigned long)start, (unsigned long)pos);
+  ASSERT_NE((unsigned long)start, 0);
+  ASSERT_NE((unsigned long)pos, 0);
   // test02
   pos = eol_color(start);
   pos = head_color(pos);
   EXPECT_EQ((unsigned long)start, (unsigned long)pos);
+  ASSERT_NE((unsigned long)start, 0);
+  ASSERT_NE((unsigned long)pos, 0);
   // 領域開放
   del_color_array(start);
   //free(start);
