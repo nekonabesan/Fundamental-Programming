@@ -77,6 +77,10 @@ TEST_F(fixtureName, initialize)
   EXPECT_EQ(t->r, 255);
   EXPECT_EQ(t->g, 255);
   EXPECT_EQ(t->b, 255);
+  EXPECT_EQ(t->x, 0);
+  EXPECT_EQ(t->y, 0);
+  EXPECT_EQ((unsigned long)t->prev, 0);
+  EXPECT_EQ((unsigned long)t->next, 0);
   // 領域開放
   free(t);
 }

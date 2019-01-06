@@ -20,10 +20,6 @@ struct gp{
   double y;
 };
 
-//static unsigned char buf[HEIGHT][WIDTH][3];
-//static int filecnt = 0;
-//static char fname[100];
-
 //--------------------------------------------------------------//
 // 色データを上書きする処理
 // @param unsigned char r
@@ -47,6 +43,10 @@ struct color * initialize(struct color *t) {
   unsigned char g = 255;
   unsigned char b = 255;
   t = writecolor(t, r, g, b);
+  t->x = 0;
+  t->y = 0;
+  t->next = NULL;
+  t->prev = NULL;
   return t;
 }
 
