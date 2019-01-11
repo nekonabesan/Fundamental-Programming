@@ -151,11 +151,15 @@ bool del_color_array(struct color *p){
 bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
-  static unsigned char buf[HEIGHT][WIDTH][3];
+  unsigned char buf[HEIGHT][WIDTH][3];
+  //unsigned char *buf = (unsigned char *)calloc(HEIGHT * WIDTH * 3, sizeof(unsigned char));
   while(p->next) {
     buf[HEIGHT - p->y - 1][p->x][0] = p->r;
     buf[HEIGHT - p->y - 1][p->x][1] = p->g;
     buf[HEIGHT - p->y - 1][p->x][2] = p->b;
+    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 0] = p->r;
+    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 1] = p->g;
+    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 2] = p->b;
     p = p->next;
   }
   // ファイル名を取得する処理
@@ -169,6 +173,7 @@ bool imgwrite(struct color *p, int filecnt) {
   fprintf(f, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
   fwrite(buf, sizeof(buf), 1, f);
   fclose(f);
+  //free(buf);
   return true;
 }
 
