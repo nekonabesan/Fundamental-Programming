@@ -144,6 +144,23 @@ bool del_color_array(struct color *p){
 }
 
 //--------------------------------------------------------------//
+//--------------------------------------------------------------//
+unsigned char* create_buf(void){
+    unsigned char *height = (unsigned char *)calloc(HEIGHT, sizeof(unsigned char));
+    unsigned char *width = NULL;
+    unsigned char *pos;
+    for(int i = 0; i < HEIGHT; i++){
+      width = (unsigned char *)calloc(WIDTH, sizeof(unsigned char));
+      for(int j = 0; j < WIDTH; j++){
+        pos = (unsigned char *)calloc(3, sizeof(unsigned char));
+        width[j] = pos;
+      }
+      height[i] = width;
+    }
+    return height;
+}
+
+//--------------------------------------------------------------//
 // リストに格納されたデータを画像ファイルへ書き出す処理
 // @param struct color *p
 // return bool
@@ -152,7 +169,7 @@ bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
   unsigned char buf[HEIGHT][WIDTH][3];
-  //unsigned char *buf = (unsigned char *)calloc(HEIGHT * WIDTH * 3, sizeof(unsigned char));
+  //unsigned char buf = create_buf();
   while(p->next) {
     buf[HEIGHT - p->y - 1][p->x][0] = p->r;
     buf[HEIGHT - p->y - 1][p->x][1] = p->g;
