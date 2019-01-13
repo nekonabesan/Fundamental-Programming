@@ -161,17 +161,13 @@ bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
   //unsigned char buf[HEIGHT][WIDTH][3];
-  //unsigned char *buf = create_buf();
-  unsigned char buf[HEIGHT*WIDTH*3];
+  unsigned char *buf = create_buf();
+  //unsigned char buf[HEIGHT*WIDTH*3];
   //printf("%ld\n", malloc_usable_size(buf));
-  //printf("%ld\n", sizeof(buf));
   while(p->next) {
     //buf[HEIGHT - p->y - 1][p->x][0] = p->r;
     //buf[HEIGHT - p->y - 1][p->x][1] = p->g;
     //buf[HEIGHT - p->y - 1][p->x][2] = p->b;
-    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 0] = p->r;
-    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 1] = p->g;
-    //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 2] = p->b;
     buf[((p->x * 3) + 0) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->r;
     buf[((p->x * 3) + 1) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->g;
     buf[((p->x * 3) + 2) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->b;
@@ -187,9 +183,9 @@ bool imgwrite(struct color *p, int filecnt) {
     return false;
   }
   fprintf(f, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
-  fwrite(buf, sizeof(buf), 1, f);
+  fwrite(buf, malloc_usable_size(buf), 1, f);
   fclose(f);
-  //free(buf);
+  free(buf);
   return true;
 }
 
