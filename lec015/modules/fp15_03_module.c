@@ -145,6 +145,8 @@ bool del_color_array(struct color *p){
 }
 
 //--------------------------------------------------------------//
+// fwriteへ渡す配列を初期化する処理
+// @return unsigned char *buf
 //--------------------------------------------------------------//
 unsigned char* create_buf(void){
     unsigned char *buf = (unsigned char *)malloc(HEIGHT * WIDTH * 3 * sizeof(unsigned char));

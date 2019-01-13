@@ -177,6 +177,17 @@ TEST_F(fixtureName, imgputpixel)
 }
 
 //--------------------------------------------------------------//
+// fwriteへ渡す配列を初期化する処理
+// @return unsigned char *buf
+//--------------------------------------------------------------//
+TEST_F(fixtureName, create_buf)
+{
+  unsigned char *buf = create_buf();
+  //EXPECT_EQ(malloc_usable_size(buf), 180000);
+  free(buf);
+}
+
+//--------------------------------------------------------------//
 // リストに格納されたデータを画像ファイルへ書き出す処理
 // @param struct color *p
 // return bool
