@@ -20,5 +20,14 @@ bool rt_triangle(struct color c, double x0, double y0, double x1, double y1, dou
 // fp15_circle.c
 bool img_fillcircle(struct color c, double x, double y, double r);
 bool rt_circle(struct color c, double x0, double y0, double r);
+// fp15_03fp15_01_module.c
+struct color * writecolor(struct color *t, unsigned char r, unsigned char g, unsigned char b);
+struct color * initialize(struct color *t);
+struct color * imgclear(void);
+struct color * head_color(struct color *pos);
+struct color * eol_color(struct color *pos);
+bool del_color_array(struct color *p);
+bool imgwrite(struct color *p, int filecnt);
+struct color * imgputpixel(struct color *p, int x, int y, unsigned char r, unsigned char g, unsigned char b);
 
 #endif /* _TARGET_H_ */
