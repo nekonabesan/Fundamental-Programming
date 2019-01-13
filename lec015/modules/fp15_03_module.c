@@ -147,7 +147,6 @@ bool del_color_array(struct color *p){
 //--------------------------------------------------------------//
 //--------------------------------------------------------------//
 unsigned char* create_buf(void){
-    //unsigned char *buf = (unsigned char *)calloc(HEIGHT * WIDTH * 3, sizeof(unsigned char));
     unsigned char *buf = (unsigned char *)malloc(HEIGHT * WIDTH * 3 * sizeof(unsigned char));
     return buf;
 }
