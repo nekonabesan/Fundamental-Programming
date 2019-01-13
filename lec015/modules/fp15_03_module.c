@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <malloc.h>
 
 #define WIDTH 300
 #define HEIGHT 200
@@ -146,18 +147,9 @@ bool del_color_array(struct color *p){
 //--------------------------------------------------------------//
 //--------------------------------------------------------------//
 unsigned char* create_buf(void){
-    unsigned char *height = (unsigned char *)calloc(HEIGHT, sizeof(unsigned char));
-    unsigned char *width = NULL;
-    unsigned char *pos;
-    for(int i = 0; i < HEIGHT; i++){
-      width = (unsigned char *)calloc(WIDTH, sizeof(unsigned char));
-      for(int j = 0; j < WIDTH; j++){
-        pos = (unsigned char *)calloc(3, sizeof(unsigned char));
-        width[j] = pos;
-      }
-      height[i] = width;
-    }
-    return height;
+    //unsigned char *buf = (unsigned char *)calloc(HEIGHT * WIDTH * 3, sizeof(unsigned char));
+    unsigned char *buf = (unsigned char *)malloc(HEIGHT * WIDTH * 3 * sizeof(unsigned char));
+    return buf;
 }
 
 //--------------------------------------------------------------//
@@ -168,15 +160,22 @@ unsigned char* create_buf(void){
 bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
-  unsigned char buf[HEIGHT][WIDTH][3];
-  //unsigned char buf = create_buf();
+  //unsigned char buf[HEIGHT][WIDTH][3];
+  //unsigned char *buf = create_buf();
+  unsigned char buf[HEIGHT*WIDTH*3];
+  //printf("%ld\n", malloc_usable_size(buf));
+  //printf("%ld\n", sizeof(buf));
   while(p->next) {
-    buf[HEIGHT - p->y - 1][p->x][0] = p->r;
-    buf[HEIGHT - p->y - 1][p->x][1] = p->g;
-    buf[HEIGHT - p->y - 1][p->x][2] = p->b;
+    //buf[HEIGHT - p->y - 1][p->x][0] = p->r;
+    //buf[HEIGHT - p->y - 1][p->x][1] = p->g;
+    //buf[HEIGHT - p->y - 1][p->x][2] = p->b;
     //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 0] = p->r;
     //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 1] = p->g;
     //buf[((3 * HEIGHT) * p->y) + (p->x * 3) + 2] = p->b;
+    buf[((p->x * 3) + 0) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->r;
+    buf[((p->x * 3) + 1) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->g;
+    buf[((p->x * 3) + 2) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->b;
+    //printf("%d\n", ((p->x * 3) + 0) * (p->y + 1));
     p = p->next;
   }
   // ファイル名を取得する処理
