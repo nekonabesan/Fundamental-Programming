@@ -160,18 +160,11 @@ unsigned char* create_buf(void){
 bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
-  //unsigned char buf[HEIGHT][WIDTH][3];
   unsigned char *buf = create_buf();
-  //unsigned char buf[HEIGHT*WIDTH*3];
-  //printf("%ld\n", malloc_usable_size(buf));
   while(p->next) {
-    //buf[HEIGHT - p->y - 1][p->x][0] = p->r;
-    //buf[HEIGHT - p->y - 1][p->x][1] = p->g;
-    //buf[HEIGHT - p->y - 1][p->x][2] = p->b;
     buf[((p->x * 3) + 0) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->r;
     buf[((p->x * 3) + 1) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->g;
     buf[((p->x * 3) + 2) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->b;
-    //printf("%d\n", ((p->x * 3) + 0) * (p->y + 1));
     p = p->next;
   }
   // ファイル名を取得する処理
