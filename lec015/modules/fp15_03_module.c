@@ -53,8 +53,7 @@ struct color * initialize(struct color *t) {
 
 //--------------------------------------------------------------//
 // リストを初期化する処理
-// int cnt
-// return struct collor t
+// return struct collor *start
 //--------------------------------------------------------------//
 struct color * imgclear(void) {
   struct color *t = NULL;
@@ -156,7 +155,7 @@ unsigned char* create_buf(void){
 //--------------------------------------------------------------//
 // リストに格納されたデータを画像ファイルへ書き出す処理
 // @param struct color *p
-// return bool
+// @return bool
 //--------------------------------------------------------------//
 bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
@@ -169,7 +168,7 @@ bool imgwrite(struct color *p, int filecnt) {
     p = p->next;
   }
   // ファイル名を取得する処理
-  sprintf(fname, "img%04d.ppm", filecnt++);
+  sprintf(fname, "img/img%04d.ppm", filecnt++);
   FILE *f = fopen(fname, "wb");
   if(f == NULL) {
     fprintf(stderr, "can’t open %s\n", fname);
