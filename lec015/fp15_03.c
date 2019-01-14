@@ -1,7 +1,5 @@
 // animate1 --- create animation using img lib.
-//#include "modules/fp15_01_module.c"
 #include "modules/fp15_03_triangle.c"
-//#include "modules/fp15_circle.c"
 
 int main(void) {
   unsigned char r = 0;
@@ -103,7 +101,6 @@ int main(void) {
     p = imgclear();
     // リストへ三角形の画像情報を上書きする処理
     p = imgtriangle(head_color(p), px0, py0, px1, py1, px2, py2, r, g, b);
-    // リストのポインタを先頭へ戻す処理
     // 画像データをファイルへ出力する処理
     if(!imgwrite(head_color(p), angle)){
       return -1;
@@ -113,4 +110,5 @@ int main(void) {
       return -1;
     }
   }
+  return 0;
 }
