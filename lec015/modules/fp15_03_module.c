@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <malloc.h>
 
 #define WIDTH 300
 #define HEIGHT 200
@@ -19,10 +20,6 @@ struct gp{
   double x;
   double y;
 };
-
-//static unsigned char buf[HEIGHT][WIDTH][3];
-//static int filecnt = 0;
-//static char fname[100];
 
 //--------------------------------------------------------------//
 // 色データを上書きする処理
@@ -47,6 +44,10 @@ struct color * initialize(struct color *t) {
   unsigned char g = 255;
   unsigned char b = 255;
   t = writecolor(t, r, g, b);
+  t->x = 0;
+  t->y = 0;
+  t->next = NULL;
+  t->prev = NULL;
   return t;
 }
 
@@ -144,6 +145,15 @@ bool del_color_array(struct color *p){
 }
 
 //--------------------------------------------------------------//
+// fwriteへ渡す配列を初期化する処理
+// @return unsigned char *buf
+//--------------------------------------------------------------//
+unsigned char* create_buf(void){
+    unsigned char *buf = (unsigned char *)malloc(HEIGHT * WIDTH * 3 * sizeof(unsigned char));
+    return buf;
+}
+
+//--------------------------------------------------------------//
 // リストに格納されたデータを画像ファイルへ書き出す処理
 // @param struct color *p
 // return bool
@@ -151,11 +161,11 @@ bool del_color_array(struct color *p){
 bool imgwrite(struct color *p, int filecnt) {
   char fname[100];
   struct color *c = head_color(p);
-  static unsigned char buf[HEIGHT][WIDTH][3];
+  unsigned char *buf = create_buf();
   while(p->next) {
-    buf[HEIGHT - p->y - 1][p->x][0] = p->r;
-    buf[HEIGHT - p->y - 1][p->x][1] = p->g;
-    buf[HEIGHT - p->y - 1][p->x][2] = p->b;
+    buf[((p->x * 3) + 0) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->r;
+    buf[((p->x * 3) + 1) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->g;
+    buf[((p->x * 3) + 2) + ((HEIGHT - p->y - 1) * (WIDTH * 3))] = p->b;
     p = p->next;
   }
   // ファイル名を取得する処理
@@ -167,8 +177,9 @@ bool imgwrite(struct color *p, int filecnt) {
     return false;
   }
   fprintf(f, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
-  fwrite(buf, sizeof(buf), 1, f);
+  fwrite(buf, malloc_usable_size(buf), 1, f);
   fclose(f);
+  free(buf);
   return true;
 }
 

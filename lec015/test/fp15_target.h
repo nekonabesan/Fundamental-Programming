@@ -29,5 +29,7 @@ struct color * eol_color(struct color *pos);
 bool del_color_array(struct color *p);
 bool imgwrite(struct color *p, int filecnt);
 struct color * imgputpixel(struct color *p, int x, int y, unsigned char r, unsigned char g, unsigned char b);
+// fp15_03fp15_03_module.c
+unsigned char* create_buf(void);
 
 #endif /* _TARGET_H_ */

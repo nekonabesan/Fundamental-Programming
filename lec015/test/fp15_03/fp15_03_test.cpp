@@ -77,6 +77,10 @@ TEST_F(fixtureName, initialize)
   EXPECT_EQ(t->r, 255);
   EXPECT_EQ(t->g, 255);
   EXPECT_EQ(t->b, 255);
+  EXPECT_EQ(t->x, 0);
+  EXPECT_EQ(t->y, 0);
+  EXPECT_EQ((unsigned long)t->prev, 0);
+  EXPECT_EQ((unsigned long)t->next, 0);
   // 領域開放
   free(t);
 }
@@ -116,10 +120,14 @@ TEST_F(fixtureName, head_color)
   // test01
   pos = head_color(start);
   EXPECT_EQ((unsigned long)start, (unsigned long)pos);
+  ASSERT_NE((unsigned long)start, 0);
+  ASSERT_NE((unsigned long)pos, 0);
   // test02
   pos = eol_color(start);
   pos = head_color(pos);
   EXPECT_EQ((unsigned long)start, (unsigned long)pos);
+  ASSERT_NE((unsigned long)start, 0);
+  ASSERT_NE((unsigned long)pos, 0);
   // 領域開放
   del_color_array(start);
   //free(start);
@@ -166,6 +174,17 @@ TEST_F(fixtureName, imgputpixel)
   EXPECT_EQ(pos->b, 255);
   // 領域開放
   del_color_array(start);
+}
+
+//--------------------------------------------------------------//
+// fwriteへ渡す配列を初期化する処理
+// @return unsigned char *buf
+//--------------------------------------------------------------//
+TEST_F(fixtureName, create_buf)
+{
+  unsigned char *buf = create_buf();
+  //EXPECT_EQ(malloc_usable_size(buf), 180000);
+  free(buf);
 }
 
 //--------------------------------------------------------------//
