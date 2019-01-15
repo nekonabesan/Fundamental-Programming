@@ -1,3 +1,4 @@
+#include <malloc.h>
 #define RMAX 1000
 #define TRUE 1
 #define FALSE 0
@@ -183,7 +184,7 @@ TEST_F(fixtureName, imgputpixel)
 TEST_F(fixtureName, create_buf)
 {
   unsigned char *buf = create_buf();
-  //EXPECT_EQ(malloc_usable_size(buf), 180000);
+  EXPECT_EQ(malloc_usable_size(buf), 180008);
   free(buf);
 }
 
